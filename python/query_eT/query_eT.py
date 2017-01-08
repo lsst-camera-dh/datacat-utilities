@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import describe
 import collections
+import operator
 
 class query_eT():
 
@@ -111,6 +112,10 @@ class query_eT():
                         ccd[row[0]] = []
                     ccd[row[0]].append([row[3],row[4]])
 
+# sort the lists per key by the instance numbee as they are not returned in order
+
+        for key in ccd:
+            ccd[key] = sorted(ccd[key],key=operator.itemgetter(1))
 
         return ccd
 
