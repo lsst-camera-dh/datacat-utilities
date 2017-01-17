@@ -1,0 +1,10 @@
+Querying eT results data files from the Data Catalog. It uses query_eT to associate the files to test. Because the database is 
+behind the SLAC firewall, this needs to be run at SLAC.Until the eTraveler python api is updated to include this.
+
+Get findCCD from github
+
+It needs a datacat module
+
+setenv PYTHONPATH /u/ey/richard/LSSY/eT/datacat/0.4/lib/
+
+Also copy over /u/ey/richard/LSSY/eT/DataCatalog.py into your python path
