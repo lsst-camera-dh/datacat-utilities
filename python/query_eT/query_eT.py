@@ -14,17 +14,18 @@ class query_eT():
         self.ccdType = ccdType
         self.dataType = dataType
         self.resultType = resultType
+        self.resultName = resultName
         self.device = device
         self.dbConnectFile = dbConnectFile
 
-    def setParams(self, schemaName=None, valueName=None, ccdType=None,dataType=None,resultType=None, resultName=None, dbConnectFile=None):
+    def setParams(self, schemaName=None, valueName=None, ccdType=None,dataType=None,resultType=None, resultName=None, device=None, dbConnectFile=None):
         if schemaName is not None: self.schemaName = schemaName
         if valueName is not None:self.valueName = valueName
         if ccdType is not None:self.ccdType = ccdType
         if dataType is not None:self.dataType = dataType
         if resultType is not None:self.resultType = resultType
         if resultName is not None:self.resultName = resultName
-        if devicee is not None:self.device = device
+        if device is not None:self.device = device
         if dbConnectFile is not None: self.dbConnectFile = dbConnectFile
 
     def connectDB(self):
@@ -71,7 +72,8 @@ class query_eT():
         if self.device is not None: dev_query = ' and hw.lsstId = ' + self.device
 
 
-        sqlVendor = "select hw.lsstId, res.activityId, act.rootActivityId, res." + self.resultName + ", res.schemaInstance from " + self.resultType + " res join Activity act on res.activityId=act.id JOIN Hardware hw ON act.hardwareId=hw.id join Process pr on act.processId=pr.id where lower(res.schemaName) ='" + self.schemaName + "' and res.name= '" + self.valueName + dev_query + "' order by res.activityId asc"
+#        sqlVendor = "select hw.lsstId, res.activityId, act.rootActivityId, res." + self.resultName + ", res.schemaInstance from " + self.resultType + " res join Activity act on res.activityId=act.id JOIN Hardware hw ON act.hardwareId=hw.id join Process pr on act.processId=pr.id where lower(res.schemaName) ='" + self.schemaName + "' and res.name= '" + self.valueName + dev_query + "' order by res.activityId asc"
+        sqlVendor = "select hw.lsstId, res.activityId, act.rootActivityId, res." + self.resultName + ", res.schemaInstance from " + self.resultType + " res join Activity act on res.activityId=act.id JOIN Hardware hw ON act.hardwareId=hw.id join Process pr on act.processId=pr.id where res.name ='" + self.valueName +  dev_query + "' order by res.activityId asc"
 
         sql = sqlVendor
 
