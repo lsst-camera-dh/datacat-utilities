@@ -69,7 +69,7 @@ class query_eT():
     def queryResultsDB(self,engine):
 
         dev_query = ''
-        if self.device is not None: dev_query = ' and hw.lsstId = ' + self.device
+        if self.device is not None: dev_query = "' and hw.lsstId = '" + self.device
 
 
 #        sqlVendor = "select hw.lsstId, res.activityId, act.rootActivityId, res." + self.resultName + ", res.schemaInstance from " + self.resultType + " res join Activity act on res.activityId=act.id JOIN Hardware hw ON act.hardwareId=hw.id join Process pr on act.processId=pr.id where lower(res.schemaName) ='" + self.schemaName + "' and res.name= '" + self.valueName + dev_query + "' order by res.activityId asc"
