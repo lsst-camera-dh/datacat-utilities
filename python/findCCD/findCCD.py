@@ -58,18 +58,18 @@ class findCCD():
 		site = 'slac.lca.archive'
 	
 	elif (self.mirrorName == 'vendorCopy-prod' or self.mirrorName == 'vendorCopy-test'):
-		query = "TESTTYPE IS NOT NULL"
+#		query = "TESTTYPE IS NOT NULL"
 		site = "SLAC"
 	elif (self.mirrorName == 'vendor-prod'):
-		folder = folder + sourceMap[self.mirrorName] + self.CCDType  + '/' + sensorID + '/Prod/'
+		folder = folder + sourceMap[self.mirrorName] + self.CCDType  + '/' + self.sensorId + '/Prod/'
 		site = "slac.lca.archive"
 		use_query_eT = False
 	elif (self.mirrorName == 'vendor-test'):
-		folder = folder + sourceMap[self.mirrorName] + self.CCDType  + '/' + sensorID + '/Dev/'
+		folder = folder + sourceMap[self.mirrorName] + self.CCDType  + '/' + self.sensorId + '/Dev/'
 		site = "slac.lca.archive"
 		use_query_eT = False
 	elif (self.mirrorName == 'SAWG-BNL'):
-		folder = folder + 'mirror/' + sourceMap[self.mirrorName] + self.CCDType  + '/' + sensorID + '/' + self.testName
+		folder = folder + 'mirror/' + sourceMap[self.mirrorName] + self.CCDType  + '/' + self.sensorId + '/' + self.testName
 		use_latest_activity = False
 		use_query_eT = False
 
@@ -85,7 +85,6 @@ class findCCD():
 			query = self.XtraOpts
 		else:
 			query += "&&" + self.XtraOpts
-
 
 
 	datacatalog = DataCatalog(folder=folder, experiment='LSST', site=site, use_newest_subfolder=use_latest_activity)
@@ -158,3 +157,4 @@ if __name__ == "__main__":
 
 	files = fCCD.find()
 
+        print files
