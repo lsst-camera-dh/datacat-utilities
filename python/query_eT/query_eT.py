@@ -9,6 +9,11 @@ import os
 class query_eT():
 
     def __init__(self, schemaName=None, valueName=None, ccdType=None,dataType=None,resultType='FloatResultHarnessed',resultName='value', device=None, dbConnectFile='db_connect.txt'):
+
+        if None in [valueName, ccdType, dataType]:
+            print 'Error: missing input to query_eT'
+            raise ValueError
+            
         self.schemaName = schemaName
         self.valueName = valueName
         self.ccdType = ccdType

@@ -7,7 +7,12 @@ import query_eT
 
 class findCCD():
 
-    def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None, testName=None, CCDType=None, sensorId=None, outputFile=None, dataType=None ):
+    def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None, testName=None, CCDType=None, sensorId=None, outputFile=None, dataType=None):
+
+        if None in (mirrorName, testName, sensorId, dataType, CCDType):
+            print 'Error: missing input to findCCD'
+            raise ValueError
+            
         self.mirrorName = mirrorName
         self.FType = FType
 	self.XtraOpts = XtraOpts
@@ -17,8 +22,8 @@ class findCCD():
 	self.outputFile = outputFile
 	self.dataType = dataType
 
-	schemaName = self.testName
-	valueName = None
+	schemaName =  self.testName
+	valueName =  self.testName
 	ccdType = self.CCDType
 	dataType = self.dataType
 
@@ -153,4 +158,3 @@ if __name__ == "__main__":
 
 	files = fCCD.find()
 
-	print files
