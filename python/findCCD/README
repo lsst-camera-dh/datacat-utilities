@@ -12,3 +12,5 @@ Also copy over /u/ey/richard/LSST/eT/DataCatalog.py into your python path
  You can find examples of the (previous rendition's) use here:
 
 https://confluence.slac.stanford.edu/x/gLfOCw
+
+ Note that needing the eTraveler root traveler name (eg SR-EOT-1) is new to those instructions.
