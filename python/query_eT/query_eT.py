@@ -145,7 +145,7 @@ class query_eT():
         if self.device is not None: dev_query = "' and hw.lsstId = '" + self.device
 
         
-        sqlVendor = "select hw.lsstId, res.activityId, act.rootActivityId, res." + self.resultName + ", res.schemaInstance from " + self.resultType + " res join Activity act on res.activityId=act.id JOIN StringResultHarnessed fl  on res.activityId=fl.activityId JOIN Hardware hw ON act.hardwareId=hw.id join Process pr on act.processId=pr.id where lower(fl.schemaName) ='" + self.schemaName + dev_query + "' order by res.activityId asc"
+        sqlVendor = "select hw.lsstId, res.activityId, act.rootActivityId, res." + self.resultName + ", res.schemaInstance from " + self.resultType + " res join Activity act on res.activityId=act.id JOIN StringResultHarnessed fl  on res.activityId=fl.activityId JOIN Hardware hw ON act.hardwareId=hw.id join Process pr on act.processId=pr.id where lower(pr.name) ='" + self.schemaName + dev_query + "' order by res.activityId asc"
 
         sql = sqlVendor
 
