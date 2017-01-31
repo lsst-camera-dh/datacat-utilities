@@ -145,7 +145,8 @@ class query_eT():
         if self.device is not None: dev_query = "' and hw.lsstId = '" + self.device
 
         
-        sqlVendor = "select hw.lsstId, res.activityId, act.rootActivityId, res." + self.resultName + ", res.schemaInstance from " + self.resultType + " res join Activity act on res.activityId=act.id JOIN StringResultHarnessed fl  on res.activityId=fl.activityId JOIN Hardware hw ON act.hardwareId=hw.id join Process pr on act.processId=pr.id where lower(pr.name) ='" + self.schemaName + dev_query + "' order by res.activityId asc"
+#        sqlVendor = "select hw.lsstId, res.activityId, act.rootActivityId, res." + self.resultName + ", res.schemaInstance from " + self.resultType + " res join Activity act on res.activityId=act.id JOIN StringResultHarnessed fl  on res.activityId=fl.activityId JOIN Hardware hw ON act.hardwareId=hw.id join Process pr on act.processId=pr.id where lower(pr.name) ='" + self.schemaName + dev_query + "' order by res.activityId asc"
+        sqlVendor = "select hw.lsstId, res.activityId, act.rootActivityId, res." + self.resultName + ", res.schemaInstance from " + self.resultType + " res join Activity act on res.activityId=act.id JOIN Hardware hw ON act.hardwareId=hw.id join Process pr on act.processId=pr.id where lower(pr.name) ='" + self.schemaName + dev_query + "' order by res.activityId asc"
 
         sql = sqlVendor
 
@@ -166,10 +167,12 @@ class query_eT():
             query.append([row['lsstId'], row['activityId'], row['rootActivityId'], row['virtualPath'], row['schemaInstance']])
 
         print 'len(query) = ', len(query)
-
+#        print query
+        
         # get the parent traveler's id and name
 
-        sqlParent = "select hw.id, hw.lsstId, act.id parId, pr.name from Activity act join Hardware hw on act.hardwareId=hw.id join Process pr on act.processId=pr.id join ActivityStatusHistory statusHist on act.id=statusHist.activityId where  pr.name='" + self.dataType + "'"
+#        sqlParent = "select hw.id, hw.lsstId, act.id parId, pr.name from Activity act join Hardware hw on act.hardwareId=hw.id join Process pr on act.processId=pr.id join ActivityStatusHistory statusHist on act.id=statusHist.activityId where  pr.name='" + self.dataType + "'"
+        sqlParent = "select hw.id, hw.lsstId, act.id parId, pr.name from Activity act join Hardware hw on act.hardwareId=hw.id join Process pr on act.processId=pr.id where  pr.name='" + self.dataType + "' order by act.id asc"
 
         print sqlParent
 
@@ -182,6 +185,8 @@ class query_eT():
         for row in resultParent:
             parentId = parent.setdefault(row['lsstId'])
             parent[row['lsstId']] = row['parId']
+
+#        print parent
 
         resultParent.close()
 
@@ -197,8 +202,8 @@ class query_eT():
 
 # sort the lists per key by the instance number as they are not returned in order
 
-        for key in ccd:
-            ccd[key] = sorted(ccd[key],key=operator.itemgetter(1))
+#        for key in ccd:
+#            ccd[key] = sorted(ccd[key],key=operator.itemgetter(1))
 
 # ccd is a dict, with CCD as key, and each key has a list of pairs - value and instance number (eg amp #)
 
