@@ -7,7 +7,7 @@ import query_eT
 
 class findCCD():
 
-    def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None, testName=None, CCDType=None, sensorId=None, outputFile=None, dataType=None, site='slac.lca.archive'):
+    def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None, testName=None, CCDType=None, sensorId=None, outputFile=None, dataType=None, site='slac.lca.archive', Print=False):
 
         if None in (mirrorName, testName, sensorId, dataType, CCDType):
             print 'Error: missing input to findCCD'
@@ -22,6 +22,7 @@ class findCCD():
         self.outputFile = outputFile
         self.dataType = dataType
         self.site = site
+        self.Print = Print
 
         schemaName =  self.testName
         valueName =  self.testName
@@ -105,7 +106,7 @@ class findCCD():
                 if (self.FType is None) or (self.FType is not None and item.endswith(self.FType)): 
                     files.append(item)
 
-        if args.Print:
+        if self.Print:
             print "File paths for files at %s:" % site
             for item in files:
                 print item
@@ -159,7 +160,7 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 
-	fCCD= findCCD(mirrorName=args.mirrorName, FType=args.FType, XtraOpts=args.XtraOpts, testName=args.testName, CCDType=args.CCDType, sensorId=args.sensorID, outputFile=args.outputFile, dataType=args.dataType, site=args.site )
+	fCCD= findCCD(mirrorName=args.mirrorName, FType=args.FType, XtraOpts=args.XtraOpts, testName=args.testName, CCDType=args.CCDType, sensorId=args.sensorID, outputFile=args.outputFile, dataType=args.dataType, site=args.site, Print=args.Print )
 
 	files = fCCD.find()
 
