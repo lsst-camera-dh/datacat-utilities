@@ -83,7 +83,7 @@ class findCCD():
                         folderList.append(f[0])
         else:
             folderList.append(folder)
-
+        
         if self.XtraOpts is not None:
             if query == '':
                 query = self.XtraOpts
@@ -96,15 +96,15 @@ class findCCD():
             datacatalog = DataCatalog(folder=folder, experiment='LSST', site=site, use_newest_subfolder=use_latest_activity)
 
             datasets = datacatalog.find_datasets(query)
-            dsList.append(datasets)
+            if len(datasets) != 0: dsList.append(datasets)
 
         files = []
 
         for ds in dsList:
-            paths = ds.full_paths()
-            for item in paths:
+            pathsList = ds.full_paths()
+            for item in pathsList:
                 if (self.FType is None) or (self.FType is not None and item.endswith(self.FType)): 
-                    files.append(item)
+                        if item not in files: files.append(item)
 
         if self.Print:
             print "File paths for files at %s:" % site
