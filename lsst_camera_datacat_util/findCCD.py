@@ -2,12 +2,13 @@ import argparse
 from DataCatalog import *
 import subprocess
 import shlex
-import query_eT
+import os
+from getResults import getResults
 
 
-class findCCD():
+class findCCD_v2():
 
-    def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None, testName=None, CCDType=None, sensorId=None, outputFile=None, dataType=None, site='slac.lca.archive', Print=False):
+    def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None, testName=None, CCDType=None, sensorId=None, run=None, outputFile=None, dataType=None, site='slac.lca.archive', Print=False, db_connect='db_connect.txt'):
 
         if None in (mirrorName, testName, sensorId, dataType, CCDType):
             print 'Error: missing input to findCCD'
@@ -23,13 +24,15 @@ class findCCD():
         self.dataType = dataType
         self.site = site
         self.Print = Print
+        self.run = run
+        self.db_connect = db_connect
 
         schemaName =  self.testName
         valueName =  self.testName
         ccdType = self.CCDType
         dataType = self.dataType
 
-        self.eT = query_eT.query_eT(schemaName=schemaName, valueName=valueName, ccdType=ccdType, dataType=dataType, device=self.sensorId)
+        self.eT = getResults( dbConnectFile= self.db_connect)
 
         self.engine = self.eT.connectDB()
 
@@ -75,12 +78,14 @@ class findCCD():
         folderList = []
 
         if use_query_eT is True:
-            filePaths  = self.eT.queryCatalogVirtualPaths(self.engine)
+            filePaths  = self.eT.getFilepaths(self.run, self.testName)
 # get the unique directory paths
 
-            for f in filePaths[self.sensorId]:
-                if f[0] not in folderList:
-                        folderList.append(f[0])
+            for test in filePaths:
+                for f in filePaths[test]:
+                    dirpath = os.path.dirname(f) + '/'
+                    if dirpath not in folderList:
+                        if self.sensorId in os.path.basename(f): folderList.append(dirpath)
         else:
             folderList.append(folder)
         
@@ -91,8 +96,7 @@ class findCCD():
                 query += "&&" + self.XtraOpts
 
         dsList = []
-        for folder in folderList:
-
+        for folder in folderList:             
             datacatalog = DataCatalog(folder=folder, experiment='LSST', site=site, use_newest_subfolder=use_latest_activity)
 
             datasets = datacatalog.find_datasets(query)
@@ -143,6 +147,8 @@ if __name__ == "__main__":
 	parser.add_argument('-F','--FType', default=None,help="File type (default=%(default)s)")
 	parser.add_argument('-q','--qType', default=None,help="query type - report or blank (default all) ")
 	parser.add_argument('-d','--dataType', default=None,help="test type (SR-EOT-1, etc) ")
+	parser.add_argument('-r','--run', default=None,help="optional run number ")
+	parser.add_argument('--db', default='devdb_connect.txt',help="db connect file for getResults ")
 
 	## Limit dataCatalog search to specified parts of the catalog
 	parser.add_argument('-m','--mirrorName',default='BNL-prod',help="mirror name to search, i.e. in dataCat /LSST/mirror/<mirrorName> (default=%(default)s)")
@@ -160,7 +166,7 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 
-	fCCD= findCCD(mirrorName=args.mirrorName, FType=args.FType, XtraOpts=args.XtraOpts, testName=args.testName, CCDType=args.CCDType, sensorId=args.sensorID, outputFile=args.outputFile, dataType=args.dataType, site=args.site, Print=args.Print )
+	fCCD= findCCD_v2(mirrorName=args.mirrorName, FType=args.FType, XtraOpts=args.XtraOpts, testName=args.testName, CCDType=args.CCDType, sensorId=args.sensorID, outputFile=args.outputFile, dataType=args.dataType, site=args.site, Print=args.Print, run=args.run, db_connect=args.db )
 
 	files = fCCD.find()
 
