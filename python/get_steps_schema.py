@@ -1,4 +1,3 @@
-from getResults import getResults
 from  eTraveler.clientAPI.connection import Connection
 import argparse
 
@@ -16,8 +15,14 @@ args = parser.parse_args()
 print 'Discover step and schema names for run ', args.run
 if args.eTserver == 'Prod': pS = True
 else: pS = False
+    
+appSuffix = ''
+if args.appSuffix != '':
+    appSuffix = '-' + args.appSuffix
 
-connect = Connection(operator='richard', db=args.db, exp='LSST-CAMERA', prodServer=pS, appSuffix='-'+args.appSuffix)
+print 'args. appSuffix, appSuffix = ', args.appSuffix, appSuffix
+    
+connect = Connection(operator='richard', db=args.db, exp='LSST-CAMERA', prodServer=pS, appSuffix=appSuffix)
 
 returnData  = connect.getRunResults(run=args.run)
     
