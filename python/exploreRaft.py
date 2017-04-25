@@ -4,12 +4,12 @@ from  eTraveler.clientAPI.connection import Connection
 
 class exploreRaft():
 
-    def __init__(self, db='Prod', prodServer='Prod'):
+    def __init__(self, db='Prod', prodServer='Prod', appSuffix=''):
 
         if prodServer == 'Prod': pS = True
         else: pS = False
 
-        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS)
+        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS, appSuffix=appSuffix)
 
     def raftContents(self, raftName=None):
         kwds = {'experimentSN':raftName, 'htype':'LCA-11021_RTM', 'noBatched':'true'}
@@ -92,7 +92,7 @@ if __name__ == "__main__":
 
     raftName = 'LCA-11021_RTM-004_ETU2-Dev'
 
-    eR = exploreRaft(db='Dev')
+    eR = exploreRaft(db='Dev', appSuffix='jrb')
 
     ccd_list = eR.raftContents(raftName)
 

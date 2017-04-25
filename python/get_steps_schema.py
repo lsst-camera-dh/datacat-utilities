@@ -10,13 +10,14 @@ parser = argparse.ArgumentParser(description='Query given eTraveler run for avai
 parser.add_argument('-r', '--run', default=None,help="(raft run number (default=%(default)s)")
 parser.add_argument('-d','--db',default='Prod',help="database to use (default=%(default)s)")
 parser.add_argument('-e','--eTserver',default='Prod',help="eTraveler server (default=%(default)s)")
+parser.add_argument('--appSuffix', default='',help="separate app instance ")
 args = parser.parse_args()
 
 print 'Discover step and schema names for run ', args.run
 if args.eTserver == 'Prod': pS = True
 else: pS = False
 
-connect = Connection(operator='richard', db=args.db, exp='LSST-CAMERA', prodServer=pS)
+connect = Connection(operator='richard', db=args.db, exp='LSST-CAMERA', prodServer=pS, appSuffix='-'+args.appSuffix)
 
 returnData  = connect.getRunResults(run=args.run)
     
