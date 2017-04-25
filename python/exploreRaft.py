@@ -90,23 +90,23 @@ class exploreRaft():
     
 if __name__ == "__main__":
 
-    raftName = 'LCA-11021_RTM-004_ETU2-Dev'
+    raftName = 'LCA-11021_RTM-004'
 
-    eR = exploreRaft(db='Dev', appSuffix='jrb')
+    eR = exploreRaft(prodServer='Dev', appSuffix='-jrb')
 
     ccd_list = eR.raftContents(raftName)
 
     print ccd_list
 
-    CCD_name = 'ITL-3800C-103-Dev'
+    CCD_name = 'ITL-3800C-034'
 
     parentRaft = eR.CCD_parent(CCD_name,'ITL-CCD')
 
     print CCD_name, "'s parent raft = ", parentRaft
 
-    reb_parent = eR.REB_parent('LCA-13574-003')
+    reb_parent = eR.REB_parent('LCA-13574-016')
     print 'parent raft of LCA-13574-003 is ', reb_parent
 
-    reb_ccds = eR.REB_CCD('LCA-13574-003')
+    reb_ccds = eR.REB_CCD('LCA-13574-016')
     print 'CCDs on REB LCA-13574-003 are ', reb_ccds
 
