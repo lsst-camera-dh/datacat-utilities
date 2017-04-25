@@ -6,7 +6,7 @@ import os
 from  eTraveler.clientAPI.connection import Connection
 
 
-class findCCD_v2():
+class findCCD():
 
     def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None, testName=None, CCDType=None, sensorId=None, run=None, outputFile=None, dataType=None, site='slac.lca.archive', Print=False, db='Prod', prodServer='Prod'):
 
@@ -163,7 +163,7 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 
-	fCCD= findCCD_v2(mirrorName=args.mirrorName, FType=args.FType, XtraOpts=args.XtraOpts, testName=args.testName, sensorId=args.sensorID, outputFile=args.outputFile, Print=args.Print, run=args.run, db=args.db, prodServer=args.server, site=args.site )
+	fCCD= findCCD(mirrorName=args.mirrorName, FType=args.FType, XtraOpts=args.XtraOpts, testName=args.testName, sensorId=args.sensorID, outputFile=args.outputFile, Print=args.Print, run=args.run, db=args.db, prodServer=args.server, site=args.site )
 
 	files = fCCD.find()
 
