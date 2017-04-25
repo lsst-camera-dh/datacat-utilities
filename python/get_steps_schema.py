@@ -1,4 +1,3 @@
-from getResults import getResults
 from  eTraveler.clientAPI.connection import Connection
 import argparse
 
@@ -10,13 +9,20 @@ parser = argparse.ArgumentParser(description='Query given eTraveler run for avai
 parser.add_argument('-r', '--run', default=None,help="(raft run number (default=%(default)s)")
 parser.add_argument('-d','--db',default='Prod',help="database to use (default=%(default)s)")
 parser.add_argument('-e','--eTserver',default='Prod',help="eTraveler server (default=%(default)s)")
+parser.add_argument('--appSuffix', default='',help="separate app instance ")
 args = parser.parse_args()
 
 print 'Discover step and schema names for run ', args.run
 if args.eTserver == 'Prod': pS = True
 else: pS = False
+    
+appSuffix = ''
+if args.appSuffix != '':
+    appSuffix = '-' + args.appSuffix
 
-connect = Connection(operator='richard', db=args.db, exp='LSST-CAMERA', prodServer=pS)
+print 'args. appSuffix, appSuffix = ', args.appSuffix, appSuffix
+    
+connect = Connection(operator='richard', db=args.db, exp='LSST-CAMERA', prodServer=pS, appSuffix=appSuffix)
 
 returnData  = connect.getRunResults(run=args.run)
     

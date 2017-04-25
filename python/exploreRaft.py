@@ -4,12 +4,12 @@ from  eTraveler.clientAPI.connection import Connection
 
 class exploreRaft():
 
-    def __init__(self, db='Prod', prodServer='Prod'):
+    def __init__(self, db='Prod', prodServer='Prod', appSuffix=''):
 
         if prodServer == 'Prod': pS = True
         else: pS = False
 
-        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS)
+        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS, appSuffix=appSuffix)
 
     def raftContents(self, raftName=None):
         kwds = {'experimentSN':raftName, 'htype':'LCA-11021_RTM', 'noBatched':'true'}
@@ -90,23 +90,23 @@ class exploreRaft():
     
 if __name__ == "__main__":
 
-    raftName = 'LCA-11021_RTM-004_ETU2-Dev'
+    raftName = 'LCA-11021_RTM-004'
 
-    eR = exploreRaft(db='Dev')
+    eR = exploreRaft(prodServer='Dev', appSuffix='-jrb')
 
     ccd_list = eR.raftContents(raftName)
 
     print ccd_list
 
-    CCD_name = 'ITL-3800C-103-Dev'
+    CCD_name = 'ITL-3800C-034'
 
     parentRaft = eR.CCD_parent(CCD_name,'ITL-CCD')
 
     print CCD_name, "'s parent raft = ", parentRaft
 
-    reb_parent = eR.REB_parent('LCA-13574-003')
+    reb_parent = eR.REB_parent('LCA-13574-016')
     print 'parent raft of LCA-13574-003 is ', reb_parent
 
-    reb_ccds = eR.REB_CCD('LCA-13574-003')
+    reb_ccds = eR.REB_CCD('LCA-13574-016')
     print 'CCDs on REB LCA-13574-003 are ', reb_ccds
 

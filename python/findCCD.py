@@ -8,7 +8,7 @@ from  eTraveler.clientAPI.connection import Connection
 
 class findCCD():
 
-    def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None, testName=None, CCDType=None, sensorId=None, run=None, outputFile=None, dataType=None, site='slac.lca.archive', Print=False, db='Prod', prodServer='Prod'):
+    def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None, testName=None, CCDType=None, sensorId=None, run=None, outputFile=None, dataType=None, site='slac.lca.archive', Print=False, db='Prod', prodServer='Prod', appSuffix=''):
 
         if mirrorName == 'vendor': chk_list = (sensorId)
         else: chk_list = (mirrorName, testName, sensorId, run)
@@ -36,7 +36,7 @@ class findCCD():
         pS = True
         if self.prodServer == 'Dev': pS = False
         
-        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS)
+        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS, appSuffix=appSuffix)
 
 
 
@@ -146,6 +146,7 @@ if __name__ == "__main__":
 	parser.add_argument('-r','--run', default=None,help="optional run number ")
 	parser.add_argument('--db', default='Prod',help="Prod or Dev eT db ")
 	parser.add_argument('--server', default='Prod',help="Prod or Dev eT server ")
+	parser.add_argument('--appSuffix', default='',help="separate app instance ")
 
 	## Limit dataCatalog search to specified parts of the catalog
 	parser.add_argument('-m','--mirrorName',default='BNL-prod',help="mirror name to search, i.e. in dataCat /LSST/mirror/<mirrorName> (default=%(default)s)")
@@ -163,7 +164,7 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 
-	fCCD= findCCD(mirrorName=args.mirrorName, FType=args.FType, XtraOpts=args.XtraOpts, testName=args.testName, sensorId=args.sensorID, outputFile=args.outputFile, Print=args.Print, run=args.run, db=args.db, prodServer=args.server, site=args.site )
+	fCCD= findCCD(mirrorName=args.mirrorName, FType=args.FType, XtraOpts=args.XtraOpts, testName=args.testName, sensorId=args.sensorID, outputFile=args.outputFile, Print=args.Print, run=args.run, db=args.db, prodServer=args.server, site=args.site,appSuffix= '-' + args.appSuffix )
 
 	files = fCCD.find()
 
