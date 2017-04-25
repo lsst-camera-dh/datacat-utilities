@@ -2,12 +2,12 @@ from  eTraveler.clientAPI.connection import Connection
 
 class exploreREB():
 
-    def __init__(self, db='Prod', prodServer='Prod'):
+    def __init__(self, db='Prod', prodServer='Prod', appSuffix=''):
 
         if prodServer == 'Prod': pS = True
         else: pS = False
 
-        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS)
+        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS, appSuffix=appSuffix)
 
     def REBContents(self, REBName=None):
         kwds = {'experimentSN':REBName, 'htype':'LCA-13574', 'noBatched':'true'}
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     REBName = 'LCA-13574-017'
 
-    eR = exploreREB()
+    eR = exploreREB(appSuffix='jrb', prodServer='Dev')
 
     aspic_list = eR.REBContents(REBName)
 
