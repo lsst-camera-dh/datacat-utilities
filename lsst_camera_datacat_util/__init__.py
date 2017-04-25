@@ -1,2 +1,0 @@
-from .DataCatalog import DataCatalog
-
