@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     REBName = 'LCA-13574-017'
 
-    eR = exploreREB(appSuffix='jrb', prodServer='Dev')
+    eR = exploreREB(appSuffix='-jrb', prodServer='Dev')
 
     aspic_list = eR.REBContents(REBName)
 
