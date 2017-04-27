@@ -8,7 +8,10 @@ from  eTraveler.clientAPI.connection import Connection
 
 class findCCD():
 
-    def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None, testName=None, CCDType=None, sensorId=None, run=None, outputFile=None, dataType=None, site='slac.lca.archive', Print=False, db='Prod', prodServer='Prod', appSuffix=''):
+    def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None,
+testName=None, CCDType=None, sensorId=None, run=None, outputFile=None,
+dataType=None, site='slac.lca.archive', Print=False, db='Prod',
+prodServer='Dev', appSuffix='jrb'):
 
         if mirrorName == 'vendor': chk_list = (sensorId)
         else: chk_list = (mirrorName, testName, sensorId, run)
@@ -145,8 +148,8 @@ if __name__ == "__main__":
 	parser.add_argument('-F','--FType', default=None,help="File type (default=%(default)s)")
 	parser.add_argument('-r','--run', default=None,help="optional run number ")
 	parser.add_argument('--db', default='Prod',help="Prod or Dev eT db ")
-	parser.add_argument('--server', default='Prod',help="Prod or Dev eT server ")
-	parser.add_argument('--appSuffix', default='',help="separate app instance ")
+	parser.add_argument('--server', default='Dev',help="Prod or Dev eT server ")
+	parser.add_argument('--appSuffix', default='jrb',help="separate app instance ")
 
 	## Limit dataCatalog search to specified parts of the catalog
 	parser.add_argument('-m','--mirrorName',default='BNL-prod',help="mirror name to search, i.e. in dataCat /LSST/mirror/<mirrorName> (default=%(default)s)")
