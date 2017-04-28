@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser(description='Query given eTraveler run for avai
 parser.add_argument('-r', '--run', default=None,help="(required raft run number (default=%(default)s)")
 parser.add_argument('-d','--db',default='Prod',help="database to use (default=%(default)s)")
 parser.add_argument('-e','--eTserver',default='Dev',help="eTraveler server (default=%(default)s)")
-parser.add_argument('--appSuffix', default='-jrb',help="separate app instance ")
+parser.add_argument('--appSuffix', default='jrb',help="separate app instance, dash should not be prepended ")
 args = parser.parse_args()
 
 print 'Discover step and schema names for run ', args.run
@@ -20,7 +20,8 @@ if args.run == None:
 if args.eTserver == 'Prod': pS = True
 else: pS = False
     
-appSuffix = '-jrb'
+if args.appSuffix != '':
+    appSuffix = '-' + args.appSuffix
 
 print 'args. appSuffix, appSuffix = ', args.appSuffix, appSuffix
     
