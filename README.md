@@ -12,7 +12,7 @@ For exploreXXX execute the main to see them in operation.
 2017-04-25: currently one must use the dev eTraveler server and '-jrb' eTraveler instance on that server. That will be rectified once the client API goes fully prod.
 
 ## Prerequisites
-- python >= 2.7.10 with mysql-python and [requests](http://docs.python-requests.org/en/master/)
+- python >= 2.7.10 with [requests](http://docs.python-requests.org/en/master/)
 - [datacat](https://gist.github.com/brianv0/c1ef2269e87060647fa3) >= 0.4
 - eTraveler-clientAPI repo. Point your PYTHONPATH at the contained python/ directory
 
