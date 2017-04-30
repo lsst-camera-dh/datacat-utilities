@@ -2,7 +2,7 @@ from  eTraveler.clientAPI.connection import Connection
 
 class exploreREB():
 
-    def __init__(self, db='Prod', prodServer='Prod', appSuffix=''):
+    def __init__(self, db='Prod', prodServer='Dev', appSuffix='-jrb'):
 
         if prodServer == 'Prod': pS = True
         else: pS = False
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     REBName = 'LCA-13574-017'
 
-    eR = exploreREB(appSuffix='-jrb', prodServer='Dev')
+    eR = exploreREB()
 
     aspic_list = eR.REBContents(REBName)
 
