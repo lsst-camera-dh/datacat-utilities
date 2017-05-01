@@ -4,7 +4,7 @@ from  eTraveler.clientAPI.connection import Connection
 
 class exploreRaft():
 
-    def __init__(self, db='Prod', prodServer='Prod', appSuffix=''):
+    def __init__(self, db='Prod', prodServer='Dev', appSuffix='-jrb'):
 
         if prodServer == 'Prod': pS = True
         else: pS = False
@@ -92,7 +92,7 @@ if __name__ == "__main__":
 
     raftName = 'LCA-11021_RTM-004'
 
-    eR = exploreRaft(prodServer='Dev', appSuffix='-jrb')
+    eR = exploreRaft()
 
     ccd_list = eR.raftContents(raftName)
 
