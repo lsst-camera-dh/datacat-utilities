@@ -99,7 +99,7 @@ prodServer='Dev', appSuffix='-jrb'):
 
         dsList = []
         for folder in folderList:             
-            datacatalog = DataCatalog(folder=folder, experiment='LSST', site=site, use_newest_subfolder=use_latest_activity)
+            datacatalog = DataCatalog(folder=folder, site=site, use_newest_subfolder=use_latest_activity)
 
             datasets = datacatalog.find_datasets(query)
             if len(datasets) != 0: dsList.append(datasets)
