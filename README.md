@@ -6,6 +6,7 @@ Tools for using/reading/interacting with the LSST Data Catalog
 - findCCD - find files associated with eTraveler tests, returning file lists for SLAC or BNL, specified by run and CCD.
 - get_steps_schema - list the traveler steps and schema for a given test, specified by run
 -- $ python get_steps_schema.py  -r 3764
+- merge, merge\_over - concatenates a list of single-sensor images for one raft into one multi-extension FITS file so that 'ds9 -mopsaicimage wcsq <filename>' can assemble the entire image.  merge\_over does the same except that it modifies the header s in the output so that ds9 does not trim away the overscan regions.
 
 For exploreXXX execute the main to see them in operation.
 
