@@ -11,6 +11,9 @@ For exploreXXX execute the main to see them in operation.
 
 2017-04-25: currently one must use the dev eTraveler server and '-jrb' eTraveler instance on that server. That will be rectified once the client API goes fully prod.
 
+More here:
+https://confluence.slac.stanford.edu/display/LSSTCAM/Primer+for+Interacting+with+CCD+and+Raft+Test+Data
+
 ## Prerequisites
 - python >= 2.7.10 with [requests](http://docs.python-requests.org/en/master/)
 - [datacat](https://gist.github.com/brianv0/c1ef2269e87060647fa3) >= 0.4
