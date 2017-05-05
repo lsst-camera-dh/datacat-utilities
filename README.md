@@ -12,13 +12,13 @@ For exploreXXX execute the main to see them in operation.
 
 2017-04-25: currently one must use the dev eTraveler server and '-jrb' eTraveler instance on that server. That will be rectified once the client API goes fully prod.
 
-More here:
-https://confluence.slac.stanford.edu/display/LSSTCAM/Primer+for+Interacting+with+CCD+and+Raft+Test+Data
-
 ## Prerequisites
 - python >= 2.7.10 with [requests](http://docs.python-requests.org/en/master/)
 - [datacat](https://gist.github.com/brianv0/c1ef2269e87060647fa3) >= 0.4
-- eTraveler-clientAPI repo. Point your PYTHONPATH at the contained python/ directory
+- [eTraveler-clientAPI](https://github.com/lsst-camera-dh/eTraveler-clientAPI) >= 1.3.0. Point your PYTHONPATH at the contained python/ directory
 
-## documentation for findCCD.py
-https://confluence.slac.stanford.edu/display/LSSTCAM/Finding+CCD+Acceptance+Data
+## Recommended
+- ds9 <= 7.3.x
+
+## Further Documentation:
+https://confluence.slac.stanford.edu/display/LSSTCAM/Primer+for+Interacting+with+CCD+and+Raft+Test+Data
