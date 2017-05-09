@@ -9,8 +9,7 @@ from  eTraveler.clientAPI.connection import Connection
 class findCCD():
 
     def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None,
-testName=None, CCDType=None, sensorId=None, run=None, outputFile=None,
-dataType=None, site='slac.lca.archive', Print=False, db='Prod',
+testName=None, sensorId=None, run=None, outputFile=None, site='slac.lca.archive', Print=False, db='Prod',
 prodServer='Dev', appSuffix='-jrb'):
 
         if mirrorName == 'vendor': chk_list = (sensorId)
@@ -27,7 +26,6 @@ prodServer='Dev', appSuffix='-jrb'):
         
         self.sensorId = sensorId
         self.outputFile = outputFile
-        self.dataType = dataType
         self.site = site
         self.Print = Print
         self.run = run
@@ -158,8 +156,6 @@ if __name__ == "__main__":
 	## Output
 	parser.add_argument('-o','--outputFile',default=None,help="Output result to specified file (default = %(default)s)")
 	parser.add_argument('-a','--displayAll',default=False,action='store_true',help="Display entire result set (default = %(default)s)")
-	parser.add_argument('-D','--download',default=False,action='store_true',help="download/ssh files (default=%(default)s)")
-	parser.add_argument('-u','--user',default='',help="SLAC unix username for ssh (default=%(default)s)")
 
 	## Verbosity
 	parser.add_argument('-p','--Print',default=False,action='store_true',help="print file paths to screen (default=%(default)s)")

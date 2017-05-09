@@ -16,7 +16,7 @@ class exploreRaft():
 
         response = self.connect.getHardwareHierarchy(**kwds)
 
-# LCA-13574 is the RSA.
+# LCA-13574 is the REB.
 
         reb_list = []
         for row in response:
@@ -32,7 +32,7 @@ class exploreRaft():
 #            print child['parent_experimentSN'], child['relationshipTypeName'],  child['child_experimentSN'], child['slotName']
 
             kid = child['child_experimentSN']
-            if 'ITL' in kid or 'e2v' in kid:
+            if 'ITL' in kid.upper() or 'E2V' in kid.upper():
                 slotName = child['slotName']
                 rebNumber = slotName[1]
                 for reb in reb_list:
