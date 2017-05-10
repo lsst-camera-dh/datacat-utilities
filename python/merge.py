@@ -22,7 +22,7 @@ hdulist.append(hdu[0])
 
 for infile in infiles:
     hdu = fits.open(infile)
-    for i in range(1,17):
+    for i in range(1, 17):
         hdulist.append(hdu[i])
 
 hdulist.writeto(sys.argv[2])
