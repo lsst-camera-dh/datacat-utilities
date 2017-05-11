@@ -5,4 +5,4 @@ python:
 install: pip install flake8 pylint
 script: 
  - flake8 --show-source --statistics --max-line-length=90 python
- - pylint python/findCCD.py
+ - pylint `find . -name \*.py -print`
