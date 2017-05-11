@@ -1,16 +1,24 @@
-from  eTraveler.clientAPI.connection import Connection
+from eTraveler.clientAPI.connection import Connection
+
 
 class exploreREB():
 
     def __init__(self, db='Prod', prodServer='Dev', appSuffix='-jrb'):
 
-        if prodServer == 'Prod': pS = True
-        else: pS = False
+        if prodServer == 'Prod':
+            pS = True
+        else:
+            pS = False
 
-        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS, appSuffix=appSuffix)
+        self.connect = Connection(
+            operator='richard',
+            db=db,
+            exp='LSST-CAMERA',
+            prodServer=pS,
+            appSuffix=appSuffix)
 
     def REBContents(self, REBName=None):
-        kwds = {'experimentSN':REBName, 'htype':'LCA-13574', 'noBatched':'true'}
+        kwds = {'experimentSN': REBName, 'htype': 'LCA-13574', 'noBatched': 'true'}
 
         response = self.connect.getHardwareHierarchy(**kwds)
 
@@ -20,15 +28,15 @@ class exploreREB():
         for row in response:
             kid = row['child_experimentSN']
             if '11721' in kid:
-                aspic_list.append((kid,row['slotName']))
-        
+                aspic_list.append((kid, row['slotName']))
+
         return aspic_list
 
     def ASPIC_parent(self, ASPIC_name=None, htype='LCA-11721'):
-    
-# now find ASPIC for a REB
 
-        kwds = {'experimentSN': ASPIC_name, 'htype':htype, 'noBatched':'true'}
+        # now find ASPIC for a REB
+
+        kwds = {'experimentSN': ASPIC_name, 'htype': htype, 'noBatched': 'true'}
 
         response = self.connect.getContainingHardware(**kwds)
 
@@ -39,7 +47,7 @@ class exploreREB():
 
         return parentREB
 
-    
+
 if __name__ == "__main__":
 
     REBName = 'LCA-13574-017'
@@ -52,6 +60,6 @@ if __name__ == "__main__":
 
     aspic_name = 'LCA-11721-ASPIC-0453'
 
-    parentREB = eR.ASPIC_parent(aspic_name,'LCA-11721')
+    parentREB = eR.ASPIC_parent(aspic_name, 'LCA-11721')
 
     print aspic_name, "'s parent REB = ", parentREB
