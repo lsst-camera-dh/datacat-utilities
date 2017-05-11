@@ -8,7 +8,6 @@ import datacat
 import datacat.error
 from datacat import client_from_config_file
 from datacat.model import Folder
-import argparse
 
 remote_hosts = {'SLAC': 'rhel6-64.slac.stanford.edu',
                 'slac.lca.archive': 'rhel6-64.slac.stanford.edu'}

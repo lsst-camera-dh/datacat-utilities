@@ -1,5 +1,5 @@
-#import commands
-#import connection
+# import commands
+# import connection
 from eTraveler.clientAPI.connection import Connection
 
 
@@ -32,7 +32,8 @@ class exploreRaft():
             if '13574' in kid:
                 reb_list.append((kid, row['slotName']))
 
-# match up the CCD to the REB via REB and slot numbering. The CCD in slot Sxy is on REBx. Note that the CCD is actually
+# match up the CCD to the REB via REB and slot numbering. The CCD in slot 
+# Sxy is on REBx. Note that the CCD is actually
 # assembled onto the RSA.
 
         ccd_list = []
@@ -59,7 +60,7 @@ class exploreRaft():
 
         kwds = {'experimentSN': CCD_name, 'htype': htype, 'noBatched': 'true'}
 
-#connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
+# connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
 
         response = self.connect.getContainingHardware(**kwds)
 

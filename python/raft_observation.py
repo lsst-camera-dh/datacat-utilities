@@ -1,11 +1,13 @@
 from exploreRaft import exploreRaft
-from  eTraveler.clientAPI.connection import Connection
+from eTraveler.clientAPI.connection import Connection
 from findCCD import findCCD
 import os
 
 class raft_observation():
 
-    def __init__(self, run=None, raft=None, step=None, imgtype=None, db='Prod', prodServer='Prod', appSuffix=''):
+
+    def __init__(self, run=None, raft=None, step=None, imgtype=None, 
+                 db='Prod', prodServer='Prod', appSuffix=''):
 
         if prodServer == 'Prod': pS = True
         else: pS = False
@@ -30,7 +32,7 @@ class raft_observation():
         for row in ccd_list:
             ccd = str(row[0])
            
-            fCCD= findCCD(FType='fits', testName=self.step, sensorId=ccd, run= str(self.run), XtraOpts=XtraOpts)
+            fCCD = findCCD(FType='fits', testName=self.step, sensorId=ccd, run= str(self.run), XtraOpts=XtraOpts)
             files = fCCD.find()
 
             for f in files:
