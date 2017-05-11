@@ -1,7 +1,8 @@
 #!/bin/bash
 
-flake8 --show-source --statistics --max-line-length=90 python
+flake8 --config=./lint/setup.cfg --show-source --statistics --max-line-length=90 python
 FLAKERC=$?
+exit $FLAKERC
 
 # Skip pylint for now
 # pylint `find . -name \*.py -print`

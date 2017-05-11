@@ -3,8 +3,8 @@ language: python
 python:
  - "2.7"
 before_install:
- - chmod +x runlint.sh
+ - chmod +x lint/runlint.sh
 install: pip install flake8 pylint
-script: ./runlint.sh
+script: ./lint/runlint.sh
 notifications:
   email: false
