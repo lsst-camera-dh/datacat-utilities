@@ -20,5 +20,8 @@ For exploreXXX execute the main to see them in operation.
 ## Recommended
 - ds9 <= 7.3.x
 
-## Further Documentation:
+## Further Documentation
 https://confluence.slac.stanford.edu/display/LSSTCAM/Primer+for+Interacting+with+CCD+and+Raft+Test+Data
+
+## Travis-CI PyLinting
+[![Build Status](https://travis-ci.org/lsst-camera-dh/datacat-utilities.svg?branch=master)](https://travis-ci.org/lsst-camera-dh/datacat-utilities)
