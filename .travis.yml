@@ -3,4 +3,4 @@ language: python
 python:
  - "2.7"
 install: pip install flake8
-script: flake8 python/findCCD.py
+script: flake8 --show-source --statistics --max-line-length=90 python
