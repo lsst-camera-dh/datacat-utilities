@@ -2,7 +2,9 @@ sudo: false
 language: python
 python:
  - "2.7"
+before_install:
+ - chmod +x lint/runlint.sh
 install: pip install flake8 pylint
-script: 
- - flake8 --show-source --statistics --max-line-length=90 python
- - pylint `find . -name \*.py -print`
+script: ./lint/runlint.sh
+notifications:
+  email: false

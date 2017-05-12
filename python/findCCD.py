@@ -1,7 +1,7 @@
 import argparse
 from DataCatalog import *
-import subprocess
-import shlex
+# import subprocess
+# import shlex
 import os
 from eTraveler.clientAPI.connection import Connection
 
@@ -9,7 +9,8 @@ from eTraveler.clientAPI.connection import Connection
 class findCCD():
 
     def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None,
-                 testName=None, sensorId=None, run=None, outputFile=None, site='slac.lca.archive', Print=False, db='Prod',
+                 testName=None, sensorId=None, run=None, outputFile=None, 
+                 site='slac.lca.archive', Print=False, db='Prod',
                  prodServer='Dev', appSuffix='-jrb'):
 
         if mirrorName == 'vendor':
