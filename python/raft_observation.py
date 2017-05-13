@@ -6,29 +6,39 @@ import os
 
 class raft_observation():
 
-    def __init__(self, run=None, raft=None, step=None, imgtype=None,
-                 db='Prod', prodServer='Prod', appSuffix=''):
+    def __init__(self, run=None, step=None, imgtype=None,
+                 db='Prod', prodServer='Prod', appSuffix='', site ='slac.lca.archive'):
 
         if prodServer == 'Prod':
             pS = True
         else:
             pS = False
 
+        self.db = db
+        self.prodServer = prodServer
+        self.appSuffix = appSuffix
+        self.site = site
+
         self.connect = Connection(
             operator='richard',
             db=db,
             exp='LSST-CAMERA',
             prodServer=pS,
-            appSuffix=appSuffix)
+            appSuffix=appSuffix,
+            debug=False)
 
         self.run = run
-        self.raft = raft
+
         self.step = step
         self.imgtype = imgtype
 
-    def find(self):
+        rsp = self.connect.getRunSummary(run=self.run)
+        self.raft = rsp['experimentSN']
 
-        eR = exploreRaft()
+
+    def find(self, imgtype=None):
+
+        eR = exploreRaft(db=self.db, prodServer=self.prodServer, appSuffix=self.appSuffix)
         ccd_list = eR.raftContents(self.raft)
         obs_dict = {}
 
@@ -39,14 +49,18 @@ class raft_observation():
         for row in ccd_list:
             ccd = str(row[0])
 
-            fCCD = findCCD(
+            self.fCCD = findCCD(
                 FType='fits',
                 testName=self.step,
                 sensorId=ccd,
                 run=str(
                     self.run),
-                XtraOpts=XtraOpts)
-            files = fCCD.find()
+                db = self.db,
+                prodServer = self.prodServer,
+                appSuffix = self.appSuffix,
+                site=self.site
+                )
+            files = self.fCCD.find()
 
             for f in files:
                 # grab the timestamp from the end of the filename
@@ -60,9 +74,7 @@ class raft_observation():
 
 if __name__ == "__main__":
 
-    raft = 'LCA-11021_RTM-004'
-
-    rO = raft_observation(run=3764, raft=raft, step='fe55_raft_acq', imgtype="BIAS")
+    rO = raft_observation(run=4963, step='fe55_raft_acq', imgtype="BIAS", db='Dev', site='BNL',prodServer='Dev', appSuffix='-jrb')
 
     obs_dict = rO.find()
     print obs_dict
