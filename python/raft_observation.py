@@ -58,7 +58,8 @@ class raft_observation():
                 db = self.db,
                 prodServer = self.prodServer,
                 appSuffix = self.appSuffix,
-                site=self.site
+                site=self.site,
+                XtraOpts = XtraOpts
                 )
             files = self.fCCD.find()
 
