@@ -7,7 +7,7 @@ import os
 class raft_observation():
 
     def __init__(self, run=None, step=None, imgtype=None,
-                 db='Prod', prodServer='Prod', appSuffix='', site ='slac.lca.archive'):
+                 db='Prod', prodServer='Dev', appSuffix='-jrb', site ='slac.lca.archive'):
 
         if prodServer == 'Prod':
             pS = True
