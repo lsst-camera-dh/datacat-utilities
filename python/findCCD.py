@@ -50,8 +50,22 @@ class findCCD():
             prodServer=pS,
             appSuffix=appSuffix)
 
-    def find(self):
+    def find(self, mirrorName=None, FType=None, XtraOpts=None,
+                 testName=None, sensorId=None, run=None, outputFile=None, 
+                 site=None, Print=None):
 
+        if mirrorName is not None: self.mirrorName = mirrorName
+        if FType is not None: self.FType = FType
+        if XtraOpts is not None: self.XtraOpts = XtraOpts
+        if testName is not None: self.testName = testName
+
+        if sensorId is not None: self.sensorId = sensorId
+        if outputFile is not None: self.outputFile = outputFile
+        if site is not None: self.site = site
+        if Print is not None: self.Print = Print
+        if run is not None: self.run = run
+
+        
         sourceMap = {
             'BNL-prod': 'BNL-prod/prod/',
             'BNL-test': 'BNL-test/test/',

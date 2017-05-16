@@ -9,6 +9,13 @@ class raft_observation():
     def __init__(self, run=None, step=None, imgtype=None,
                  db='Prod', prodServer='Dev', appSuffix='-jrb', site ='slac.lca.archive'):
 
+        chk_list = (run, step)
+
+        if None in chk_list:
+            print 'Error: missing input to raft_observation'
+            raise ValueError
+
+        
         if prodServer == 'Prod':
             pS = True
         else:
@@ -32,14 +39,18 @@ class raft_observation():
         self.step = step
         self.imgtype = imgtype
 
+
+    def find(self, run=None, step=None, imgtype=None):
+
+        if run is not None: self.run = run
+        if step is not None: self.step = step
+        if imgtype is not None: self.imgtype = imgtype
+
         rsp = self.connect.getRunSummary(run=self.run)
-        self.raft = rsp['experimentSN']
-
-
-    def find(self, imgtype=None):
+        raft = rsp['experimentSN']
 
         eR = exploreRaft(db=self.db, prodServer=self.prodServer, appSuffix=self.appSuffix)
-        ccd_list = eR.raftContents(self.raft)
+        ccd_list = eR.raftContents(raft)
         obs_dict = {}
 
         XtraOpts = ''
