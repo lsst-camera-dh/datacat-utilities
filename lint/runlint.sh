@@ -1,6 +1,6 @@
 #!/bin/bash
 
-flake8 --config=./lint/setup.cfg --show-source --statistics --max-line-length=90 python
+flake8 --config=./lint/setup.cfg --show-source --statistics python
 FLAKERC=$?
 exit $FLAKERC
 
