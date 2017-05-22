@@ -19,7 +19,7 @@ For exploreXXX execute the main to see them in operation.
 - [eTraveler-clientAPI](https://github.com/lsst-camera-dh/eTraveler-clientAPI) >= 1.3.0. Point your PYTHONPATH at the contained python/ directory
 
 ## Recommended
-- ds9 <= 7.3.x
+- ds9 <= 7.3.x or [7.6 Beta](http://ds9.si.edu/site/Beta.html)
 
 ## Further Documentation
 https://confluence.slac.stanford.edu/display/LSSTCAM/Primer+for+Interacting+with+CCD+and+Raft+Test+Data
