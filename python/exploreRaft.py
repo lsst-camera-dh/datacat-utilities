@@ -32,7 +32,7 @@ class exploreRaft():
             if '13574' in kid:
                 reb_list.append((kid, row['slotName']))
 
-# match up the CCD to the REB via REB and slot numbering. The CCD in slot 
+# match up the CCD to the REB via REB and slot numbering. The CCD in slot
 # Sxy is on REBx. Note that the CCD is actually
 # assembled onto the RSA.
 
