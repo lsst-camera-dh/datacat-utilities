@@ -1,3 +1,4 @@
+# flake8: noqa
 """
 Use Brian's python client to query the SRS datacatalog.
 """

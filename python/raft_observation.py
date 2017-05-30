@@ -7,7 +7,7 @@ import os
 class raft_observation():
 
     def __init__(self, run=None, step=None, imgtype=None,
-                 db='Prod', prodServer='Dev', appSuffix='-jrb', site ='slac.lca.archive'):
+                 db='Prod', prodServer='Dev', appSuffix='-jrb', site='slac.lca.archive'):
 
         chk_list = (run, step)
 
@@ -15,7 +15,6 @@ class raft_observation():
             print 'Error: missing input to raft_observation'
             raise ValueError
 
-        
         if prodServer == 'Prod':
             pS = True
         else:
@@ -39,12 +38,14 @@ class raft_observation():
         self.step = step
         self.imgtype = imgtype
 
-
     def find(self, run=None, step=None, imgtype=None):
 
-        if run is not None: self.run = run
-        if step is not None: self.step = step
-        if imgtype is not None: self.imgtype = imgtype
+        if run is not None:
+            self.run = run
+        if step is not None:
+            self.step = step
+        if imgtype is not None:
+            self.imgtype = imgtype
 
         rsp = self.connect.getRunSummary(run=self.run)
         raft = rsp['experimentSN']
@@ -66,12 +67,12 @@ class raft_observation():
                 sensorId=ccd,
                 run=str(
                     self.run),
-                db = self.db,
-                prodServer = self.prodServer,
-                appSuffix = self.appSuffix,
+                db=self.db,
+                prodServer=self.prodServer,
+                appSuffix=self.appSuffix,
                 site=self.site,
-                XtraOpts = XtraOpts
-                )
+                XtraOpts=XtraOpts
+            )
             files = self.fCCD.find()
 
             for f in files:
@@ -86,7 +87,14 @@ class raft_observation():
 
 if __name__ == "__main__":
 
-    rO = raft_observation(run=4963, step='fe55_raft_acq', imgtype="BIAS", db='Dev', site='BNL',prodServer='Dev', appSuffix='-jrb')
+    rO = raft_observation(
+        run=4963,
+        step='fe55_raft_acq',
+        imgtype="BIAS",
+        db='Dev',
+        site='BNL',
+        prodServer='Dev',
+        appSuffix='-jrb')
 
     obs_dict = rO.find()
     print obs_dict

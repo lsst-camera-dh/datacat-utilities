@@ -9,7 +9,7 @@ from eTraveler.clientAPI.connection import Connection
 class findCCD():
 
     def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None,
-                 testName=None, sensorId=None, run=None, outputFile=None, 
+                 testName=None, sensorId=None, run=None, outputFile=None,
                  site='slac.lca.archive', Print=False, db='Prod',
                  prodServer='Dev', appSuffix='-jrb'):
 
@@ -51,21 +51,29 @@ class findCCD():
             appSuffix=appSuffix)
 
     def find(self, mirrorName=None, FType=None, XtraOpts=None,
-                 testName=None, sensorId=None, run=None, outputFile=None, 
-                 site=None, Print=None):
+             testName=None, sensorId=None, run=None, outputFile=None,
+             site=None, Print=None):
 
-        if mirrorName is not None: self.mirrorName = mirrorName
-        if FType is not None: self.FType = FType
-        if XtraOpts is not None: self.XtraOpts = XtraOpts
-        if testName is not None: self.testName = testName
+        if mirrorName is not None:
+            self.mirrorName = mirrorName
+        if FType is not None:
+            self.FType = FType
+        if XtraOpts is not None:
+            self.XtraOpts = XtraOpts
+        if testName is not None:
+            self.testName = testName
 
-        if sensorId is not None: self.sensorId = sensorId
-        if outputFile is not None: self.outputFile = outputFile
-        if site is not None: self.site = site
-        if Print is not None: self.Print = Print
-        if run is not None: self.run = run
+        if sensorId is not None:
+            self.sensorId = sensorId
+        if outputFile is not None:
+            self.outputFile = outputFile
+        if site is not None:
+            self.site = site
+        if Print is not None:
+            self.Print = Print
+        if run is not None:
+            self.run = run
 
-        
         sourceMap = {
             'BNL-prod': 'BNL-prod/prod/',
             'BNL-test': 'BNL-test/test/',
@@ -169,7 +177,8 @@ if __name__ == "__main__":
 
         # Command line arguments
     parser = argparse.ArgumentParser(
-        description='Find archived data in the LSST  data Catalog. These include CCD test stand and vendor data files.')
+        description='Find archived data in the LSST  data Catalog. '
+                    'These include CCD test stand and vendor data files.')
 
     # The following are 'convenience options' which could also be specified in
     # the filter string
