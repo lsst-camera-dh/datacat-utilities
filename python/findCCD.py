@@ -1,5 +1,5 @@
 import argparse
-from DataCatalog import *
+from DataCatalog import DataCatalog
 # import subprocess
 # import shlex
 import os
