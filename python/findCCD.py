@@ -242,4 +242,5 @@ if __name__ == "__main__":
 
     files = fCCD.find()
 
+    print len(files), " files found"
     print files
