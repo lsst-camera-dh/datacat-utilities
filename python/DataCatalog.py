@@ -1,3 +1,4 @@
+# flake8: noqa
 """
 Use Brian's python client to query the SRS datacatalog.
 """
@@ -9,17 +10,17 @@ import datacat.error
 from datacat.client import client_from_config
 from datacat.config import config_from_file
 from datacat.model import Folder
-import argparse
 
-remote_hosts = {'SLAC' : 'rhel6-64.slac.stanford.edu',
-                'slac.lca.archive' : 'rhel6-64.slac.stanford.edu'}
+remote_hosts = {'SLAC': 'rhel6-64.slac.stanford.edu',
+                'slac.lca.archive': 'rhel6-64.slac.stanford.edu'}
 
 _DC_VERSION = "0.4"
 _PROD_DC_URL = "https://srs.slac.stanford.edu/datacat-v%s/r" % _DC_VERSION
 
+
 def is_valid_folder(child):
     try:
-        if isinstance(child, Folder)  and float(child.name):
+        if isinstance(child, Folder) and float(child.name):
             return True
     except ValueError:
         pass
@@ -28,12 +29,14 @@ def is_valid_folder(child):
 
 def _get_job_id(dataset):
     folder = os.path.split(dataset.path)[0]
-    return str(os.path.split(folder)[1]) 
+    return str(os.path.split(folder)[1])
+
 
 def _get_job_name(dataset):
     "Get the name of the harnessed job from the Data Catalog folder name."
     folder = os.path.split(dataset.path)[0]
     return str(folder.split(os.path.sep)[-3])
+
 
 def _get_filter(**kwds):
     components = ['(True)']
@@ -41,7 +44,8 @@ def _get_filter(**kwds):
         if value is not None:
             components.append('(_get_%s(x) == "%s")' % (key, value))
     condition = ' and '.join(components)
-    return lambda x : eval(condition)
+    return lambda x: eval(condition)
+
 
 class DatasetList(list):
     def __init__(self, input_list, datacat_obj, sort_by_name=True,
@@ -50,20 +54,23 @@ class DatasetList(list):
         my_list = [x for x in input_list if accept(x)]
         if sort_by_name:
             super(DatasetList, self).__init__(sorted(my_list,
-                                                     key=lambda x : x.name))
+                                                     key=lambda x: x.name))
         else:
             super(DatasetList, self).__init__(my_list)
         self.folder = datacat_obj.folder
         self.login = datacat_obj.remote_login
         self.site = datacat_obj.site
+
     def job_ids(self):
         my_job_ids = []
         for item in self:
             my_job_ids.append(_get_job_id(item))
         return my_job_ids
+
     def filenames(self, job_id=None, job_name=None):
         accept = _get_filter(job_id=job_id, job_name=job_name)
         return [str(x.name) for x in self if accept(x)]
+
     def full_paths(self, job_id=None, job_name=None):
         accept = _get_filter(job_id=job_id, job_name=job_name)
         my_full_paths = []
@@ -75,6 +82,7 @@ class DatasetList(list):
                     my_full_paths.append(str(location.resource))
                     break
         return my_full_paths
+
     def download(self, site='SLAC', rootpath='.', nfiles=None, dryrun=True,
                  job_id=None, job_name=None, clobber=False):
         user_host = '@'.join((self.login, remote_hosts[site]))
@@ -92,7 +100,7 @@ class DatasetList(list):
                     my_datasets.append(dataset)
         for dataset in my_datasets:
             output = os.path.join(rootpath,
-                                  dataset.path[len(self.folder)+1:])
+                                  dataset.path[len(self.folder) + 1:])
             outdir = os.path.split(output)[0]
             if not os.path.isdir(outdir):
                 os.makedirs(outdir)
@@ -110,9 +118,11 @@ class DatasetList(list):
                             print "%s already exists." % output
                     break  # Just need one location at this site.
 
+
 class DataCatalogException(RuntimeError):
     def __init__(self, value):
         super(DataCatalogException, self).__init__(value)
+
 
 class DataCatalog(object):
     def __init__(self, folder=None, remote_login=None, site='SLAC',
@@ -133,12 +143,14 @@ class DataCatalog(object):
         self.client = client_from_config(client_config)
         if use_newest_subfolder:
             self.folder = self.find_newest_subfolder(folder)
+
     def find_newest_subfolder(self, folder_root):
         children = sorted([c for c in self.client.children(folder_root)
-                           if is_valid_folder(c)], key=lambda c : c.name)
+                           if is_valid_folder(c)], key=lambda c: c.name)
         return children[-1].path
+
     def find_datasets(self, query, folder=None, job_id=None, job_name=None,
-                      datacat_search_patterns = (None, '**')):
+                      datacat_search_patterns=(None, '**')):
         """
         Find datasets in the Data Catalog given the self.folder
         attribute or the specified folder.  For the default value of
@@ -155,7 +167,7 @@ class DataCatalog(object):
                 pattern_path = my_folder.rstrip('/')
             try:
                 resp = self.client.search(pattern_path, site='all', query=query)
-            except datacat.error.DcException, eobj:
+            except datacat.error.DcException as eobj:
                 print "Caught datacat.error.DcException:"
                 print eobj.raw
                 raise eobj
@@ -174,8 +186,7 @@ class DataCatalog(object):
 #            raise eobj
         return DatasetList(resp, self, job_id=job_id, job_name=job_name)
 
+
 if __name__ == '__main__':
-
-
 
     datasets.download(dryrun=args.dryRun, clobber=False, nfiles=nfiles)

@@ -1,38 +1,48 @@
-#import commands
-#import connection
-from  eTraveler.clientAPI.connection import Connection
+# import commands
+# import connection
+from eTraveler.clientAPI.connection import Connection
+
 
 class exploreRaft():
 
     def __init__(self, db='Prod', prodServer='Dev', appSuffix='-jrb'):
 
-        if prodServer == 'Prod': pS = True
-        else: pS = False
+        if prodServer == 'Prod':
+            pS = True
+        else:
+            pS = False
 
-        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS, appSuffix=appSuffix)
+        self.connect = Connection(
+            operator='richard',
+            db=db,
+            exp='LSST-CAMERA',
+            prodServer=pS,
+            appSuffix=appSuffix)
 
     def raftContents(self, raftName=None):
-        kwds = {'experimentSN':raftName, 'htype':'LCA-11021_RTM', 'noBatched':'true'}
+        kwds = {'experimentSN': raftName, 'htype': 'LCA-11021_RTM', 'noBatched': 'true'}
 
         response = self.connect.getHardwareHierarchy(**kwds)
 
-# LCA-13574 is the RSA.
+# LCA-13574 is the REB.
 
         reb_list = []
         for row in response:
             kid = row['child_experimentSN']
             if '13574' in kid:
-                reb_list.append((kid,row['slotName']))
-        
-# match up the CCD to the REB via REB and slot numbering. The CCD in slot Sxy is on REBx. Note that the CCD is actually
+                reb_list.append((kid, row['slotName']))
+
+# match up the CCD to the REB via REB and slot numbering. The CCD in slot
+# Sxy is on REBx. Note that the CCD is actually
 # assembled onto the RSA.
 
         ccd_list = []
         for child in response:
-#            print child['parent_experimentSN'], child['relationshipTypeName'],  child['child_experimentSN'], child['slotName']
+            # print child['parent_experimentSN'], child['relationshipTypeName'],
+            # child['child_experimentSN'], child['slotName']
 
             kid = child['child_experimentSN']
-            if 'ITL' in kid or 'e2v' in kid:
+            if 'ITL' in kid.upper() or 'E2V' in kid.upper():
                 slotName = child['slotName']
                 rebNumber = slotName[1]
                 for reb in reb_list:
@@ -45,12 +55,12 @@ class exploreRaft():
         return ccd_list
 
     def CCD_parent(self, CCD_name=None, htype='ITL-CCD'):
-    
-# now find raft for a CCD
 
-        kwds = {'experimentSN': CCD_name, 'htype':htype, 'noBatched':'true'}
+        # now find raft for a CCD
 
-#connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
+        kwds = {'experimentSN': CCD_name, 'htype': htype, 'noBatched': 'true'}
+
+# connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
 
         response = self.connect.getContainingHardware(**kwds)
 
@@ -62,10 +72,11 @@ class exploreRaft():
         return parentRTM
 
     def REB_parent(self, REB_name=None):
-    
-# now find raft for a REB
 
-        kwds = {'experimentSN': REB_name, 'htype':'LCA-13574', 'noBatched':'true'}   # need to fix REB htype!
+        # now find raft for a REB
+
+        kwds = {'experimentSN': REB_name, 'htype': 'LCA-13574',
+                'noBatched': 'true'}   # need to fix REB htype!
 
         response = self.connect.getContainingHardware(**kwds)
 
@@ -83,11 +94,12 @@ class exploreRaft():
 
         ccd_in_reb = []
         for ccd in ccd_list:
-            if REB_name == ccd[2]: ccd_in_reb.append(ccd[0])
+            if REB_name == ccd[2]:
+                ccd_in_reb.append(ccd[0])
 
         return ccd_in_reb
 
-    
+
 if __name__ == "__main__":
 
     raftName = 'LCA-11021_RTM-004'
@@ -100,7 +112,7 @@ if __name__ == "__main__":
 
     CCD_name = 'ITL-3800C-034'
 
-    parentRaft = eR.CCD_parent(CCD_name,'ITL-CCD')
+    parentRaft = eR.CCD_parent(CCD_name, 'ITL-CCD')
 
     print CCD_name, "'s parent raft = ", parentRaft
 
@@ -109,4 +121,3 @@ if __name__ == "__main__":
 
     reb_ccds = eR.REB_CCD('LCA-13574-016')
     print 'CCDs on REB LCA-13574-003 are ', reb_ccds
-
