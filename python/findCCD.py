@@ -134,7 +134,6 @@ class findCCD():
         for folder in folderList:
             datacatalog = DataCatalog(
                 folder=folder,
-                experiment='LSST',
                 site=site,
                 use_newest_subfolder=use_latest_activity)
 

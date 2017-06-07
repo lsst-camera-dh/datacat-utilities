@@ -7,14 +7,15 @@ import os
 import subprocess
 import datacat
 import datacat.error
-from datacat import client_from_config_file
+from datacat.client import client_from_config
+from datacat.config import config_from_file
 from datacat.model import Folder
 
 remote_hosts = {'SLAC': 'rhel6-64.slac.stanford.edu',
                 'slac.lca.archive': 'rhel6-64.slac.stanford.edu'}
 
-
-client = client_from_config_file()
+_DC_VERSION = "0.4"
+_PROD_DC_URL = "https://srs.slac.stanford.edu/datacat-v%s/r" % _DC_VERSION
 
 
 def is_valid_folder(child):
@@ -124,21 +125,22 @@ class DataCatalogException(RuntimeError):
 
 
 class DataCatalog(object):
-    def __init__(self, folder=None, experiment="LSST",
-                 mode="dev", remote_login=None, site='SLAC', config_url=None,
+    def __init__(self, folder=None, remote_login=None, site='SLAC',
                  use_newest_subfolder=True):
         self.folder = folder
         if remote_login is None:
             self.remote_login = os.getlogin()
         self.site = site
-        my_config_url = datacat.config.default_url(experiment, mode=mode)
-        if my_config_url is None:
-            raise DataCatalogException("Invalid experiment or mode: %s, %s"
-                                       % (experiment, mode))
-        if config_url is not None:
-            # Override the computed value.
-            my_config_url = config_url
-        self.client = datacat.Client(my_config_url)
+
+        # The following will create a config, checking ~/.datacat/default.cfg
+        # and ~/.datacat.cfg.
+        client_config = config_from_file()
+
+        # If no URL was set (e.g. No config file, no url in config file)
+        # try to use a default URL
+        if "url" not in client_config:
+            client_config["url"] = _PROD_DC_URL
+        self.client = client_from_config(client_config)
         if use_newest_subfolder:
             self.folder = self.find_newest_subfolder(folder)
 
