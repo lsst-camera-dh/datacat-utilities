@@ -14,9 +14,9 @@ class findCCD():
                  prodServer='Dev', appSuffix='-jrb'):
 
         if mirrorName == 'vendor':
-            chk_list = (sensorId)
+            chk_list = [sensorId]
         else:
-            chk_list = (mirrorName, testName, sensorId, run)
+            chk_list = [mirrorName, testName, sensorId, run]
 
         if None in chk_list:
             print 'Error: missing input to findCCD'
