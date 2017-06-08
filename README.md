@@ -15,7 +15,7 @@ For exploreXXX execute the main to see them in operation.
 
 ## Prerequisites
 - python >= 2.7.10 with [requests](http://docs.python-requests.org/en/master/)
-- [datacat](https://gist.github.com/brianv0/c1ef2269e87060647fa3) >= 0.4
+- [datacat](https://pypi.python.org/pypi/datacat) = 0.5
 - [eTraveler-clientAPI](https://github.com/lsst-camera-dh/eTraveler-clientAPI) >= 1.3.0. Point your PYTHONPATH at the contained python/ directory
 
 ## Recommended
