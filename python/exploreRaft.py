@@ -63,6 +63,7 @@ class exploreRaft():
 # connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
 
         response = self.connect.getContainingHardware(**kwds)
+        parentRTM = ""
 
         for child in response:
             if 'RTM' in child['parent_experimentSN']:
@@ -79,6 +80,7 @@ class exploreRaft():
                 'noBatched': 'true'}   # need to fix REB htype!
 
         response = self.connect.getContainingHardware(**kwds)
+        parentRTM = ""
 
         for child in response:
             if 'RTM' in child['parent_experimentSN']:
@@ -102,7 +104,7 @@ class exploreRaft():
 
 if __name__ == "__main__":
 
-    raftName = 'LCA-11021_RTM-004'
+    raftName = 'LCA-11021_RTM-005'
 
     eR = exploreRaft()
 
@@ -110,14 +112,14 @@ if __name__ == "__main__":
 
     print ccd_list
 
-    CCD_name = 'ITL-3800C-034'
+    CCD_name = 'E2V-CCD250-220'
 
-    parentRaft = eR.CCD_parent(CCD_name, 'ITL-CCD')
+    parentRaft = eR.CCD_parent(CCD_name, 'e2v-CCD')
 
     print CCD_name, "'s parent raft = ", parentRaft
 
-    reb_parent = eR.REB_parent('LCA-13574-016')
-    print 'parent raft of LCA-13574-003 is ', reb_parent
+    reb_parent = eR.REB_parent('LCA-13574-013')
+    print 'parent raft of LCA-13574-1 is ', reb_parent
 
-    reb_ccds = eR.REB_CCD('LCA-13574-016')
-    print 'CCDs on REB LCA-13574-003 are ', reb_ccds
+    reb_ccds = eR.REB_CCD('LCA-13574-013')
+    print 'CCDs on REB LCA-13574-013 are ', reb_ccds

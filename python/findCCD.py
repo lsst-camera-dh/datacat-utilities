@@ -77,6 +77,8 @@ class findCCD():
         sourceMap = {
             'BNL-prod': 'BNL-prod/prod/',
             'BNL-test': 'BNL-test/test/',
+            'INT-prod': 'SLAC-prod/prod/',
+            'INT-test': 'SLAC-test/test/',
             'vendorCopy-prod': 'SLAC-prod/prod/',
             'vendorCopy-test': 'SLAC-test/test/',
             'vendor': 'vendorData/',
@@ -91,7 +93,7 @@ class findCCD():
         site = self.site
         use_query_eT = True
 
-        if (self.mirrorName == 'vendorCopy'):
+        if ('vendorCopy' in self.mirrorName or "INT" in self.mirrorName ):
             site = "SLAC"
         elif (self.mirrorName == 'vendor'):
             folder = folder + \
