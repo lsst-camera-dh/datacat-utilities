@@ -4,7 +4,6 @@ from eTraveler.clientAPI.connection import Connection
 
 
 class exploreRaft():
-
     def __init__(self, db='Prod', prodServer='Dev', appSuffix='-jrb'):
 
         if prodServer == 'Prod':
@@ -24,7 +23,7 @@ class exploreRaft():
 
         response = self.connect.getHardwareHierarchy(**kwds)
 
-# LCA-13574 is the REB.
+        # LCA-13574 is the REB.
 
         reb_list = []
         for row in response:
@@ -32,9 +31,9 @@ class exploreRaft():
             if '13574' in kid:
                 reb_list.append((kid, row['slotName']))
 
-# match up the CCD to the REB via REB and slot numbering. The CCD in slot
-# Sxy is on REBx. Note that the CCD is actually
-# assembled onto the RSA.
+            # match up the CCD to the REB via REB and slot numbering. The CCD in slot
+            # Sxy is on REBx. Note that the CCD is actually
+            # assembled onto the RSA.
 
         ccd_list = []
         for child in response:
@@ -60,7 +59,7 @@ class exploreRaft():
 
         kwds = {'experimentSN': CCD_name, 'htype': htype, 'noBatched': 'true'}
 
-# connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
+        # connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
 
         response = self.connect.getContainingHardware(**kwds)
         parentRTM = ""
@@ -77,7 +76,7 @@ class exploreRaft():
         # now find raft for a REB
 
         kwds = {'experimentSN': REB_name, 'htype': 'LCA-13574',
-                'noBatched': 'true'}   # need to fix REB htype!
+                'noBatched': 'true'}  # need to fix REB htype!
 
         response = self.connect.getContainingHardware(**kwds)
         parentRTM = ""
@@ -103,7 +102,6 @@ class exploreRaft():
 
 
 if __name__ == "__main__":
-
     raftName = 'LCA-11021_RTM-005'
 
     eR = exploreRaft()
