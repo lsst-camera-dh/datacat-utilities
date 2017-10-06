@@ -16,7 +16,7 @@ For exploreXXX execute the main to see them in operation.
 ## Prerequisites
 - python >= 2.7.10 with [requests](http://docs.python-requests.org/en/master/)
 - [datacat](https://pypi.python.org/pypi/datacat) = 0.5
-- [eTraveler-clientAPI](https://github.com/lsst-camera-dh/eTraveler-clientAPI) >= 1.3.0. Point your PYTHONPATH at the contained python/ directory
+- [eTraveler-clientAPI](https://github.com/lsst-camera-dh/eTraveler-clientAPI) >= 1.5.3. Point your PYTHONPATH at the contained python/ directory
 
 ## Recommended
 - ds9 <= 7.3.x or [7.6 Beta](http://ds9.si.edu/site/Beta.html)
