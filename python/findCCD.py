@@ -7,7 +7,6 @@ from eTraveler.clientAPI.connection import Connection
 
 
 class findCCD():
-
     def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None,
                  testName=None, sensorId=None, run=None, outputFile=None,
                  site='slac.lca.archive', Print=False, db='Prod',
@@ -77,6 +76,8 @@ class findCCD():
         sourceMap = {
             'BNL-prod': 'BNL-prod/prod/',
             'BNL-test': 'BNL-test/test/',
+            'INT-prod': 'SLAC-prod/prod/',
+            'INT-test': 'SLAC-test/test/',
             'vendorCopy-prod': 'SLAC-prod/prod/',
             'vendorCopy-test': 'SLAC-test/test/',
             'vendor': 'vendorData/',
@@ -91,7 +92,7 @@ class findCCD():
         site = self.site
         use_query_eT = True
 
-        if (self.mirrorName == 'vendorCopy'):
+        if ('vendorCopy' in self.mirrorName or "INT" in self.mirrorName):
             site = "SLAC"
         elif (self.mirrorName == 'vendor'):
             folder = folder + \
@@ -112,7 +113,7 @@ class findCCD():
         if use_query_eT is True:
             kwds = {'run': self.run, 'stepName': self.testName}
             filePaths = self.connect.getRunFilepaths(**kwds)
-# get the unique directory paths
+            # get the unique directory paths
 
             for test in filePaths:
                 for f in filePaths[test]:
@@ -146,17 +147,17 @@ class findCCD():
         for ds in dsList:
             pathsList = ds.full_paths()
             for item in pathsList:
-                if (self.FType is None) or (
-                        self.FType is not None and item.endswith(self.FType)):
-                    if item not in files:
-                        files.append(item)
+                if (self.FType is None) or \
+                   (self.FType is not None and item.endswith(self.FType)):
+                        if item not in files:
+                            files.append(item)
 
         if self.Print:
             print "File paths for files at %s:" % site
             for item in files:
                 print item
 
-    # Write file with list of found data files, if requested
+                # Write file with list of found data files, if requested
 
         if self.outputFile is not None and len(datasets) > 0:
             print 'Writing output file ', self.outputFile, '...'
@@ -173,8 +174,7 @@ class findCCD():
 
 
 if __name__ == "__main__":
-
-        # Command line arguments
+    # Command line arguments
     parser = argparse.ArgumentParser(
         description='Find archived data in the LSST  data Catalog. '
                     'These include CCD test stand and vendor data files.')

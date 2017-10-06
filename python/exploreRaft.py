@@ -4,7 +4,6 @@ from eTraveler.clientAPI.connection import Connection
 
 
 class exploreRaft():
-
     def __init__(self, db='Prod', prodServer='Dev', appSuffix='-jrb'):
 
         if prodServer == 'Prod':
@@ -24,7 +23,7 @@ class exploreRaft():
 
         response = self.connect.getHardwareHierarchy(**kwds)
 
-# LCA-13574 is the REB.
+        # LCA-13574 is the REB.
 
         reb_list = []
         for row in response:
@@ -32,9 +31,9 @@ class exploreRaft():
             if '13574' in kid:
                 reb_list.append((kid, row['slotName']))
 
-# match up the CCD to the REB via REB and slot numbering. The CCD in slot
-# Sxy is on REBx. Note that the CCD is actually
-# assembled onto the RSA.
+            # match up the CCD to the REB via REB and slot numbering. The CCD in slot
+            # Sxy is on REBx. Note that the CCD is actually
+            # assembled onto the RSA.
 
         ccd_list = []
         for child in response:
@@ -60,9 +59,10 @@ class exploreRaft():
 
         kwds = {'experimentSN': CCD_name, 'htype': htype, 'noBatched': 'true'}
 
-# connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
+        # connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
 
         response = self.connect.getContainingHardware(**kwds)
+        parentRTM = ""
 
         for child in response:
             if 'RTM' in child['parent_experimentSN']:
@@ -76,9 +76,10 @@ class exploreRaft():
         # now find raft for a REB
 
         kwds = {'experimentSN': REB_name, 'htype': 'LCA-13574',
-                'noBatched': 'true'}   # need to fix REB htype!
+                'noBatched': 'true'}  # need to fix REB htype!
 
         response = self.connect.getContainingHardware(**kwds)
+        parentRTM = ""
 
         for child in response:
             if 'RTM' in child['parent_experimentSN']:
@@ -101,8 +102,7 @@ class exploreRaft():
 
 
 if __name__ == "__main__":
-
-    raftName = 'LCA-11021_RTM-004'
+    raftName = 'LCA-11021_RTM-005'
 
     eR = exploreRaft()
 
@@ -110,14 +110,14 @@ if __name__ == "__main__":
 
     print ccd_list
 
-    CCD_name = 'ITL-3800C-034'
+    CCD_name = 'E2V-CCD250-220'
 
-    parentRaft = eR.CCD_parent(CCD_name, 'ITL-CCD')
+    parentRaft = eR.CCD_parent(CCD_name, 'e2v-CCD')
 
     print CCD_name, "'s parent raft = ", parentRaft
 
-    reb_parent = eR.REB_parent('LCA-13574-016')
-    print 'parent raft of LCA-13574-003 is ', reb_parent
+    reb_parent = eR.REB_parent('LCA-13574-013')
+    print 'parent raft of LCA-13574-1 is ', reb_parent
 
-    reb_ccds = eR.REB_CCD('LCA-13574-016')
-    print 'CCDs on REB LCA-13574-003 are ', reb_ccds
+    reb_ccds = eR.REB_CCD('LCA-13574-013')
+    print 'CCDs on REB LCA-13574-013 are ', reb_ccds
