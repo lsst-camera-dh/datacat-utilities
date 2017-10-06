@@ -39,7 +39,8 @@ if __name__ == "__main__":
 
     # Command line arguments
     parser = argparse.ArgumentParser(
-        description='Query given eTraveler run for available steps and schema names.')  # The following are 'convenience options' which could also be specified in
+        description='Query given eTraveler run for available steps and schema names.')
+    # The following are 'convenience options' which could also be specified in
     # the filter string
     parser.add_argument(
         '-r',

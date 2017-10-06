@@ -96,15 +96,15 @@ class findCCD():
             site = "SLAC"
         elif (self.mirrorName == 'vendor'):
             folder = folder + \
-                     sourceMap['vendor'] + \
-                     self.CCDType.split('-')[0] + '/' + self.sensorId + '/' + self.db + '/'
+                sourceMap['vendor'] + \
+                self.CCDType.split('-')[0] + '/' + self.sensorId + '/' + self.db + '/'
             use_latest_activity = True
             site = "slac.lca.archive"
             use_query_eT = False
         elif (self.mirrorName == 'SAWG-BNL'):
             folder = folder + 'mirror/' + \
-                     sourceMap[self.mirrorName] + self.CCDType + \
-                     '/' + self.sensorId + '/' + self.testName
+                sourceMap[self.mirrorName] + self.CCDType + \
+                '/' + self.sensorId + '/' + self.testName
             use_latest_activity = True
             use_query_eT = False
 
@@ -147,10 +147,10 @@ class findCCD():
         for ds in dsList:
             pathsList = ds.full_paths()
             for item in pathsList:
-                if (self.FType is None) or (
-                                self.FType is not None and item.endswith(self.FType)):
-                    if item not in files:
-                        files.append(item)
+                if (self.FType is None) or \
+                   (self.FType is not None and item.endswith(self.FType)):
+                        if item not in files:
+                            files.append(item)
 
         if self.Print:
             print "File paths for files at %s:" % site
