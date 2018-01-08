@@ -10,6 +10,7 @@ import datacat.error
 from datacat.client import client_from_config
 from datacat.config import config_from_file
 from datacat.model import Folder
+import pwd
 
 remote_hosts = {'SLAC': 'rhel6-64.slac.stanford.edu',
                 'slac.lca.archive': 'rhel6-64.slac.stanford.edu'}
@@ -129,7 +130,7 @@ class DataCatalog(object):
                  use_newest_subfolder=True):
         self.folder = folder
         if remote_login is None:
-            self.remote_login = os.getlogin()
+            self.remote_login = pwd.getpwuid(os.geteuid()).pw_name
         self.site = site
 
         # The following will create a config, checking ~/.datacat/default.cfg
