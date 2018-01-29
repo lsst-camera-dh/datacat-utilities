@@ -96,8 +96,8 @@ class findCCD():
             site = "SLAC"
         elif (self.mirrorName == 'vendor'):
             folder = folder + \
-                     sourceMap['vendor'] + \
-                     self.CCDType.split('-')[0] + '/' + self.sensorId + '/' + self.db + '/'
+                sourceMap['vendor'] + \
+                self.CCDType.split('-')[0] + '/' + self.sensorId + '/' + self.db + '/'
             use_latest_activity = True
             site = "slac.lca.archive"
             use_query_eT = False
