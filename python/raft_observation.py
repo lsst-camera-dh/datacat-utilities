@@ -7,7 +7,7 @@ import os
 class raft_observation():
 
     def __init__(self, run=None, step=None, imgtype=None,
-                 db='Prod', prodServer='Dev', appSuffix='-jrb', site='slac.lca.archive'):
+                 db='Prod', prodServer='Prod', appSuffix='', site='slac.lca.archive'):
 
         chk_list = (run, step)
 
@@ -88,13 +88,13 @@ class raft_observation():
 if __name__ == "__main__":
 
     rO = raft_observation(
-        run=4963,
+        run=4389,
         step='fe55_raft_acq',
         imgtype="BIAS",
-        db='Dev',
+        db='Prod',
         site='BNL',
-        prodServer='Dev',
-        appSuffix='-jrb')
+        prodServer='Prod',
+        appSuffix='')
 
     obs_dict = rO.find()
     print obs_dict

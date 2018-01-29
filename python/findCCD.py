@@ -10,7 +10,7 @@ class findCCD():
     def __init__(self, mirrorName='BNL-prod', FType=None, XtraOpts=None,
                  testName=None, sensorId=None, run=None, outputFile=None,
                  site='slac.lca.archive', Print=False, db='Prod',
-                 prodServer='Dev', appSuffix='-jrb'):
+                 prodServer='Prod', appSuffix=''):
 
         if mirrorName == 'vendor':
             chk_list = [sensorId]
@@ -148,9 +148,9 @@ class findCCD():
             pathsList = ds.full_paths()
             for item in pathsList:
                 if (self.FType is None) or \
-                   (self.FType is not None and item.endswith(self.FType)):
-                        if item not in files:
-                            files.append(item)
+                        (self.FType is not None and item.endswith(self.FType)):
+                    if item not in files:
+                        files.append(item)
 
         if self.Print:
             print "File paths for files at %s:" % site

@@ -3,7 +3,7 @@ from eTraveler.clientAPI.connection import Connection
 
 class exploreREB():
 
-    def __init__(self, db='Prod', prodServer='Dev', appSuffix='-jrb'):
+    def __init__(self, db='Prod', prodServer='Prod', appSuffix=''):
 
         if prodServer == 'Prod':
             pS = True
