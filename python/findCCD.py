@@ -103,8 +103,8 @@ class findCCD():
             use_query_eT = False
         elif (self.mirrorName == 'SAWG-BNL'):
             folder = folder + 'mirror/' + \
-                     sourceMap[self.mirrorName] + self.CCDType + \
-                     '/' + self.sensorId + '/' + self.testName
+                sourceMap[self.mirrorName] + self.CCDType + \
+                '/' + self.sensorId + '/' + self.testName
             use_latest_activity = True
             use_query_eT = False
 
