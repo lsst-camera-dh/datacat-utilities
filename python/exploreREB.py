@@ -1,4 +1,5 @@
 from eTraveler.clientAPI.connection import Connection
+import argparse
 
 
 class exploreREB():
@@ -50,16 +51,20 @@ class exploreREB():
 
 if __name__ == "__main__":
 
-    REBName = 'LCA-13574-017'
+    parser = argparse.ArgumentParser(
+        description='Find archived data in the LSST  data Catalog. '
+                    'These include CCD test stand and vendor data files.')
+
+    # The following are 'convenience options' which could also be specified in
+    # the filter string
+    parser.add_argument('-r', '--reb', default="LCA-13574-017",
+                        help="reb serial number")
+    args = parser.parse_args()
+
+    REBName = args.reb
 
     eR = exploreREB()
 
     aspic_list = eR.REBContents(REBName)
 
     print aspic_list
-
-    aspic_name = 'LCA-11721-ASPIC-0453'
-
-    parentREB = eR.ASPIC_parent(aspic_name, 'LCA-11721')
-
-    print aspic_name, "'s parent REB = ", parentREB
