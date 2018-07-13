@@ -17,26 +17,52 @@ class get_EO_analysis_results():
 
                           }
 
+# define hardware types and traveler names, respectively
+
         self.site_type['I&T-Raft'] = ['LCA-11021_RTM', 'INT-SR-EOT-01']
         self.site_type['BNL-Raft'] = ['LCA-11021_RTM', 'SR-RTM-EOT-03']
         self.site_type['BNL-ITL-CCD'] = ['ITL-CCD', 'SR-EOT-1']
         self.site_type['BNL-e2v-CCD'] = ['e2v-CCD', 'SR-EOT-1']
         self.site_type['vendor-e2v'] = ['e2v-CCD', 'SR-EOT-02']
+        self.site_type['vendor-ITL'] = ['ITL-CCD', 'SR-EOT-02']
 
         self.type_dict = {}
+        self.type_dict_raft = {}
+        self.type_dict_ccd = {}
 
-        self.type_dict['gain'] = ['fe55_raft_analysis', 'fe55_raft_analysis']
-        self.type_dict['cti_low_serial'] = ['cte_offline', 'cte']
-        self.type_dict['cti_high_serial'] = ['cte_offline', 'cte']
-        self.type_dict['cti_low_parallel'] = ['cte_offline', 'cte']
-        self.type_dict['cti_high_parallell'] = ['cte_offline', 'cte']
-        self.type_dict['read_noise'] = ['read_noise_offline', 'read_noise']
-        self.type_dict['nonlinearity'] = ['flat_pairs_offline', 'flat_pairs']
-        self.type_dict['bright_pixels'] = ['bright_defects_offline', 'bright_defects']
-        self.type_dict['bright_columns'] = ['bright_defects_offline', 'bright_defects']
-        self.type_dict['dark_pixels'] = ['dark_defects_offline', 'dark_defects']
-        self.type_dict['dark_columns'] = ['dark_defects_offline', 'dark_defects']
-        self.type_dict['traps'] = ['traps_offline', 'traps']
+# define step and schema names, respectively
+
+        self.type_dict_raft['gain'] = ['fe55_raft_analysis', 'fe55_raft_analysis']
+        self.type_dict_raft['cti_low_serial'] = ['cte_raft', 'cte_raft']
+        self.type_dict_raft['cti_high_serial'] = ['cte_raft', 'cte_raft']
+        self.type_dict_raft['cti_low_parallel'] = ['cte_raft', 'cte_raft']
+        self.type_dict_raft['cti_high_parallell'] = ['cte_raft', 'cte_raft']
+        self.type_dict_raft['read_noise'] = ['read_noise_raft', 'read_noise_raft']
+        self.type_dict_raft['nonlinearity'] = ['flat_pairs_raft_analysis', 'flat_pairs_raft']
+        self.type_dict_raft['bright_pixels'] = ['bright_defects_raft', 'bright_defects_raft']
+        self.type_dict_raft['bright_columns'] = ['bright_defects_raft', 'bright_defects_raft']
+        self.type_dict_raft['dark_pixels'] = ['dark_defects_raft', 'dark_defects_raft']
+        self.type_dict_raft['dark_columns'] = ['dark_defects_raft', 'dark_defects_raft']
+        self.type_dict_raft['traps'] = ['traps_raft', 'traps_raft']
+
+        self.type_dict['raft'] = self.type_dict_raft
+
+        self.type_dict_ccd['gain'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_ccd['cti_low_serial'] = ['cte_offline', 'cte']
+        self.type_dict_ccd['cti_high_serial'] = ['cte_offline', 'cte']
+        self.type_dict_ccd['cti_low_parallel'] = ['cte_offline', 'cte']
+        self.type_dict_ccd['cti_high_parallell'] = ['cte_offline', 'cte']
+        self.type_dict_ccd['read_noise'] = ['read_noise_offline', 'read_noise']
+        self.type_dict_ccd['nonlinearity'] = ['flat_pairs_offline', 'flat_pairs']
+        self.type_dict_ccd['bright_pixels'] = ['bright_defects_offline', 'bright_defects']
+        self.type_dict_ccd['bright_columns'] = ['bright_defects_offline', 'bright_defects']
+        self.type_dict_ccd['dark_pixels'] = ['dark_defects_offline', 'dark_defects']
+        self.type_dict_ccd['dark_columns'] = ['dark_defects_offline', 'dark_defects']
+        self.type_dict_ccd['traps'] = ['traps_offline', 'traps']
+
+        self.type_dict['ccd'] = self.type_dict_ccd
+
+        self.camera_type = 'raft'
 
         if server == 'Prod':
             pS = True
@@ -46,44 +72,40 @@ class get_EO_analysis_results():
 
     def get_tests(self, site_type=None, test_type=None, run=None):
 
+        if 'Raft' not in site_type:
+            self.camera_type = 'ccd'
+
         if run == None:
-            data = self.connect.getResultsJH(htype=self.site_type[site_type][0], stepName=self.type_dict[test_type][0],
-                                          travelerName=self.site_type[site_type][1])
+#            hardwareLabels = ['Run_Quality:Run_for_the_record']
+            hardwareLabels = ["Run_Quality:"]
+            data = self.connect.getResultsJH(htype=self.site_type[site_type][0],
+                stepName=self.type_dict[self.camera_type][test_type][0],
+                travelerName=self.site_type[site_type][1])
         else:
             data = self.connect.getRunResults(stepName=self.type_dict[test_type][0])
 
         # this step gives us dark columns and dark pixels
 
-        raft_list = []
+        dev_list = []
 
         # Get a list of ccd's
-        for raft in data:
-            raft_list.append(raft)
+        for dev in data:
+            dev_list.append(dev)
 
-        return raft_list, data
+        return dev_list, data
 
-    def get_results(self, test_type=None, data=None, raft=None):
+    def get_results(self, test_type=None, data=None, device=None):
 
         results = []
 
-        step = data[raft]['steps'][self.type_dict[test_type][0]]
+        step = data[device]['steps'][self.type_dict[self.camera_type][test_type][0]]
 
-        for amp in step[self.type_dict[test_type][1]][1:]:
-            ccd = amp['sensor_id']
+        for amp in step[self.type_dict[self.camera_type][test_type][1]][1:]:
+#            ccd = amp['sensor_id']
             ampResult = amp[test_type]
             results.append(ampResult)
 
         return results
-
-    def raft_type(self, raft=None):
-        eR = exploreRaft()
-        ccd_list = eR.raftContents(raftName=raft)
-        if 'ITL' in ccd_list[0][0]:
-            type = 'ITL'
-        else:
-            type = 'e2v'
-
-        return type
 
 
 if __name__ == "__main__":
