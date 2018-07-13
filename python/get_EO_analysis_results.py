@@ -97,22 +97,25 @@ class get_EO_analysis_results():
         if 'Raft' not in site_type:
             self.camera_type = 'ccd'
 
+        dev_list = []
+
         if run == None:
 #            hardwareLabels = ['Run_Quality:Run_for_the_record']
             hardwareLabels = ["Run_Quality:"]
             data = self.connect.getResultsJH(htype=self.site_type[site_type][0],
                 stepName=self.type_dict[self.camera_type][test_type][0],
                 travelerName=self.site_type[site_type][1])
+        # Get a list of devices
+            for dev in data:
+                dev_list.append(dev)
+
         else:
-            data = self.connect.getRunResults(stepName=self.type_dict[test_type][0])
+            data = self.connect.getRunResults(run=run, stepName=self.type_dict[self.camera_type][test_type][0])
+            dev_list = data['experimentSN']
 
         # this step gives us dark columns and dark pixels
 
-        dev_list = []
 
-        # Get a list of ccd's
-        for dev in data:
-            dev_list.append(dev)
 
         return dev_list, data
 
@@ -124,7 +127,11 @@ class get_EO_analysis_results():
         if self.camera_type == 'ccd':
             ccdName = device
 
-        step = data[device]['steps'][self.type_dict[self.camera_type][test_type][0]]
+        try:
+            data[device]
+            step = data[device]['steps'][self.type_dict[self.camera_type][test_type][0]]
+        except:
+            step = data['steps'][self.type_dict[self.camera_type][test_type][0]]
 
         for amp in step[self.type_dict[self.camera_type][test_type][1]][1:]:
             if self.camera_type == 'raft':
