@@ -52,6 +52,17 @@ class exploreRaft():
 
         return ccd_list
 
+    def raft_type(self, raft=None):
+        eR = exploreRaft()
+        ccd_list = eR.raftContents(raftName=raft)
+        if 'ITL' in ccd_list[0][0]:
+            type = 'ITL'
+        else:
+            type = 'e2v'
+
+        return type
+
+
     def CCD_parent(self, CCD_name=None, htype='ITL-CCD'):
 
         # now find raft for a CCD
@@ -110,11 +121,13 @@ if __name__ == "__main__":
     # the filter string
     parser.add_argument('-r', '--raft', default="LCA-11021_RTM-005",
                         help="raft serial number")
+    parser.add_argument('-d', '--db', default="Prod",
+                        help="eT database")
     args = parser.parse_args()
 
     raftName = args.raft
 
-    eR = exploreRaft()
+    eR = exploreRaft(db=args.db)
 
     ccd_list = eR.raftContents(raftName)
 
