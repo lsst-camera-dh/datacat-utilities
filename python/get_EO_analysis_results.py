@@ -2,7 +2,7 @@
 
 from eTraveler.clientAPI.connection import Connection
 import numpy as np
-
+import collections
 import argparse
 
 
@@ -33,32 +33,54 @@ class get_EO_analysis_results():
 # define step and schema names, respectively
 
         self.type_dict_raft['gain'] = ['fe55_raft_analysis', 'fe55_raft_analysis']
+        self.type_dict_raft['gain_error'] = ['fe55_raft_analysis', 'fe55_raft_analysis']
         self.type_dict_raft['cti_low_serial'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['cti_high_serial'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['cti_low_parallel'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['cti_high_parallell'] = ['cte_raft', 'cte_raft']
+        self.type_dict_raft['cti_low_serial_error'] = ['cte_raft', 'cte_raft']
+        self.type_dict_raft['cti_high_serial_error'] = ['cte_raft', 'cte_raft']
+        self.type_dict_raft['cti_low_parallel_error'] = ['cte_raft', 'cte_raft']
+        self.type_dict_raft['cti_high_parallell_error'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['read_noise'] = ['read_noise_raft', 'read_noise_raft']
+        self.type_dict_raft['system_noise'] = ['read_noise_raft', 'read_noise_raft']
+        self.type_dict_raft['total_noise'] = ['read_noise_raft', 'read_noise_raft']
         self.type_dict_raft['nonlinearity'] = ['flat_pairs_raft_analysis', 'flat_pairs_raft']
         self.type_dict_raft['bright_pixels'] = ['bright_defects_raft', 'bright_defects_raft']
         self.type_dict_raft['bright_columns'] = ['bright_defects_raft', 'bright_defects_raft']
         self.type_dict_raft['dark_pixels'] = ['dark_defects_raft', 'dark_defects_raft']
         self.type_dict_raft['dark_columns'] = ['dark_defects_raft', 'dark_defects_raft']
         self.type_dict_raft['traps'] = ['traps_raft', 'traps_raft']
+        self.type_dict_ccd['dark_current'] = ['dark_current_raft', 'dark_current_raft']
+        self.type_dict_ccd['ptc'] = ['ptc_raft', 'ptc_raft']
+        self.type_dict_ccd['pixel_mean'] = ['prnu_raft', 'prnu']
 
         self.type_dict['raft'] = self.type_dict_raft
 
         self.type_dict_ccd['gain'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_ccd['gain_error'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_ccd['psf_sigma'] = ['fe55_analysis', 'fe55_analysis']
         self.type_dict_ccd['cti_low_serial'] = ['cte_offline', 'cte']
         self.type_dict_ccd['cti_high_serial'] = ['cte_offline', 'cte']
         self.type_dict_ccd['cti_low_parallel'] = ['cte_offline', 'cte']
-        self.type_dict_ccd['cti_high_parallell'] = ['cte_offline', 'cte']
+        self.type_dict_ccd['cti_high_parallel'] = ['cte_offline', 'cte']
+        self.type_dict_ccd['cti_low_serial_error'] = ['cte_offline', 'cte']
+        self.type_dict_ccd['cti_high_serial_error'] = ['cte_offline', 'cte']
+        self.type_dict_ccd['cti_low_parallel_error'] = ['cte_offline', 'cte']
+        self.type_dict_ccd['cti_high_parallel_error'] = ['cte_offline', 'cte']
         self.type_dict_ccd['read_noise'] = ['read_noise_offline', 'read_noise']
-        self.type_dict_ccd['nonlinearity'] = ['flat_pairs_offline', 'flat_pairs']
+        self.type_dict_ccd['system_noise'] = ['read_noise_offline', 'read_noise']
+        self.type_dict_ccd['total_noise'] = ['read_noise_offline', 'read_noise']
+        self.type_dict_ccd['max_frac_dev'] = ['flat_pairs_offline', 'flat_pairs']
         self.type_dict_ccd['bright_pixels'] = ['bright_defects_offline', 'bright_defects']
         self.type_dict_ccd['bright_columns'] = ['bright_defects_offline', 'bright_defects']
         self.type_dict_ccd['dark_pixels'] = ['dark_defects_offline', 'dark_defects']
         self.type_dict_ccd['dark_columns'] = ['dark_defects_offline', 'dark_defects']
-        self.type_dict_ccd['traps'] = ['traps_offline', 'traps']
+        self.type_dict_ccd['num_traps'] = ['traps_offline', 'traps']
+        self.type_dict_ccd['pixel_mean'] = ['prnu_offline', 'prnu']
+        self.type_dict_ccd['num_traps'] = ['traps_offline', 'traps']
+        self.type_dict_ccd['dark_current'] = ['dark_current_offline', 'dark_current_95CL']
+        self.type_dict_ccd['ptc'] = ['ptc_offline', 'ptc']
 
         self.type_dict['ccd'] = self.type_dict_ccd
 
@@ -96,16 +118,22 @@ class get_EO_analysis_results():
 
     def get_results(self, test_type=None, data=None, device=None):
 
-        results = []
+        ccd_dict = collections.OrderedDict()
+
+        ccdName = None
+        if self.camera_type == 'ccd':
+            ccdName = device
 
         step = data[device]['steps'][self.type_dict[self.camera_type][test_type][0]]
 
         for amp in step[self.type_dict[self.camera_type][test_type][1]][1:]:
-#            ccd = amp['sensor_id']
+            if self.camera_type == 'raft':
+                ccdName = amp['sensor_id']
+            c = ccd_dict.setdefault(ccdName, [])
             ampResult = amp[test_type]
-            results.append(ampResult)
+            c.append(ampResult)
 
-        return results
+        return ccd_dict
 
 
 if __name__ == "__main__":
