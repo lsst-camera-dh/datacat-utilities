@@ -11,9 +11,11 @@ class get_EO_analysis_results():
     def __init__(self, db='Prod', server='Prod', appSuffix=None):
 
         self.site_type = {}
-        self.dataTypes = {'gain', 'read_noise', 'bright_pixels', 'bright_columns' 'dark_pixels', 'dark_columns',
+        self.dataTypes = {'gain', 'read_noise', 'bright_pixels', 'bright_columns' 'dark_pixels',
+                          'dark_columns',
                           'traps',
-                          'cti_low_serial', 'cti_high_serial', 'cti_low_parallel', 'cti_high_parallel', 'nonlinearity'
+                          'cti_low_serial', 'cti_high_serial', 'cti_low_parallel', 'cti_high_parallel',
+                          'nonlinearity'
 
                           }
 
@@ -99,9 +101,9 @@ class get_EO_analysis_results():
 
         dev_list = []
 
-        if run == None:
+        if run is None:
             #            hardwareLabels = ['Run_Quality:Run_for_the_record']
-            hardwareLabels = ["Run_Quality:"]
+            # hardwareLabels = ["Run_Quality:"]
             data = self.connect.getResultsJH(htype=self.site_type[site_type][0],
                                              stepName=self.type_dict[self.camera_type][test_type][0],
                                              travelerName=self.site_type[site_type][1])
@@ -110,7 +112,8 @@ class get_EO_analysis_results():
                 dev_list.append(dev)
 
         else:
-            data = self.connect.getRunResults(run=run, stepName=self.type_dict[self.camera_type][test_type][0])
+            data = self.connect.getRunResults(run=run,
+                                              stepName=self.type_dict[self.camera_type][test_type][0])
             dev_list = data['experimentSN']
 
         # this step gives us dark columns and dark pixels
@@ -142,11 +145,12 @@ class get_EO_analysis_results():
 
 
 if __name__ == "__main__":
-    ## Command line arguments
+    # Command line arguments
     parser = argparse.ArgumentParser(
-        description='Find archived data in the LSST  data Catalog. These include CCD test stand and vendor data files.')
+        description=
+         'Find archived data in the LSST  data Catalog. These include CCD test stand and vendor data files.')
 
-    ##   The following are 'convenience options' which could also be specified in the filter string
+    #   The following are 'convenience options' which could also be specified in the filter string
     # parser.add_argument('-t', '--htype', default=None, help="hardware type (default=%(default)s)") #ITL-CCD
     parser.add_argument('-d', '--db', default='Prod', help="eT database (default=%(default)s)")
     parser.add_argument('-e', '--eTserver', default='Dev', help="eTraveler server (default=%(default)s)")
