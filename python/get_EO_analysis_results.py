@@ -17,7 +17,7 @@ class get_EO_analysis_results():
 
                           }
 
-# define hardware types and traveler names, respectively
+        # define hardware types and traveler names, respectively
 
         self.site_type['I&T-Raft'] = ['LCA-11021_RTM', 'INT-SR-EOT-01']
         self.site_type['BNL-Raft'] = ['LCA-11021_RTM', 'SR-RTM-EOT-03']
@@ -30,7 +30,7 @@ class get_EO_analysis_results():
         self.type_dict_raft = {}
         self.type_dict_ccd = {}
 
-# define step and schema names, respectively
+        # define step and schema names, respectively
 
         self.type_dict_raft['gain'] = ['fe55_raft_analysis', 'fe55_raft_analysis']
         self.type_dict_raft['gain_error'] = ['fe55_raft_analysis', 'fe55_raft_analysis']
@@ -100,12 +100,12 @@ class get_EO_analysis_results():
         dev_list = []
 
         if run == None:
-#            hardwareLabels = ['Run_Quality:Run_for_the_record']
+            #            hardwareLabels = ['Run_Quality:Run_for_the_record']
             hardwareLabels = ["Run_Quality:"]
             data = self.connect.getResultsJH(htype=self.site_type[site_type][0],
-                stepName=self.type_dict[self.camera_type][test_type][0],
-                travelerName=self.site_type[site_type][1])
-        # Get a list of devices
+                                             stepName=self.type_dict[self.camera_type][test_type][0],
+                                             travelerName=self.site_type[site_type][1])
+            # Get a list of devices
             for dev in data:
                 dev_list.append(dev)
 
@@ -114,8 +114,6 @@ class get_EO_analysis_results():
             dev_list = data['experimentSN']
 
         # this step gives us dark columns and dark pixels
-
-
 
         return dev_list, data
 
@@ -158,4 +156,4 @@ if __name__ == "__main__":
 
     g = get_EO_analysis_results()
     raft_list, data = g.get_tests(site_type="I&T-Raft", test_type="gain")
-    res = g.get_results(test_type='gain', data=data, raft=raft_list[0])
+    res = g.get_results(test_type='gain', data=data, device=raft_list[0])

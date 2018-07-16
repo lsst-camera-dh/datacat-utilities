@@ -62,7 +62,6 @@ class exploreRaft():
 
         return type
 
-
     def CCD_parent(self, CCD_name=None, htype='ITL-CCD'):
 
         # now find raft for a CCD
@@ -112,7 +111,6 @@ class exploreRaft():
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(
         description='Find archived data in the LSST  data Catalog. '
                     'These include CCD test stand and vendor data files.')
