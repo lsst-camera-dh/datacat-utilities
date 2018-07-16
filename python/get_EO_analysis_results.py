@@ -131,7 +131,7 @@ class get_EO_analysis_results():
         try:
             data[device]
             step = data[device]['steps'][self.type_dict[self.camera_type][test_type][0]]
-        except:
+        except KeyError:
             step = data['steps'][self.type_dict[self.camera_type][test_type][0]]
 
         for amp in step[self.type_dict[self.camera_type][test_type][1]][1:]:
@@ -147,8 +147,7 @@ class get_EO_analysis_results():
 if __name__ == "__main__":
     # Command line arguments
     parser = argparse.ArgumentParser(
-        description=
-         'Find archived data in the LSST  data Catalog. These include CCD test stand and vendor data files.')
+        description = 'Find EO analysis test results.')
 
     #   The following are 'convenience options' which could also be specified in the filter string
     # parser.add_argument('-t', '--htype', default=None, help="hardware type (default=%(default)s)") #ITL-CCD
