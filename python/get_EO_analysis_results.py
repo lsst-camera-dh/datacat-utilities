@@ -146,8 +146,7 @@ class get_EO_analysis_results():
 
 if __name__ == "__main__":
     # Command line arguments
-    parser = argparse.ArgumentParser(
-        description = 'Find EO analysis test results.')
+    parser = argparse.ArgumentParser(description='Find EO analysis test results.')
 
     #   The following are 'convenience options' which could also be specified in the filter string
     # parser.add_argument('-t', '--htype', default=None, help="hardware type (default=%(default)s)") #ITL-CCD
