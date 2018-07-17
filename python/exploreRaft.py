@@ -1,5 +1,4 @@
-# import commands
-# import connection
+import argparse
 from eTraveler.clientAPI.connection import Connection
 
 
@@ -53,6 +52,16 @@ class exploreRaft():
 
         return ccd_list
 
+    def raft_type(self, raft=None):
+        eR = exploreRaft()
+        ccd_list = eR.raftContents(raftName=raft)
+        if 'ITL' in ccd_list[0][0]:
+            type = 'ITL'
+        else:
+            type = 'e2v'
+
+        return type
+
     def CCD_parent(self, CCD_name=None, htype='ITL-CCD'):
 
         # now find raft for a CCD
@@ -102,22 +111,22 @@ class exploreRaft():
 
 
 if __name__ == "__main__":
-    raftName = 'LCA-11021_RTM-005'
+    parser = argparse.ArgumentParser(
+        description='Find archived data in the LSST  data Catalog. '
+                    'These include CCD test stand and vendor data files.')
 
-    eR = exploreRaft()
+    # The following are 'convenience options' which could also be specified in
+    # the filter string
+    parser.add_argument('-r', '--raft', default="LCA-11021_RTM-005",
+                        help="raft serial number")
+    parser.add_argument('-d', '--db', default="Prod",
+                        help="eT database")
+    args = parser.parse_args()
+
+    raftName = args.raft
+
+    eR = exploreRaft(db=args.db)
 
     ccd_list = eR.raftContents(raftName)
 
     print ccd_list
-
-    CCD_name = 'E2V-CCD250-220'
-
-    parentRaft = eR.CCD_parent(CCD_name, 'e2v-CCD')
-
-    print CCD_name, "'s parent raft = ", parentRaft
-
-    reb_parent = eR.REB_parent('LCA-13574-013')
-    print 'parent raft of LCA-13574-1 is ', reb_parent
-
-    reb_ccds = eR.REB_CCD('LCA-13574-013')
-    print 'CCDs on REB LCA-13574-013 are ', reb_ccds
