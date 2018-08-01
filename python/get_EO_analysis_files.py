@@ -20,7 +20,7 @@ class get_EO_analysis_files():
         self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS)
 
         self.eR = exploreRaft(db=db, prodServer=pS)
-        self.fCCD = findCCD(db=db, prodServer=pS, mirrorName="",testName="",run=0,sensorId="")
+        self.fCCD = findCCD(db=db, prodServer=pS, mirrorName="", testName="", run=0, sensorId="")
 
     def get_files(self, FType=None, testName=None, run=None, imgtype=None):
 
@@ -45,12 +45,12 @@ class get_EO_analysis_files():
             for ccd in ccd_list:
                 dev_list.append(ccd)
         else:
-            dev_list = [[device,0,0]]
+            dev_list = [[device, 0, 0]]
             self.slot_or_ccd = 'ccd'
 
         for ccd in dev_list:
             ccd_dict[ccd[idx]] = self.fCCD.find(mirrorName=mirrorName, FType=FType,
-                                                XtraOpts=imgtype,run=run,
+                                                XtraOpts=imgtype, run=run,
                                                 testName=testName, sensorId=ccd[0])
 
         return ccd_dict
@@ -80,6 +80,7 @@ class get_EO_analysis_files():
 
         return mirrorName
 
+
 if __name__ == "__main__":
     # Command line arguments
     parser = argparse.ArgumentParser(description='Find EO analysis test results.')
@@ -94,6 +95,7 @@ if __name__ == "__main__":
                         help="eTraveler server (default=%(default)s)")
     args = parser.parse_args()
 
-    g = get_EO_analysis_files(db=args.db,server=args.eTserver)
-    files_list = g.get_files(run=args.run, testName=args.test_type,FType="fits",
+    g = get_EO_analysis_files(db=args.db, server=args.eTserver)
+    files_list = g.get_files(run=args.run, testName=args.test_type, FType="fits",
                              imgtype=args.imgtype)
+
