@@ -17,7 +17,7 @@ class exploreRaft():
             prodServer=pS,
             appSuffix=appSuffix)
 
-    def raftContents(self, raftName=None, when = None):
+    def raftContents(self, raftName=None, when=None):
         kwds = {'experimentSN': raftName, 'htype': 'LCA-11021_RTM', 'noBatched': 'true', 'timestamp': when}
 
         response = self.connect.getHardwareHierarchy(**kwds)
