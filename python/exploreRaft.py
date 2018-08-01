@@ -62,7 +62,7 @@ class exploreRaft():
 
         return type
 
-    def CCD_parent(self, CCD_name=None, htype='ITL-CCD', when = None):
+    def CCD_parent(self, CCD_name=None, htype='ITL-CCD', when=None):
 
         # now find raft for a CCD
 
@@ -80,7 +80,7 @@ class exploreRaft():
 
         return parentRTM
 
-    def REB_parent(self, REB_name=None, when = None):
+    def REB_parent(self, REB_name=None, when=None):
 
         # now find raft for a REB
 
@@ -97,7 +97,7 @@ class exploreRaft():
 
         return parentRTM
 
-    def REB_CCD(self, REB_name=None, when = None):
+    def REB_CCD(self, REB_name=None, when=None):
 
         raft = self.REB_parent(REB_name)
         ccd_list = self.raftContents(raftName=raft, when=when)
