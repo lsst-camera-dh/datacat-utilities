@@ -25,6 +25,8 @@ class get_EO_analysis_files():
     def get_files(self, FType=None, testName=None, run=None, imgtype=None):
 
         data = self.connect.getRunResults(run=run, stepName=testName)
+        self.run_sum = self.connect.getRunSummary(run=run)
+        when = self.run_sum['begin']
 
         mirrorName = self.deduce_mirror(run=run)
 
@@ -37,7 +39,7 @@ class get_EO_analysis_files():
             imgtype = "IMGTYPE=='" + imgtype + "'"
 
         if 'RTM' in device:
-            ccd_list = self.eR.raftContents(raftName=device)
+            ccd_list = self.eR.raftContents(raftName=device, when=when)
             if self.slot_or_ccd == 'ccd':
                 idx = 0
             else:
@@ -59,21 +61,19 @@ class get_EO_analysis_files():
 
         mirrorName = 'INT-prod'
 
-        run_sum = self.connect.getRunSummary(run=run)
-
-        if "integration" in run_sum['subsystem']:
+        if "integration" in self.run_sum['subsystem']:
             if self.db == 'Prod':
                 mirrorName = "INT-prod"
             else:
                 mirrorName = "Int-test"
         else:
             if self.db == 'Prod':
-                if run_sum['travelerName'] == "SR-EOT-02":
+                if self.run_sum['travelerName'] == "SR-EOT-02":
                     mirrorName = 'vendorCopy-prod'
                 else:
                     mirrorName = "BNL-prod"
             else:
-                if run_sum['travelerName'] == "SR-EOT-02":
+                if self.run_sum['travelerName'] == "SR-EOT-02":
                     mirrorName = 'vendorCopy-test'
                 else:
                     mirrorName = "BNL-test"
