@@ -78,6 +78,7 @@ class get_EO_analysis_results():
         self.type_dict_raft['traps'] = ['traps_raft', 'traps_raft']
         self.type_dict_raft['dark_current'] = ['dark_current_raft', 'dark_current_raft']
         self.type_dict_raft['ptc_gain'] = ['ptc_raft', 'ptc_raft']
+        self.type_dict_raft['ptc_gain_error'] = ['ptc_raft', 'ptc_raft']
         self.type_dict_raft['pixel_mean'] = ['prnu_raft', 'prnu']
 
         self.type_dict['raft'] = self.type_dict_raft
@@ -105,7 +106,8 @@ class get_EO_analysis_results():
         self.type_dict_ccd['pixel_mean'] = ['prnu_offline', 'prnu']
         self.type_dict_ccd['num_traps'] = ['traps_offline', 'traps']
         self.type_dict_ccd['dark_current'] = ['dark_current_offline', 'dark_current_95CL']
-        self.type_dict_ccd['ptc'] = ['ptc_offline', 'ptc']
+        self.type_dict_ccd['ptc_gain'] = ['ptc_offline', 'ptc']
+        self.type_dict_ccd['ptc_gain_error'] = ['ptc_offline', 'ptc']
 
         self.type_dict['ccd'] = self.type_dict_ccd
 
