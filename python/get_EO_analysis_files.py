@@ -23,8 +23,8 @@ Example usage:
                              imgtype=args.imgtype)
 """
 
-class get_EO_analysis_files():
 
+class get_EO_analysis_files():
 
     def __init__(self, db='Prod', server='Prod', appSuffix=None, slot_or_ccd='slot'):
 

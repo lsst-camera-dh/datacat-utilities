@@ -24,8 +24,8 @@ Example usage:
     res = g.get_results(test_type='gain', data=data, device=raft_list[0])  # get the data for a raft
 """
 
-class get_EO_analysis_results():
 
+class get_EO_analysis_results():
 
     def __init__(self, db='Prod', server='Prod', appSuffix=None):
 
