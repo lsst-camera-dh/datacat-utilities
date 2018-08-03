@@ -5,11 +5,36 @@ from findCCD import findCCD
 from exploreRaft import exploreRaft
 import argparse
 
+"""
+get_EO_analysis_files:
+
+Purpose:
+
+Query the eTraveler database for associated image files It attempts to simplify the user inputs by abstracting
+ out the details of what traveler and test steps were run.
+
+As such, it is limited to the 'standard' travelers. These are stable at BNL, but not necessarily so at SLAC 
+for I&T.
+
+Example usage:
+
+    g = get_EO_analysis_files(db=args.db, server=args.eTserver)
+    files_list = g.get_files(run=args.run, testName=args.test_type, FType="fits",
+                             imgtype=args.imgtype)
+"""
 
 class get_EO_analysis_files():
 
     def __init__(self, db='Prod', server='Prod', appSuffix=None, slot_or_ccd='slot'):
 
+        """
+        __init__
+
+         Inputs:
+            db: eTraveler database to use. Choices are Prod or Dev (case matters)
+            server: eTraveler server to use. Choices are Prod or Dev
+            slot_or_ccd: key results off slot or CCD name
+        """
         self.slot_or_ccd = slot_or_ccd
         self.db = db
 
@@ -24,6 +49,19 @@ class get_EO_analysis_files():
 
     def get_files(self, FType=None, testName=None, run=None, imgtype=None):
 
+        """
+        get_files:
+
+        Inputs:
+
+            FType: output file type (eg fits)
+            testName: step name of test, eg fe55_raft_acq
+            run: desired run number
+            imgtype: (Optional) use Catalog metadata to select image type, eg BIAS
+
+        Output:
+            ccd_dict: dictionary of lists of files  keyed on slot or CCD name
+        """
         data = self.connect.getRunResults(run=run, stepName=testName)
         self.run_sum = self.connect.getRunSummary(run=run)
         when = self.run_sum['begin']

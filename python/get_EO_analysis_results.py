@@ -6,9 +6,35 @@ import collections
 import argparse
 
 
+"""
+get_EO_analysis_results:
+
+Purpose:
+
+Query the eTraveler results database for its analysis results values, eg gain, read_noise etc. It attempts 
+to simplify the user inputs by abstracting out the details of what traveler and test steps were run.
+
+As such, it is limited to the 'standard' travelers. These are stable at BNL, but not necessarily so at SLAC 
+for I&T.
+
+Example usage:
+
+    g = get_EO_analysis_results()   # initialize (all Prod by default"
+    raft_list, data = g.get_tests(site_type="I&T-Raft", test_type="gain")  # get the data for I&T-Raft
+    res = g.get_results(test_type='gain', data=data, device=raft_list[0])  # get the data for a raft
+"""
+
 class get_EO_analysis_results():
 
     def __init__(self, db='Prod', server='Prod', appSuffix=None):
+
+        """
+        __init__
+
+         Inputs:
+            db: eTraveler database to use. Choices are Prod or Dev (case matters)
+            server: eTraveler server to use. Choices are Prod or Dev
+        """
 
         self.site_type = {}
         self.dataTypes = {'gain', 'read_noise', 'bright_pixels', 'bright_columns' 'dark_pixels',
@@ -96,6 +122,20 @@ class get_EO_analysis_results():
 
     def get_tests(self, site_type=None, test_type=None, run=None):
 
+        """
+        get_tests:
+
+        Inputs:
+
+            site_type: kind of test desired, eg BNL-Raft
+            test_type: result type desired, eg gain
+            run: (Optional) specific run number to use. If specified, site_type is ignored.
+
+        Outputs:
+
+            dev_list: list of hardware devices associated with the query
+            data: object containing data from the query to getResultsXXX
+        """
         if 'Raft' not in site_type:
             self.camera_type = 'ccd'
 
@@ -121,7 +161,18 @@ class get_EO_analysis_results():
         return dev_list, data
 
     def get_results(self, test_type=None, data=None, device=None):
+        """
+        get_results:
 
+        Inputs:
+
+            test_type: result type desired (eg gain)
+            data: object resulting from get_tests containing the results data
+            device: specific hardware identifier desired
+
+        Output:
+            ccd_dict: dictionary of lists of values (eg gains) keyed on CCD name
+        """
         ccd_dict = collections.OrderedDict()
 
         ccdName = None
