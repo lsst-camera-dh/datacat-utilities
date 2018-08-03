@@ -26,6 +26,7 @@ Example usage:
 
 class get_EO_analysis_results():
 
+
     def __init__(self, db='Prod', server='Prod', appSuffix=None):
 
         """
