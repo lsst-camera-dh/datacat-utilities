@@ -27,7 +27,6 @@ Example usage:
 class get_EO_analysis_files():
 
     def __init__(self, db='Prod', server='Prod', appSuffix=None, slot_or_ccd='slot'):
-
         """
         __init__
 
@@ -49,7 +48,6 @@ class get_EO_analysis_files():
         self.fCCD = findCCD(db=db, prodServer=pS, mirrorName="", testName="", run=0, sensorId="")
 
     def get_files(self, FType=None, testName=None, run=None, imgtype=None):
-
         """
         get_files:
 
@@ -97,7 +95,9 @@ class get_EO_analysis_files():
         return ccd_dict
 
     def deduce_mirror(self, run=None):
-
+        """
+        deduce_mirror: Given the run number, figure out which Data Catalog mirror its data is registered in
+        """
         mirrorName = 'INT-prod'
 
         if "integration" in self.run_sum['subsystem']:

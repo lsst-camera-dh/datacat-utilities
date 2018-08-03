@@ -28,7 +28,6 @@ Example usage:
 class get_EO_analysis_results():
 
     def __init__(self, db='Prod', server='Prod', appSuffix=None):
-
         """
         __init__
 
@@ -122,7 +121,6 @@ class get_EO_analysis_results():
         self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS)
 
     def get_tests(self, site_type=None, test_type=None, run=None):
-
         """
         get_tests:
 
