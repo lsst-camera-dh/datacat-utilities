@@ -15,8 +15,8 @@ class get_EO_analysis_results():
     Query the eTraveler results database for its analysis results values, eg gain, read_noise etc. It attempts
     to simplify the user inputs by abstracting out the details of what traveler and test steps were run.
 
-    As such, it is limited to the 'standard' travelers. These are stable at BNL, but not necessarily so at SLAC
-    for I&T.
+    As such, it is limited to the 'standard' travelers. These are stable at BNL, but not necessarily so at
+    SLAC for I&T.
 
     Example usage:
 
