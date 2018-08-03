@@ -12,11 +12,11 @@ class get_EO_analysis_files():
 
     Purpose:
 
-    Query the eTraveler database for associated image files It attempts to simplify the user inputs by abstracting
-     out the details of what traveler and test steps were run.
+    Query the eTraveler database for associated image files It attempts to simplify the user inputs by
+    abstracting out the details of what traveler and test steps were run.
 
-    As such, it is limited to the 'standard' travelers. These are stable at BNL, but not necessarily so at SLAC
-    for I&T.
+    As such, it is limited to the 'standard' travelers. These are stable at BNL, but not necessarily so at
+    SLAC for I&T.
 
     Example usage:
 
