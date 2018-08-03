@@ -77,7 +77,7 @@ class get_EO_analysis_results():
         self.type_dict_raft['dark_columns'] = ['dark_defects_raft', 'dark_defects_raft']
         self.type_dict_raft['traps'] = ['traps_raft', 'traps_raft']
         self.type_dict_raft['dark_current'] = ['dark_current_raft', 'dark_current_raft']
-        self.type_dict_raft['ptc'] = ['ptc_raft', 'ptc_raft']
+        self.type_dict_raft['ptc_gain'] = ['ptc_raft', 'ptc_raft']
         self.type_dict_raft['pixel_mean'] = ['prnu_raft', 'prnu']
 
         self.type_dict['raft'] = self.type_dict_raft
@@ -208,4 +208,4 @@ if __name__ == "__main__":
 
     g = get_EO_analysis_results()
     raft_list, data = g.get_tests(site_type=args.site_type, test_type=args.test_type)
-    res = g.get_results(test_type='gain', data=data, device=raft_list[0])
+    res = g.get_results(test_type=args.test_type, data=data, device=raft_list[0])
