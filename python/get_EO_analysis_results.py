@@ -206,8 +206,9 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--test_type', default='gain', help="test type (default=%(default)s)")
     parser.add_argument('-s', '--site_type', default='I&T-Raft', help="type & site of test (default=%("
                                                                       "default)s)")
+    parser.add_argument('-r', '--run', default=None, help="run number (default=%(default)s)")
     args = parser.parse_args()
 
-    g = get_EO_analysis_results()
-    raft_list, data = g.get_tests(site_type=args.site_type, test_type=args.test_type)
+    g = get_EO_analysis_results(db=args.db, server=args.eTserver)
+    raft_list, data = g.get_tests(site_type=args.site_type, test_type=args.test_type, run=args.run)
     res = g.get_results(test_type=args.test_type, data=data, device=raft_list[0])
