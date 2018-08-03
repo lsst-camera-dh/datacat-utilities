@@ -77,7 +77,7 @@ class get_EO_analysis_results():
         self.type_dict_raft['dark_columns'] = ['dark_defects_raft', 'dark_defects_raft']
         self.type_dict_raft['traps'] = ['traps_raft', 'traps_raft']
         self.type_dict_raft['dark_current'] = ['dark_current_raft', 'dark_current_raft']
-        self.type_dict_raft'ptc'] = ['ptc_raft', 'ptc_raft']
+        self.type_dict_raft['ptc'] = ['ptc_raft', 'ptc_raft']
         self.type_dict_raft['pixel_mean'] = ['prnu_raft', 'prnu']
 
         self.type_dict['raft'] = self.type_dict_raft
