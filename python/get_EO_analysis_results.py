@@ -6,27 +6,24 @@ import collections
 import argparse
 
 
-"""
-get_EO_analysis_results:
-
-Purpose:
-
-Query the eTraveler results database for its analysis results values, eg gain, read_noise etc. It attempts 
-to simplify the user inputs by abstracting out the details of what traveler and test steps were run.
-
-As such, it is limited to the 'standard' travelers. These are stable at BNL, but not necessarily so at SLAC 
-for I&T.
-
-Example usage:
-
-    g = get_EO_analysis_results()   # initialize (all Prod by default"
-    raft_list, data = g.get_tests(site_type="I&T-Raft", test_type="gain")  # get the data for I&T-Raft
-    res = g.get_results(test_type='gain', data=data, device=raft_list[0])  # get the data for a raft
-"""
-
-
 class get_EO_analysis_results():
+    """
+    get_EO_analysis_results:
 
+    Purpose:
+
+    Query the eTraveler results database for its analysis results values, eg gain, read_noise etc. It attempts
+    to simplify the user inputs by abstracting out the details of what traveler and test steps were run.
+
+    As such, it is limited to the 'standard' travelers. These are stable at BNL, but not necessarily so at SLAC
+    for I&T.
+
+    Example usage:
+
+        g = get_EO_analysis_results()   # initialize (all Prod by default"
+        raft_list, data = g.get_tests(site_type="I&T-Raft", test_type="gain")  # get the data for I&T-Raft
+        res = g.get_results(test_type='gain', data=data, device=raft_list[0])  # get the data for a raft
+    """
     def __init__(self, db='Prod', server='Prod', appSuffix=None):
         """
         __init__

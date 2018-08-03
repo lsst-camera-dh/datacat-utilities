@@ -5,27 +5,25 @@ from findCCD import findCCD
 from exploreRaft import exploreRaft
 import argparse
 
-"""
-get_EO_analysis_files:
-
-Purpose:
-
-Query the eTraveler database for associated image files It attempts to simplify the user inputs by abstracting
- out the details of what traveler and test steps were run.
-
-As such, it is limited to the 'standard' travelers. These are stable at BNL, but not necessarily so at SLAC 
-for I&T.
-
-Example usage:
-
-    g = get_EO_analysis_files(db=args.db, server=args.eTserver)
-    files_list = g.get_files(run=args.run, testName=args.test_type, FType="fits",
-                             imgtype=args.imgtype)
-"""
-
 
 class get_EO_analysis_files():
+    """
+    get_EO_analysis_files:
 
+    Purpose:
+
+    Query the eTraveler database for associated image files It attempts to simplify the user inputs by abstracting
+     out the details of what traveler and test steps were run.
+
+    As such, it is limited to the 'standard' travelers. These are stable at BNL, but not necessarily so at SLAC
+    for I&T.
+
+    Example usage:
+
+        g = get_EO_analysis_files(db=args.db, server=args.eTserver)
+        files_list = g.get_files(run=args.run, testName=args.test_type, FType="fits",
+                                 imgtype=args.imgtype)
+    """
     def __init__(self, db='Prod', server='Prod', appSuffix=None, slot_or_ccd='slot'):
         """
         __init__
