@@ -200,7 +200,7 @@ if __name__ == "__main__":
     #   The following are 'convenience options' which could also be specified in the filter string
     # parser.add_argument('-t', '--htype', default=None, help="hardware type (default=%(default)s)") #ITL-CCD
     parser.add_argument('-d', '--db', default='Prod', help="eT database (default=%(default)s)")
-    parser.add_argument('-e', '--eTserver', default='Dev', help="eTraveler server (default=%(default)s)")
+    parser.add_argument('-e', '--eTserver', default='Prod', help="eTraveler server (default=%(default)s)")
     parser.add_argument('--appSuffix', '--appSuffix', default='jrb',
                         help="eTraveler server (default=%(default)s)")
     parser.add_argument('-t', '--test_type', default='gain', help="test type (default=%(default)s)")
