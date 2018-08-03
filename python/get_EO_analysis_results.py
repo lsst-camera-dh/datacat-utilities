@@ -201,8 +201,11 @@ if __name__ == "__main__":
     parser.add_argument('-e', '--eTserver', default='Dev', help="eTraveler server (default=%(default)s)")
     parser.add_argument('--appSuffix', '--appSuffix', default='jrb',
                         help="eTraveler server (default=%(default)s)")
+    parser.add_argument('-t', '--test_type', default='gain', help="test type (default=%(default)s)")
+    parser.add_argument('-s', '--site_type', default='I&T-Raft', help="type & site of test (default=%("
+                                                                      "default)s)")
     args = parser.parse_args()
 
     g = get_EO_analysis_results()
-    raft_list, data = g.get_tests(site_type="I&T-Raft", test_type="gain")
+    raft_list, data = g.get_tests(site_type=args.site_type, test_type=args.test_type)
     res = g.get_results(test_type='gain', data=data, device=raft_list[0])
