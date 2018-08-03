@@ -42,8 +42,8 @@ class get_EO_analysis_files():
             pS = False
         self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS)
 
-        self.eR = exploreRaft(db=db, prodServer=pS)
-        self.fCCD = findCCD(db=db, prodServer=pS, mirrorName="", testName="", run=0, sensorId="")
+        self.eR = exploreRaft(db=db, prodServer=server)
+        self.fCCD = findCCD(db=db, prodServer=server, mirrorName="", testName="", run=0, sensorId="")
 
     def get_files(self, FType=None, testName=None, run=None, imgtype=None):
         """
