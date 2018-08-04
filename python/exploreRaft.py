@@ -18,7 +18,9 @@ class exploreRaft():
             appSuffix=appSuffix)
 
     def raftContents(self, raftName=None, when=None):
-        kwds = {'experimentSN': raftName, 'htype': 'LCA-11021_RTM', 'noBatched': 'true', 'timestamp': when}
+        kwds = {'experimentSN': raftName, 'htype': 'LCA-11021_RTM', 'noBatched': 'true'}
+        if when is not None:
+            kwds['timestamp'] = when
 
         response = self.connect.getHardwareHierarchy(**kwds)
 
@@ -66,7 +68,9 @@ class exploreRaft():
 
         # now find raft for a CCD
 
-        kwds = {'experimentSN': CCD_name, 'htype': htype, 'noBatched': 'true', 'timestamp': when}
+        kwds = {'experimentSN': CCD_name, 'htype': htype, 'noBatched': 'true'}
+        if when is not None:
+            kwds['timestamp'] = when
 
         # connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
 
@@ -85,7 +89,9 @@ class exploreRaft():
         # now find raft for a REB
 
         kwds = {'experimentSN': REB_name, 'htype': 'LCA-13574',
-                'noBatched': 'true', 'timestamp': when}  # need to fix REB htype!
+                'noBatched': 'true'}  # need to fix REB htype!
+        if when is not None:
+            kwds['timestamp'] = when
 
         response = self.connect.getContainingHardware(**kwds)
         parentRTM = ""
