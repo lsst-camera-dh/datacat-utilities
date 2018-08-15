@@ -17,8 +17,10 @@ class exploreRaft():
             prodServer=pS,
             appSuffix=appSuffix)
 
-    def raftContents(self, raftName=None):
+    def raftContents(self, raftName=None, when=None):
         kwds = {'experimentSN': raftName, 'htype': 'LCA-11021_RTM', 'noBatched': 'true'}
+        if when is not None:
+            kwds['timestamp'] = when
 
         response = self.connect.getHardwareHierarchy(**kwds)
 
@@ -62,11 +64,13 @@ class exploreRaft():
 
         return type
 
-    def CCD_parent(self, CCD_name=None, htype='ITL-CCD'):
+    def CCD_parent(self, CCD_name=None, htype='ITL-CCD', when=None):
 
         # now find raft for a CCD
 
         kwds = {'experimentSN': CCD_name, 'htype': htype, 'noBatched': 'true'}
+        if when is not None:
+            kwds['timestamp'] = when
 
         # connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
 
@@ -80,12 +84,14 @@ class exploreRaft():
 
         return parentRTM
 
-    def REB_parent(self, REB_name=None):
+    def REB_parent(self, REB_name=None, when=None):
 
         # now find raft for a REB
 
         kwds = {'experimentSN': REB_name, 'htype': 'LCA-13574',
                 'noBatched': 'true'}  # need to fix REB htype!
+        if when is not None:
+            kwds['timestamp'] = when
 
         response = self.connect.getContainingHardware(**kwds)
         parentRTM = ""
@@ -97,10 +103,10 @@ class exploreRaft():
 
         return parentRTM
 
-    def REB_CCD(self, REB_name=None):
+    def REB_CCD(self, REB_name=None, when=None):
 
         raft = self.REB_parent(REB_name)
-        ccd_list = self.raftContents(raft)
+        ccd_list = self.raftContents(raftName=raft, when=when)
 
         ccd_in_reb = []
         for ccd in ccd_list:
