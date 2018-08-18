@@ -59,10 +59,11 @@ class get_EO_analysis_results():
 
         self.type_dict_raft['gain'] = ['fe55_raft_analysis', 'fe55_raft_analysis']
         self.type_dict_raft['gain_error'] = ['fe55_raft_analysis', 'fe55_raft_analysis']
+        self.type_dict_raft['psf_sigma'] = ['fe55_raft_analysis', 'fe55_raft_analysis']
         self.type_dict_raft['cti_low_serial'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['cti_high_serial'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['cti_low_parallel'] = ['cte_raft', 'cte_raft']
-        self.type_dict_raft['cti_high_parallell'] = ['cte_raft', 'cte_raft']
+        self.type_dict_raft['cti_high_parallel'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['cti_low_serial_error'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['cti_high_serial_error'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['cti_low_parallel_error'] = ['cte_raft', 'cte_raft']
