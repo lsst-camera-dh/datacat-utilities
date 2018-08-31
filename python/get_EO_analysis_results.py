@@ -76,11 +76,14 @@ class get_EO_analysis_results():
         self.type_dict_raft['bright_columns'] = ['bright_defects_raft', 'bright_defects_raft']
         self.type_dict_raft['dark_pixels'] = ['dark_defects_raft', 'dark_defects_raft']
         self.type_dict_raft['dark_columns'] = ['dark_defects_raft', 'dark_defects_raft']
-        self.type_dict_raft['traps'] = ['traps_raft', 'traps_raft']
-        self.type_dict_raft['dark_current'] = ['dark_current_raft', 'dark_current_raft']
+        self.type_dict_raft['num_traps'] = ['traps_raft', 'traps_raft']
+        self.type_dict_raft['dark_current_95CL'] = ['dark_current_raft', 'dark_current_raft']
         self.type_dict_raft['ptc_gain'] = ['ptc_raft', 'ptc_raft']
         self.type_dict_raft['ptc_gain_error'] = ['ptc_raft', 'ptc_raft']
         self.type_dict_raft['pixel_mean'] = ['prnu_raft', 'prnu']
+        self.type_dict_raft['QE'] = ['qe_raft_analysis', 'qe_raft_analysis']
+        self.type_dict_raft['full_well'] = ['flat_pairs_raft_analysis', 'flat_pairs_raft']
+        self.type_dict_raft['max_frac_dev'] = ['flat_pairs_raft_analysis', 'flat_pairs_raft']
 
         self.type_dict['raft'] = self.type_dict_raft
 
@@ -106,9 +109,10 @@ class get_EO_analysis_results():
         self.type_dict_ccd['num_traps'] = ['traps_offline', 'traps']
         self.type_dict_ccd['pixel_mean'] = ['prnu_offline', 'prnu']
         self.type_dict_ccd['num_traps'] = ['traps_offline', 'traps']
-        self.type_dict_ccd['dark_current'] = ['dark_current_offline', 'dark_current_95CL']
+        self.type_dict_ccd['dark_current_95CL'] = ['dark_current_offline', 'dark_current_95CL']
         self.type_dict_ccd['ptc_gain'] = ['ptc_offline', 'ptc']
         self.type_dict_ccd['ptc_gain_error'] = ['ptc_offline', 'ptc']
+        self.type_dict_ccd['QE'] = ['qe_offline', 'qe']
 
         self.type_dict['ccd'] = self.type_dict_ccd
 
