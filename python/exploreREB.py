@@ -1,3 +1,4 @@
+from __future__ import print_function
 from eTraveler.clientAPI.connection import Connection
 import argparse
 
@@ -67,4 +68,4 @@ if __name__ == "__main__":
 
     aspic_list = eR.REBContents(REBName)
 
-    print aspic_list
+    print (aspic_list)

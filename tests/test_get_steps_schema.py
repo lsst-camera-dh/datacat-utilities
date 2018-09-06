@@ -9,4 +9,4 @@ class TestGet_steps_schema(TestCase):
 
         returnData = get.get("4418")
 
-        self.assertEqual(len(returnData['steps']),20)
+        assert (len(returnData['steps']) == 20)

@@ -1,6 +1,6 @@
+from __future__ import print_function
 import argparse
 from eTraveler.clientAPI.connection import Connection
-
 
 class exploreRaft():
     def __init__(self, db='Prod', prodServer='Prod', appSuffix=''):
@@ -135,4 +135,4 @@ if __name__ == "__main__":
 
     ccd_list = eR.raftContents(raftName)
 
-    print ccd_list
+    print (ccd_list)
