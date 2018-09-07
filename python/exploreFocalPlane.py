@@ -19,7 +19,7 @@ class exploreFocalPlane():
             prodServer=pS,
             appSuffix=appSuffix)
 
-    def focalPlaneContents(self, parentName="LCA-10616_CryostatAssembly-0001",
+    def focalPlaneContents(self, parentName="LCA-10134_CryostatAssembly-0001",
                            htype='LCA-10616_CryostatAssembly', when=None):
 
         kwds = {'experimentSN': parentName, 'htype': htype, 'noBatched': 'true'}
@@ -54,9 +54,9 @@ if __name__ == "__main__":
 
     # The following are 'convenience options' which could also be specified in
     # the filter string
-    parser.add_argument('-f', '--focalPlane', default="LCA-10616_CryostatAssembly",
+    parser.add_argument('-f', '--focalPlane', default="LCA-10134_Cryostat",
                         help="focal plane type")
-    parser.add_argument('-i', '--fpInstance', default="LCA-10616_CryostatAssembly-0001",
+    parser.add_argument('-i', '--fpInstance', default="LCA-10134_Cryostat-0001",
                         help="focal plane type")
     args = parser.parse_args()
 
