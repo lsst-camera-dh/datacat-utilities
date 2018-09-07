@@ -19,8 +19,8 @@ class exploreFocalPlane():
             prodServer=pS,
             appSuffix=appSuffix)
 
-    def focalPlaneContents(self, parentName="LCA-10134_CryostatAssembly-0001",
-                           htype='LCA-10616_CryostatAssembly', when=None):
+    def focalPlaneContents(self, parentName="LCA-10134_Cryostat-0001",
+                           htype='LCA-10134_Cryostat', when=None):
 
         kwds = {'experimentSN': parentName, 'htype': htype, 'noBatched': 'true'}
         if when is not None:

@@ -6,7 +6,7 @@ class TestExploreRFocalPlane(TestCase):
 
         eFP = exploreFocalPlane()
 
-        raft_list = eFP.focalPlaneContents(when="2018-09-03T00:00:00.0")
+        raft_list = eFP.focalPlaneContents(when="2018-09-07T00:00:00.0")
 
         assert (raft_list[0][0] == 'LCA-11021_RTM-002_ETU1'), "Failed to find Raft "
 
