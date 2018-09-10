@@ -34,13 +34,12 @@ class get_EO_analysis_results():
         """
 
         self.site_type = {}
-        self.dataTypes = {'gain', 'read_noise', 'bright_pixels', 'bright_columns' 'dark_pixels',
-                          'dark_columns',
-                          'traps',
+        self.raft_dataTypes = ['gain', 'gain_error', 'psf_sigma', 'read_noise', 'system_noise',
+                          'total_noise', 'bright_pixels', 'bright_columns', 'dark_pixels',
+                          'dark_columns', 'num_traps',
                           'cti_low_serial', 'cti_high_serial', 'cti_low_parallel', 'cti_high_parallel',
-                          'nonlinearity'
-
-                          }
+                          'nonlinearity', 'dark_current_95CL', 'ptc_gain', 'pixel_mean', 'full_well',
+                           'max_frac_dev']
 
         # define hardware types and traveler names, respectively
 
