@@ -55,8 +55,7 @@ class exploreRaft():
         return ccd_list
 
     def raft_type(self, raft=None):
-        eR = exploreRaft()
-        ccd_list = eR.raftContents(raftName=raft)
+        ccd_list = self.raftContents(raftName=raft)
         if 'ITL' in ccd_list[0][0]:
             type = 'ITL'
         else:
