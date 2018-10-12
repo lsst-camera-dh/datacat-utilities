@@ -1,10 +1,9 @@
-"""Helper tools to fetch Camera EO Test image files."""
-
+from __future__ import print_function
 from eTraveler.clientAPI.connection import Connection
 from findCCD import findCCD
 from exploreRaft import exploreRaft
 import argparse
-
+"""Helper tools to fetch Camera EO Test image files."""
 
 class get_EO_analysis_files():
     """
@@ -135,3 +134,4 @@ if __name__ == "__main__":
     g = get_EO_analysis_files(db=args.db, server=args.eTserver)
     files_list = g.get_files(run=args.run, testName=args.test_type, FType="fits",
                              imgtype=args.imgtype)
+    print (files_list)
