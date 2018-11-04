@@ -17,9 +17,12 @@ class exploreRaft():
             prodServer=pS,
             appSuffix=appSuffix)
 
-    def raftContents(self, raftName=None, when=None):
+    def raftContents(self, raftName=None, when=None, run=None):
         kwds = {'experimentSN': raftName, 'htype': 'LCA-11021_RTM', 'noBatched': 'true'}
-        if when is not None:
+        if run is not None:
+            run_info = self.connect.getRunSummary(run=run)
+            kwds['timestamp'] = run_info['begin']
+        elif when is not None:
             kwds['timestamp'] = when
 
         response = self.connect.getHardwareHierarchy(**kwds)
@@ -63,12 +66,16 @@ class exploreRaft():
 
         return type
 
-    def CCD_parent(self, CCD_name=None, htype='ITL-CCD', when=None):
+    def CCD_parent(self, CCD_name=None, htype='ITL-CCD', when=None, run=None):
 
         # now find raft for a CCD
 
         kwds = {'experimentSN': CCD_name, 'htype': htype, 'noBatched': 'true'}
-        if when is not None:
+
+        if run is not None:
+            run_info = self.connect.getRunSummary(run=run)
+            kwds['timestamp'] = run_info['begin']
+        elif when is not None:
             kwds['timestamp'] = when
 
         # connect = connection.Connection('richard', db='Dev', exp='LSST-CAMERA', prodServer=True)
@@ -83,13 +90,16 @@ class exploreRaft():
 
         return parentRTM
 
-    def REB_parent(self, REB_name=None, when=None):
+    def REB_parent(self, REB_name=None, when=None, run=None):
 
         # now find raft for a REB
 
         kwds = {'experimentSN': REB_name, 'htype': 'LCA-13574',
                 'noBatched': 'true'}  # need to fix REB htype!
-        if when is not None:
+        if run is not None:
+            run_info = self.connect.getRunSummary(run=run)
+            kwds['timestamp'] = run_info['begin']
+        elif when is not None:
             kwds['timestamp'] = when
 
         response = self.connect.getContainingHardware(**kwds)
@@ -102,9 +112,13 @@ class exploreRaft():
 
         return parentRTM
 
-    def REB_CCD(self, REB_name=None, when=None):
+    def REB_CCD(self, REB_name=None, when=None, run=None):
 
         raft = self.REB_parent(REB_name)
+        if run is not None:
+            run_info = self.connect.getRunSummary(run=run)
+            when = run_info['begin']
+
         ccd_list = self.raftContents(raftName=raft, when=when)
 
         ccd_in_reb = []
@@ -124,6 +138,8 @@ if __name__ == "__main__":
     # the filter string
     parser.add_argument('-r', '--raft', default="LCA-11021_RTM-005",
                         help="raft serial number")
+    parser.add_argument('--run', default=None,
+                        help="optional run number")
     parser.add_argument('-d', '--db', default="Prod",
                         help="eT database")
     args = parser.parse_args()
@@ -132,6 +148,10 @@ if __name__ == "__main__":
 
     eR = exploreRaft(db=args.db)
 
-    ccd_list = eR.raftContents(raftName)
+    if args.run is None:
+        ccd_list = eR.raftContents(raftName)
+    else:
+        ccd_list = eR.raftContents(raftName=raftName, run=args.run)
+
 
     print (ccd_list)
