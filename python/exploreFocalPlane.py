@@ -20,10 +20,13 @@ class exploreFocalPlane():
             appSuffix=appSuffix)
 
     def focalPlaneContents(self, parentName="LCA-10134_Cryostat-0001",
-                           htype='LCA-10134_Cryostat', when=None):
+                           htype='LCA-10134_Cryostat', when=None, run=None):
 
         kwds = {'experimentSN': parentName, 'htype': htype, 'noBatched': 'true'}
-        if when is not None:
+        if run is not None:
+            run_info = self.connect.getRunSummary(run=run)
+            kwds['timestamp'] = run_info['begin']
+        elif when is not None:
             kwds['timestamp'] = when
 
         response = self.connect.getHardwareHierarchy(**kwds)
