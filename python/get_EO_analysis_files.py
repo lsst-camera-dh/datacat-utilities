@@ -97,7 +97,7 @@ class get_EO_analysis_files():
         """
         mirrorName = 'INT-prod'
 
-        if "integration" in self.run_sum['subsystem']:
+        if "Integration" in self.run_sum['subsystem']:
             if self.db == 'Prod':
                 mirrorName = "INT-prod"
             else:
@@ -126,7 +126,7 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--test_type', default=None, help="test type (default=%(default)s)")
     parser.add_argument('-d', '--db', default='Prod', help="eT database (default=%(default)s)")
     parser.add_argument('-e', '--eTserver', default='Prod', help="eTraveler server (default=%(default)s)")
-    parser.add_argument('-i', '--imgtype', default='', help="image type (eg BIAS) (default=%(default)s)")
+    parser.add_argument('-i', '--imgtype', default=None, help="image type (eg BIAS) (default=%(default)s)")
     parser.add_argument('--appSuffix', '--appSuffix', default='jrb',
                         help="eTraveler server (default=%(default)s)")
     args = parser.parse_args()
