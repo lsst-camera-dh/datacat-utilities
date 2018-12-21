@@ -50,7 +50,6 @@ class exploreFocalPlane():
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(
         description='Find archived data in the LSST  data Catalog. '
                     'These include CCD test stand and vendor data files.')
@@ -65,6 +64,6 @@ if __name__ == "__main__":
 
     eFP = exploreFocalPlane()
 
-    rafts = eFP.focalPlaneContents(parentName=args.fpInstance, htype=args.focalPlane )
+    rafts = eFP.focalPlaneContents(parentName=args.fpInstance, htype=args.focalPlane)
 
-    print (rafts)
+    print(rafts)
