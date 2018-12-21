@@ -1,3 +1,4 @@
+from __future__ import print_function
 from eTraveler.clientAPI.connection import Connection
 import argparse
 
@@ -27,7 +28,7 @@ class get_steps_schema:
     def get(self, run=None):
 
         if run is None:
-            print 'Error: missing run number'
+            print ('Error: missing run number')
             raise ValueError
 
         returnData = self.connect.getRunResults(run=run)
@@ -45,7 +46,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '-r',
         '--run',
-        default=None,
+        default=7983,
         help="(required raft run number (default=%(default)s)")
     parser.add_argument(
         '-d',
@@ -64,16 +65,16 @@ if __name__ == "__main__":
         help="separate app instance, dash should not be prepended ")
     args = parser.parse_args()
 
-    print 'Discover step and schema names for run ', args.run
+    print ('Discover step and schema names for run ', args.run)
 
     get = get_steps_schema(db=args.db, eTserver=args.eTserver, appSuffix=args.appSuffix)
 
     returnData = get.get(run=str(args.run))
 
-    print len(returnData["steps"]), " steps found in run ", args.run
+    print (len(returnData["steps"]), " steps found in run ", args.run)
     for step in returnData['steps']:
         stepDict = returnData['steps'][step]
-        print '\n Step ', step, '\n'
+        print ('\n Step ', step, '\n')
 
         for schemaList in stepDict:
-            print schemaList
+            print (schemaList)

@@ -4,6 +4,7 @@ from eTraveler.clientAPI.connection import Connection
 import numpy as np
 import collections
 import argparse
+import time
 
 
 class get_EO_analysis_results():
@@ -24,6 +25,7 @@ class get_EO_analysis_results():
         raft_list, data = g.get_tests(site_type="I&T-Raft", test_type="gain")  # get the data for I&T-Raft
         res = g.get_results(test_type='gain', data=data, device=raft_list[0])  # get the data for a raft
     """
+
     def __init__(self, db='Prod', server='Prod', appSuffix=None):
         """
         __init__
@@ -34,13 +36,12 @@ class get_EO_analysis_results():
         """
 
         self.site_type = {}
-        self.dataTypes = {'gain', 'read_noise', 'bright_pixels', 'bright_columns' 'dark_pixels',
-                          'dark_columns',
-                          'traps',
-                          'cti_low_serial', 'cti_high_serial', 'cti_low_parallel', 'cti_high_parallel',
-                          'nonlinearity'
-
-                          }
+        self.raft_dataTypes = ['gain', 'gain_error', 'psf_sigma', 'read_noise', 'system_noise',
+                               'total_noise', 'bright_pixels', 'bright_columns', 'dark_pixels',
+                               'dark_columns', 'num_traps',
+                               'cti_low_serial', 'cti_high_serial', 'cti_low_parallel', 'cti_high_parallel',
+                               'nonlinearity', 'dark_current_95CL', 'ptc_gain', 'pixel_mean', 'full_well',
+                               'max_frac_dev']
 
         # define hardware types and traveler names, respectively
 
@@ -67,11 +68,10 @@ class get_EO_analysis_results():
         self.type_dict_raft['cti_low_serial_error'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['cti_high_serial_error'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['cti_low_parallel_error'] = ['cte_raft', 'cte_raft']
-        self.type_dict_raft['cti_high_parallell_error'] = ['cte_raft', 'cte_raft']
+        self.type_dict_raft['cti_high_parallel_error'] = ['cte_raft', 'cte_raft']
         self.type_dict_raft['read_noise'] = ['read_noise_raft', 'read_noise_raft']
         self.type_dict_raft['system_noise'] = ['read_noise_raft', 'read_noise_raft']
         self.type_dict_raft['total_noise'] = ['read_noise_raft', 'read_noise_raft']
-        self.type_dict_raft['nonlinearity'] = ['flat_pairs_raft_analysis', 'flat_pairs_raft']
         self.type_dict_raft['bright_pixels'] = ['bright_defects_raft', 'bright_defects_raft']
         self.type_dict_raft['bright_columns'] = ['bright_defects_raft', 'bright_defects_raft']
         self.type_dict_raft['dark_pixels'] = ['dark_defects_raft', 'dark_defects_raft']
@@ -80,7 +80,7 @@ class get_EO_analysis_results():
         self.type_dict_raft['dark_current_95CL'] = ['dark_current_raft', 'dark_current_raft']
         self.type_dict_raft['ptc_gain'] = ['ptc_raft', 'ptc_raft']
         self.type_dict_raft['ptc_gain_error'] = ['ptc_raft', 'ptc_raft']
-        self.type_dict_raft['pixel_mean'] = ['prnu_raft', 'prnu']
+        #        self.type_dict_raft['pixel_mean'] = ['prnu_raft', 'prnu']
         self.type_dict_raft['QE'] = ['qe_raft_analysis', 'qe_raft_analysis']
         self.type_dict_raft['full_well'] = ['flat_pairs_raft_analysis', 'flat_pairs_raft']
         self.type_dict_raft['max_frac_dev'] = ['flat_pairs_raft_analysis', 'flat_pairs_raft']
@@ -155,8 +155,11 @@ class get_EO_analysis_results():
                 dev_list.append(dev)
 
         else:
-            data = self.connect.getRunResults(run=run,
-                                              stepName=self.type_dict[self.camera_type][test_type][0])
+            if test_type is None:
+                data = self.connect.getRunResults(run=run)
+            else:
+                data = self.connect.getRunResults(run=run,
+                                                  stepName=self.type_dict[self.camera_type][test_type][0])
             dev_list = data['experimentSN']
 
         # this step gives us dark columns and dark pixels
@@ -197,6 +200,46 @@ class get_EO_analysis_results():
 
         return ccd_dict
 
+    def get_all_results(self, data=None, device=None):
+        """
+        get_results:
+
+        Inputs:
+
+            data: object resulting from get_tests containing the results data
+            device: specific hardware identifier desired
+
+        Output:
+            test_dict: dictionary (by test, eg gain) of dictionary (by CCD) of lists of values (eg gains)
+        """
+        test_dict = collections.OrderedDict()
+
+        ccdName = None
+        if self.camera_type == 'ccd':
+            ccdName = device
+
+        # get the list of supported tests from member dict
+        test_list = self.type_dict[self.camera_type]
+
+        for tests in test_list:
+            steps = test_list[tests][0]
+            test_name_type = test_list[tests][1]
+
+            # set up empty dict, keyed off test name
+            t = test_dict.setdefault(tests, {})
+
+            # test_name_type is the test's EO schema name
+            results_list = data['steps'][steps][test_name_type]
+            for amp in results_list[1:]:
+                if self.camera_type == 'raft':
+                    ccdName = amp['sensor_id']
+                # set up dict by CCD with list of test quantities
+                c = t.setdefault(ccdName, [])
+                ampResult = amp[tests]
+                c.append(ampResult)
+
+        return test_dict
+
 
 if __name__ == "__main__":
     # Command line arguments
@@ -215,5 +258,14 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     g = get_EO_analysis_results(db=args.db, server=args.eTserver)
+
+    start = time.time()
     raft_list, data = g.get_tests(site_type=args.site_type, test_type=args.test_type, run=args.run)
-    res = g.get_results(test_type=args.test_type, data=data, device=raft_list[0])
+    res = g.get_results(test_type=args.test_type, data=data, device=raft_list)
+    after_sngl = time.time() - start
+
+    raft_list_all, data_all = g.get_tests(site_type=args.site_type, run=args.run)
+    res_all = g.get_all_results(data=data_all, device=raft_list_all)
+    after_all = time.time() - start
+
+    print("timing info: ", start, after_sngl, after_all)

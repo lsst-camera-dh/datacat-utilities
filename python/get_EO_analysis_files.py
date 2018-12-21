@@ -1,9 +1,9 @@
-"""Helper tools to fetch Camera EO Test image files."""
-
+from __future__ import print_function
 from eTraveler.clientAPI.connection import Connection
 from findCCD import findCCD
 from exploreRaft import exploreRaft
 import argparse
+"""Helper tools to fetch Camera EO Test image files."""
 
 
 class get_EO_analysis_files():
@@ -98,7 +98,7 @@ class get_EO_analysis_files():
         """
         mirrorName = 'INT-prod'
 
-        if "integration" in self.run_sum['subsystem']:
+        if "Integration" in self.run_sum['subsystem']:
             if self.db == 'Prod':
                 mirrorName = "INT-prod"
             else:
@@ -127,7 +127,7 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--test_type', default=None, help="test type (default=%(default)s)")
     parser.add_argument('-d', '--db', default='Prod', help="eT database (default=%(default)s)")
     parser.add_argument('-e', '--eTserver', default='Prod', help="eTraveler server (default=%(default)s)")
-    parser.add_argument('-i', '--imgtype', default='', help="image type (eg BIAS) (default=%(default)s)")
+    parser.add_argument('-i', '--imgtype', default=None, help="image type (eg BIAS) (default=%(default)s)")
     parser.add_argument('--appSuffix', '--appSuffix', default='jrb',
                         help="eTraveler server (default=%(default)s)")
     args = parser.parse_args()
@@ -135,3 +135,4 @@ if __name__ == "__main__":
     g = get_EO_analysis_files(db=args.db, server=args.eTserver)
     files_list = g.get_files(run=args.run, testName=args.test_type, FType="fits",
                              imgtype=args.imgtype)
+    print(files_list)
