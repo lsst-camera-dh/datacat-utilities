@@ -2,6 +2,7 @@ from __future__ import print_function
 import argparse
 from eTraveler.clientAPI.connection import Connection
 
+
 class exploreRaft():
     def __init__(self, db='Prod', prodServer='Prod', appSuffix=''):
 
@@ -44,6 +45,7 @@ class exploreRaft():
             # print child['parent_experimentSN'], child['relationshipTypeName'],
             # child['child_experimentSN'], child['slotName']
 
+            rebId = ""
             kid = child['child_experimentSN']
             if 'ITL' in kid.upper() or 'E2V' in kid.upper():
                 slotName = child['slotName']
@@ -153,5 +155,4 @@ if __name__ == "__main__":
     else:
         ccd_list = eR.raftContents(raftName=raftName, run=args.run)
 
-
-    print (ccd_list)
+    print(ccd_list)

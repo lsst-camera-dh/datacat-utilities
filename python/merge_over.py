@@ -64,8 +64,10 @@ for infile in infiles:
             ccdpx, ccdpy = ccdax + 193, ccday + 104
             gap_inx, gap_iny = 28, 25
             gap_outx, gap_outy = 26.5, 25
-            crval1q = gap_outy + (ccdpy - ccday) / 2 + Cs * (8 * dimh + gap_iny + ccdpy - ccday) + Sp * (dimh + 1) + Ss * dimh + (2 * Sp - 1) * preh # noqa
-            crval2q = Sp * (2 * dimv + 1) + gap_outx + (ccdpx - ccdax) / 2 + Cp * (2 * dimv + gap_inx + ccdpx - ccdax) # noqa
+            crval1q = gap_outy + (ccdpy - ccday) / 2 + Cs * (8 * dimh + gap_iny + ccdpy - ccday) + Sp * (
+                        dimh + 1) + Ss * dimh + (2 * Sp - 1) * preh  # noqa
+            crval2q = Sp * (2 * dimv + 1) + gap_outx + (ccdpx - ccdax) / 2 + Cp * (
+                        2 * dimv + gap_inx + ccdpx - ccdax)  # noqa
         else:
             dsx1 = (Sy + 1) * dimh
             dsx2 = Sy * dimh + 1
@@ -81,7 +83,7 @@ for infile in infiles:
 
         datasec = '[1:' + str(naxis1) + ',1:' + str(naxis2) + ']'
         detsec = '[' + str(dsx1) + ':' + str(dsx2) + ',' + \
-            str(dsy1) + ':' + str(dsy2) + ']'
+                 str(dsy1) + ':' + str(dsy2) + ']'
         detsize = '[1:' + str(naxis1 * 8) + ',1:' + str(naxis2 * 2) + ']'
         hdutemp.header['DATASEC'] = datasec
         hdutemp.header['DETSEC'] = detsec

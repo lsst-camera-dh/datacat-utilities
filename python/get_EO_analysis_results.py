@@ -25,6 +25,7 @@ class get_EO_analysis_results():
         raft_list, data = g.get_tests(site_type="I&T-Raft", test_type="gain")  # get the data for I&T-Raft
         res = g.get_results(test_type='gain', data=data, device=raft_list[0])  # get the data for a raft
     """
+
     def __init__(self, db='Prod', server='Prod', appSuffix=None):
         """
         __init__
@@ -36,11 +37,11 @@ class get_EO_analysis_results():
 
         self.site_type = {}
         self.raft_dataTypes = ['gain', 'gain_error', 'psf_sigma', 'read_noise', 'system_noise',
-                          'total_noise', 'bright_pixels', 'bright_columns', 'dark_pixels',
-                          'dark_columns', 'num_traps',
-                          'cti_low_serial', 'cti_high_serial', 'cti_low_parallel', 'cti_high_parallel',
-                          'nonlinearity', 'dark_current_95CL', 'ptc_gain', 'pixel_mean', 'full_well',
-                           'max_frac_dev']
+                               'total_noise', 'bright_pixels', 'bright_columns', 'dark_pixels',
+                               'dark_columns', 'num_traps',
+                               'cti_low_serial', 'cti_high_serial', 'cti_low_parallel', 'cti_high_parallel',
+                               'nonlinearity', 'dark_current_95CL', 'ptc_gain', 'pixel_mean', 'full_well',
+                               'max_frac_dev']
 
         # define hardware types and traveler names, respectively
 
@@ -79,7 +80,7 @@ class get_EO_analysis_results():
         self.type_dict_raft['dark_current_95CL'] = ['dark_current_raft', 'dark_current_raft']
         self.type_dict_raft['ptc_gain'] = ['ptc_raft', 'ptc_raft']
         self.type_dict_raft['ptc_gain_error'] = ['ptc_raft', 'ptc_raft']
-#        self.type_dict_raft['pixel_mean'] = ['prnu_raft', 'prnu']
+        #        self.type_dict_raft['pixel_mean'] = ['prnu_raft', 'prnu']
         self.type_dict_raft['QE'] = ['qe_raft_analysis', 'qe_raft_analysis']
         self.type_dict_raft['full_well'] = ['flat_pairs_raft_analysis', 'flat_pairs_raft']
         self.type_dict_raft['max_frac_dev'] = ['flat_pairs_raft_analysis', 'flat_pairs_raft']
@@ -158,7 +159,7 @@ class get_EO_analysis_results():
                 data = self.connect.getRunResults(run=run)
             else:
                 data = self.connect.getRunResults(run=run,
-                                              stepName=self.type_dict[self.camera_type][test_type][0])
+                                                  stepName=self.type_dict[self.camera_type][test_type][0])
             dev_list = data['experimentSN']
 
         # this step gives us dark columns and dark pixels
@@ -264,8 +265,7 @@ if __name__ == "__main__":
     after_sngl = time.time() - start
 
     raft_list_all, data_all = g.get_tests(site_type=args.site_type, run=args.run)
-    res_all = g.get_all_results( data=data_all, device=raft_list_all)
+    res_all = g.get_all_results(data=data_all, device=raft_list_all)
     after_all = time.time() - start
 
-    print ("timing info: ", start, after_sngl, after_all)
-
+    print("timing info: ", start, after_sngl, after_all)
