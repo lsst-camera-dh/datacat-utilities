@@ -39,7 +39,7 @@ class get_EO_analysis_files():
         """
         self.slot_or_ccd = slot_or_ccd
         self.db = db
-        self.ccd_slots = ["S00", "S01","S02","S10","S11","S12","S20","S21","S22",]
+        self.ccd_slots = ["S00", "S01", "S02", "S10", "S11", "S12", "S20", "S21", "S22"]
 
         if server == 'Prod':
             pS = True
