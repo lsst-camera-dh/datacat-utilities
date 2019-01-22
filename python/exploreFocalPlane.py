@@ -3,7 +3,7 @@ from eTraveler.clientAPI.connection import Connection
 import argparse
 
 
-class exploreFocalPlane():
+class exploreFocalPlane:
 
     def __init__(self, db='Prod', prodServer='Prod', appSuffix=''):
 

@@ -1,8 +1,11 @@
 from __future__ import print_function
 from eTraveler.clientAPI.connection import Connection
 from findCCD import findCCD
+from findFullFocalPlane import findFullFocalPlane
 from exploreRaft import exploreRaft
+from exploreFocalPlane import exploreFocalPlane
 import argparse
+
 """Helper tools to fetch Camera EO Test image files."""
 
 
@@ -24,6 +27,7 @@ class get_EO_analysis_files():
         files_list = g.get_files(run=args.run, testName=args.test_type, FType="fits",
                                  imgtype=args.imgtype)
     """
+
     def __init__(self, db='Prod', server='Prod', appSuffix=None, slot_or_ccd='slot'):
         """
         __init__
@@ -35,6 +39,7 @@ class get_EO_analysis_files():
         """
         self.slot_or_ccd = slot_or_ccd
         self.db = db
+        self.ccd_slots = ["S00", "S01", "S02", "S10", "S11", "S12", "S20", "S21", "S22"]
 
         if server == 'Prod':
             pS = True
@@ -42,8 +47,10 @@ class get_EO_analysis_files():
             pS = False
         self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS)
 
+        self.eFP = exploreFocalPlane(db=db, prodServer=server)
         self.eR = exploreRaft(db=db, prodServer=server)
         self.fCCD = findCCD(db=db, prodServer=server, mirrorName="", testName="", run=0, sensorId="")
+        self.f_FP = findFullFocalPlane(prodServer=server)
 
     def get_files(self, FType=None, testName=None, run=None, imgtype=None):
         """
@@ -58,6 +65,7 @@ class get_EO_analysis_files():
 
         Output:
             ccd_dict: dictionary of lists of files  keyed on slot or CCD name
+            or raft_dict : dict by raft of dict of list of files, both keyed on slot names
         """
         data = self.connect.getRunResults(run=run, stepName=testName)
         self.run_sum = self.connect.getRunSummary(run=run)
@@ -68,29 +76,49 @@ class get_EO_analysis_files():
         device = data['experimentSN']
         dev_list = []
         ccd_dict = {}
+        raft_dict = {}
+
         idx = 0
+        if self.slot_or_ccd == 'ccd':
+            idx = 0
+        else:
+            idx = 1
 
         if imgtype is not None:
             imgtype = "IMGTYPE=='" + imgtype + "'"
 
-        if 'RTM' in device:
-            ccd_list = self.eR.raftContents(raftName=device, when=when)
-            if self.slot_or_ccd == 'ccd':
-                idx = 0
-            else:
-                idx = 1
-            for ccd in ccd_list:
-                dev_list.append(ccd)
+        if 'CRYO' in device.upper():
+
+            files = self.f_FP.find(run=run, testName=testName)
+
+            for f in files:
+                parse_path = f.split("/")
+                fn = parse_path[-1].split(".")[0]
+                fn_split = fn.split("_")
+                ccd_slot = fn_split[-1]
+                raft_slot = fn_split[-2]
+
+                r = raft_dict.setdefault(raft_slot, {})
+                c = r.setdefault(ccd_slot, [])
+                c.append(f)
+
+            return raft_dict
+
         else:
-            dev_list = [[device, 0, 0]]
-            self.slot_or_ccd = 'ccd'
+            if 'RTM' in device:
+                ccd_list = self.eR.raftContents(raftName=device, when=when)
+                for ccd in ccd_list:
+                    dev_list.append(ccd)
+            else:
+                dev_list = [[device, 0, 0]]
+                self.slot_or_ccd = 'ccd'
 
-        for ccd in dev_list:
-            ccd_dict[ccd[idx]] = self.fCCD.find(mirrorName=mirrorName, FType=FType,
-                                                XtraOpts=imgtype, run=run,
-                                                testName=testName, sensorId=ccd[0])
+            for ccd in dev_list:
+                ccd_dict[ccd[idx]] = self.fCCD.find(mirrorName=mirrorName, FType=FType,
+                                                    XtraOpts=imgtype, run=run,
+                                                    testName=testName, sensorId=ccd[0])
 
-        return ccd_dict
+            return ccd_dict
 
     def deduce_mirror(self, run=None):
         """
