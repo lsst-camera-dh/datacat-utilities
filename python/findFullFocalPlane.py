@@ -1,11 +1,12 @@
 from __future__ import print_function
+
 import argparse
+
 from DataCatalog import DataCatalog
-import os
 from eTraveler.clientAPI.connection import Connection
 
 
-class findFullFocalPlane():
+class findFullFocalPlane:
     def __init__(self, prodServer="Prod"):
 
         self.mirrorName = None
@@ -58,8 +59,6 @@ class findFullFocalPlane():
             'INT-test': 'SLAC-test/test/',
         }
 
-        folder = '/LSST/'
-
         use_latest_activity = False
 
         query = ''
@@ -79,7 +78,7 @@ class findFullFocalPlane():
 
         folderList.append("/LSST/mirror/" + sourceMap[self.mirrorName] +
                           "LCA-10134_Cryostat/" + focal_plane + "/" + self.run + "/" +
-                           acq_step + "/v0/")
+                          acq_step + "/v0/")
 
         if self.XtraOpts is not None:
             if query == '':
@@ -105,7 +104,7 @@ class findFullFocalPlane():
             for item in pathsList:
                 if (self.FType is None) or \
                         (self.FType is not None and item.endswith(self.FType)):
-                    #if item not in files:
+                    # if item not in files:
                     if (self.testName is None) or \
                             (self.testName is not None and self.testName.upper() in item.upper()):
                         files.append(item)
