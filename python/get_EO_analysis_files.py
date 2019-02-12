@@ -130,7 +130,7 @@ class get_EO_analysis_files():
             if self.db == 'Prod':
                 mirrorName = "INT-prod"
             else:
-                mirrorName = "Int-test"
+                mirrorName = "INT-test"
         else:
             if self.db == 'Prod':
                 if self.run_sum['travelerName'] == "SR-EOT-02":
