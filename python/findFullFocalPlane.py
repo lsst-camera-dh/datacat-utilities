@@ -32,11 +32,10 @@ class findFullFocalPlane:
     def find(self, FType=None, XtraOpts=None, testName=None, run=None):
 
         if "D" not in run:
-            self.mirrorName = "INT-prod"
             self.db = "Prod"
         else:
-            self.mirrorName = "INT-test"
             self.db = "Dev"
+
         if FType is not None:
             self.FType = FType
         if XtraOpts is not None:
@@ -46,18 +45,51 @@ class findFullFocalPlane:
         if run is not None:
             self.run = run
 
+        self.mirrorName = "INT-prod"
+
         run_info = self.connections["connect"][self.db].getRunResults(run=self.run)
-        focal_plane = run_info['experimentSN']
-        if 'CRYO' not in focal_plane.upper():
+        device = run_info['experimentSN']
+        acq_step = ""
+        dev_type = "LCA-10134_Cryostat"
+
+        if 'CRYO' in device.upper():
+            sourceMap = {
+                'INT-prod': 'SLAC-prod/prod/',
+                'INT-test': 'SLAC-test/test/',
+            }
+            if self.db == "Dev":
+                self.mirrorName = "INT-test"
+            acq_step = "BOT_acq_sim"  # we only have simulated BOT runs as of 2019-02-12
+            step_info = self.connections["connect"][self.db].getRunFilepaths(run=self.run)
+            for steps in step_info:
+                if "acq" in steps.lower():
+                    acq_step = steps
+                    break
+        elif 'RTM' in device.upper():
+            run_sum = self.connections["connect"][self.db].getRunSummary(run=run)
+            if "Integration" in run_sum['subsystem']:
+                if self.db == "Dev":
+                    self.mirrorName = "INT-test"
+                sourceMap = {
+                    'INT-prod': 'INT-prod/prod/',
+                    'INT-test': 'INT-test/test/',
+                }
+            else:
+                if self.db == "Dev":
+                    self.mirrorName = "BNL-test"
+                else:
+                    self.mirrorName = "BNL-prod"
+
+                sourceMap = {
+                    'BNL-prod': 'BNL-prod/prod/',
+                    'BNL-test': 'BNL-test/test/',
+                }
+            dev_type = "LCA-11021_RTM"
+            acq_step = testName
+
+        else:
             print("Run " + run + " not a BOT run")
             raise ValueError
-
-        # check that this run is for full focal plane
-
-        sourceMap = {
-            'INT-prod': 'SLAC-prod/prod/',
-            'INT-test': 'SLAC-test/test/',
-        }
 
         use_latest_activity = False
 
@@ -68,16 +100,8 @@ class findFullFocalPlane:
 
         # get the path to this run
 
-        step_info = self.connections["connect"][self.db].getRunFilepaths(run=self.run)
-
-        acq_step = "BOT_acq_sim"
-        for steps in step_info:
-            if "acq" in steps.lower():
-                acq_step = steps
-                break
-
         folderList.append("/LSST/mirror/" + sourceMap[self.mirrorName] +
-                          "LCA-10134_Cryostat/" + focal_plane + "/" + self.run + "/" +
+                          dev_type + "/" + device + "/" + self.run + "/" +
                           acq_step + "/v0/")
 
         if self.XtraOpts is not None:

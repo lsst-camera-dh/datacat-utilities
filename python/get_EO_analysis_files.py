@@ -104,14 +104,23 @@ class get_EO_analysis_files():
 
             return raft_dict
 
+        elif 'RTM' in device.upper():
+            files = self.f_FP.find(run=run, testName=testName)
+
+            for f in files:
+                parse_path = f.split("/")
+                fn = parse_path[-1].split(".")[0]
+                fn_split = fn.split("_")
+                ccd_slot = fn_split[-1]
+
+                c = raft_dict.setdefault(ccd_slot, [])
+                c.append(f)
+
+            return raft_dict
+
         else:
-            if 'RTM' in device:
-                ccd_list = self.eR.raftContents(raftName=device, when=when)
-                for ccd in ccd_list:
-                    dev_list.append(ccd)
-            else:
-                dev_list = [[device, 0, 0]]
-                self.slot_or_ccd = 'ccd'
+            dev_list = [[device, 0, 0]]
+            self.slot_or_ccd = 'ccd'
 
             for ccd in dev_list:
                 ccd_dict[ccd[idx]] = self.fCCD.find(mirrorName=mirrorName, FType=FType,
