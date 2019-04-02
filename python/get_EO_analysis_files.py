@@ -89,7 +89,7 @@ class get_EO_analysis_files():
 
         if 'CRYO' in device.upper():
 
-            files = self.f_FP.find(run=run, testName=testName)
+            files = self.f_FP.find(run=run, testName=testName, FType=FType)
 
             for f in files:
                 parse_path = f.split("/")
