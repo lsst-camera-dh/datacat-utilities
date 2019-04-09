@@ -63,9 +63,9 @@ class get_EO_analysis_results():
 
         # define step and schema names, respectively
 
-        self.type_dict_BOT['gain'] = ['fe55_BOT_analysis', 'fe55_BOT_analysis']
-        self.type_dict_BOT['gain_error'] = ['fe55_BOT_analysis', 'fe55_BOT_analysis']
-        self.type_dict_BOT['psf_sigma'] = ['fe55_BOT_analysis', 'fe55_BOT_analysis']
+        self.type_dict_BOT['gain'] = ['fe55_analysis_BOT', 'fe55_BOT_analysis']
+        self.type_dict_BOT['gain_error'] = ['fe55_analysis_BOT', 'fe55_analysis_BOT']
+        self.type_dict_BOT['psf_sigma'] = ['fe55_analysis_BOT', 'fe55_analysis_BOT']
         self.type_dict_BOT['cti_low_serial'] = ['cte_BOT', 'cte_BOT']
         self.type_dict_BOT['cti_high_serial'] = ['cte_BOT', 'cte_BOT']
         self.type_dict_BOT['cti_low_parallel'] = ['cte_BOT', 'cte_BOT']
@@ -93,7 +93,7 @@ class get_EO_analysis_results():
         self.type_dict['BOT'] = self.type_dict_BOT
 
         self.BOT_schema_meas = {}
-        self.BOT_schema_meas['fe55_BOT_analysis'] = ['gain', 'gain_error', 'psf_sigma']
+        self.BOT_schema_meas['fe55_analysis_BOT'] = ['gain', 'gain_error', 'psf_sigma']
         self.BOT_schema_meas['read_noise_BOT'] = ['read_noise', 'system_noise', 'total_noise']
         self.BOT_schema_meas['bright_defects_BOT'] = ['bright_pixels', 'bright_columns']
         self.BOT_schema_meas['dark_defects_BOT'] = ['dark_pixels', 'dark_columns']
@@ -216,8 +216,8 @@ class get_EO_analysis_results():
                 data = self.connect.getRunResults(run=run)
             else:
                 stepName = self.type_dict[self.camera_type][test_type][0]
-                if self.camera_type == "BOT":
-                    stepName = "BOT_EO_analysis"
+                #if self.camera_type == "BOT":
+                #    stepName = "BOT_EO_analysis"
                 data = self.connect.getRunResults(run=run, stepName=stepName)
             if self.camera_type == "BOT":
                 rl = self.eFP.focalPlaneContents(parentName=self.site_type["I&T-BOT"][0], run=run)
@@ -248,6 +248,10 @@ class get_EO_analysis_results():
         ccd_dict = collections.OrderedDict()
         test_dict = collections.OrderedDict()
 
+        test_array = [-1.]*16
+        ccd_idx = {"S00":0, "S01":1, "S02":2, "S10":3, "S11":4, "S12":5, "S20":6, "S21":7, "S22":8 }
+
+
         ccdName = None
         if self.camera_type == 'ccd':
             ccdName = device
@@ -269,7 +273,11 @@ class get_EO_analysis_results():
             return ccd_dict
 
         else:
-            t_dict = data['steps']["BOT_EO_analysis"]
+            step = "BOT_EO_analysis"
+            if len(data) != 1:
+                step = data["steps"][self.type_dict["raft"][test_type][0]]
+
+            t_dict = data['steps'][step]
             # find schema for test type
             test_name_type = ""
             for schemas in self.BOT_schema_meas:
@@ -287,9 +295,15 @@ class get_EO_analysis_results():
                 else:
                     t = test_dict.setdefault(test_type, {})
                 r = t.setdefault(raft_slot, {})
-                c = r.setdefault(ccd_slot, [])
+                #c = r.setdefault(ccd_slot, [])
+                c = r.setdefault(ccd_slot, test_array.copy())
                 meas = a[test_type]
-                c.append(meas)
+                amp_id = a["amp"] - 1
+                slot_id = ccd_idx[ccd_slot]
+                array_idx = 16 * slot_id + amp_id
+                # c.append(meas)
+                c[amp_id] = meas
+                #c.append(meas)
 
             return test_dict
 
@@ -311,6 +325,9 @@ class get_EO_analysis_results():
         test_dict = collections.OrderedDict()
         # get the list of supported tests from member dict
         test_list = self.type_dict[self.camera_type]
+
+        test_array = [-1.]*16
+        ccd_idx = {"S00":0, "S01":1, "S02":2, "S10":3, "S11":4, "S12":5, "S20":6, "S21":7, "S22":8 }
 
         ccdName = None
         if self.camera_type == 'ccd':
@@ -336,30 +353,38 @@ class get_EO_analysis_results():
                     c.append(ampResult)
 
         else:
-            t_dict = data['steps']["BOT_EO_analysis"]
-            for test_name_type in t_dict:
-                if test_name_type == "job_info" or test_name_type == 'tearing_detection_BOT' or \
-                        test_name_type == "package_versions":
-                    continue
+            for step in data["steps"]:
+                t_dict = data['steps'][step]
+                for test_name_type in t_dict:
+                    # only accept known EO test steps
+                    if test_name_type not in [t[1] for t in self.type_dict_BOT.values()]:
+                    #if test_name_type == "job_info" or test_name_type == 'tearing_detection_BOT' or \
+                    #        test_name_type == "package_versions":
+                        continue
 
-                for a in t_dict[test_name_type][1:]:
-                    try:
-                        raft_slot = a["raft"]
-                        ccd_slot = a["slot"]
-                    except KeyError:
-                        print(a)
+                    for a in t_dict[test_name_type][1:]:
+                        try:
+                            raft_slot = a["raft"]
+                            ccd_slot = a["slot"]
+                        except KeyError:
+                            print(a)
 
-                    for res in self.BOT_schema_meas[test_name_type]:
-                        if res == "QE":
-                            band = a["band"]
-                            qe_band = res + "-" + str(band)
-                            t = test_dict.setdefault(qe_band, {})
-                        else:
-                            t = test_dict.setdefault(res, {})
-                        r = t.setdefault(raft_slot, {})
-                        c = r.setdefault(ccd_slot, [])
-                        meas = a[res]
-                        c.append(meas)
+                        for res in self.BOT_schema_meas[test_name_type]:
+                            if res == "QE":
+                                band = a["band"]
+                                qe_band = res + "-" + str(band)
+                                t = test_dict.setdefault(qe_band, {})
+                            else:
+                                t = test_dict.setdefault(res, {})
+                            r = t.setdefault(raft_slot, {})
+                            #c = r.setdefault(ccd_slot, [])
+                            c = r.setdefault(ccd_slot, test_array.copy())
+                            meas = a[res]
+                            amp_id = a["amp"] - 1
+                            slot_id = ccd_idx[ccd_slot]
+                            array_idx = 16*slot_id+amp_id
+                            #c.append(meas)
+                            c[amp_id] = meas
 
         return test_dict
 
@@ -384,12 +409,13 @@ if __name__ == "__main__":
 
     if True:
         start = time.time()
+
         raft_list, data = g.get_tests(site_type=args.site_type, test_type=args.test_type, run=args.run)
         res = g.get_results(test_type=args.test_type, data=data, device=raft_list)
         after_sngl = time.time() - start
 
-    raft_list_all, data_all = g.get_tests(site_type=args.site_type, run=args.run)
-    res_all = g.get_all_results(data=data_all, device=raft_list_all)
-    after_all = time.time() - start
+        raft_list_all, data_all = g.get_tests(site_type=args.site_type, run=args.run)
+        res_all = g.get_all_results(data=data_all, device=raft_list_all)
+        after_all = time.time() - start
 
     print("timing info: ", start, after_sngl, after_all)
