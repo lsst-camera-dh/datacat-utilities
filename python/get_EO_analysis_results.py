@@ -64,8 +64,8 @@ class get_EO_analysis_results():
         # define step and schema names, respectively
 
         self.type_dict_BOT['gain'] = ['fe55_analysis_BOT', 'fe55_BOT_analysis']
-        self.type_dict_BOT['gain_error'] = ['fe55_analysis_BOT', 'fe55_analysis_BOT']
-        self.type_dict_BOT['psf_sigma'] = ['fe55_analysis_BOT', 'fe55_analysis_BOT']
+        self.type_dict_BOT['gain_error'] = ['fe55_analysis_BOT', 'fe55_BOT_analysis']
+        self.type_dict_BOT['psf_sigma'] = ['fe55_analysis_BOT', 'fe55_BOT_analysis']
         self.type_dict_BOT['cti_low_serial'] = ['cte_BOT', 'cte_BOT']
         self.type_dict_BOT['cti_high_serial'] = ['cte_BOT', 'cte_BOT']
         self.type_dict_BOT['cti_low_parallel'] = ['cte_BOT', 'cte_BOT']
@@ -93,7 +93,7 @@ class get_EO_analysis_results():
         self.type_dict['BOT'] = self.type_dict_BOT
 
         self.BOT_schema_meas = {}
-        self.BOT_schema_meas['fe55_analysis_BOT'] = ['gain', 'gain_error', 'psf_sigma']
+        self.BOT_schema_meas['fe55_BOT_analysis'] = ['gain', 'gain_error', 'psf_sigma']
         self.BOT_schema_meas['read_noise_BOT'] = ['read_noise', 'system_noise', 'total_noise']
         self.BOT_schema_meas['bright_defects_BOT'] = ['bright_pixels', 'bright_columns']
         self.BOT_schema_meas['dark_defects_BOT'] = ['dark_pixels', 'dark_columns']
