@@ -275,7 +275,7 @@ class get_EO_analysis_results():
         else:
             step = "BOT_EO_analysis"
             if len(data) != 1:
-                step = data["steps"][self.type_dict["raft"][test_type][0]]
+                step = self.type_dict["BOT"][test_type][0]
 
             t_dict = data['steps'][step]
             # find schema for test type
