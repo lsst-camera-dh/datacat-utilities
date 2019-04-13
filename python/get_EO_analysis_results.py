@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 """Helper tools to fetch Camera EO Test analysis results."""
 
 from eTraveler.clientAPI.connection import Connection
@@ -8,6 +10,7 @@ import numpy as np
 import collections
 import argparse
 import time
+import copy
 
 
 class get_EO_analysis_results():
@@ -85,6 +88,11 @@ class get_EO_analysis_results():
         self.type_dict_BOT['dark_current_95CL'] = ['dark_current_BOT', 'dark_current_BOT']
         self.type_dict_BOT['ptc_gain'] = ['ptc_BOT', 'ptc_BOT']
         self.type_dict_BOT['ptc_gain_error'] = ['ptc_BOT', 'ptc_BOT']
+        self.type_dict_BOT['ptc_a00'] = ['ptc_BOT', 'ptc_BOT']
+        self.type_dict_BOT['ptc_a00_error'] = ['ptc_BOT', 'ptc_BOT']
+        self.type_dict_BOT['ptc_turnoff'] = ['ptc_BOT', 'ptc_BOT']
+        self.type_dict_BOT['ptc_noise'] = ['ptc_BOT', 'ptc_BOT']
+        self.type_dict_BOT['ptc_noise_error'] = ['ptc_BOT', 'ptc_BOT']
 
         self.type_dict_BOT['QE'] = ['qe_BOT_analysis', 'qe_BOT_analysis']
         self.type_dict_BOT['full_well'] = ['flat_pairs_BOT_analysis', 'flat_pairs_BOT']
@@ -104,7 +112,8 @@ class get_EO_analysis_results():
                                            'cti_low_serial_error',
                                            'cti_low_parallel', 'cti_low_parallel_error']
         self.BOT_schema_meas['flat_pairs_BOT'] = ['full_well', 'max_frac_dev']
-        self.BOT_schema_meas['ptc_BOT'] = ['ptc_gain', 'ptc_gain_error']
+        self.BOT_schema_meas['ptc_BOT'] = ['ptc_gain', 'ptc_gain_error', 'ptc_a00', 'ptc_a00_error',
+                                           'ptc_turnoff', 'ptc_noise', 'ptc_noise_error']
         self.BOT_schema_meas['qe_BOT_analysis'] = ['QE']
         self.BOT_schema_meas['tearing_detection_BOT'] = ['detections']
 
@@ -296,7 +305,7 @@ class get_EO_analysis_results():
                     t = test_dict.setdefault(test_type, {})
                 r = t.setdefault(raft_slot, {})
                 #c = r.setdefault(ccd_slot, [])
-                c = r.setdefault(ccd_slot, test_array.copy())
+                c = r.setdefault(ccd_slot, copy.copy(test_array))
                 meas = a[test_type]
                 amp_id = a["amp"] - 1
                 slot_id = ccd_idx[ccd_slot]
@@ -378,7 +387,7 @@ class get_EO_analysis_results():
                                 t = test_dict.setdefault(res, {})
                             r = t.setdefault(raft_slot, {})
                             #c = r.setdefault(ccd_slot, [])
-                            c = r.setdefault(ccd_slot, test_array.copy())
+                            c = r.setdefault(ccd_slot, copy.copy(test_array))
                             meas = a[res]
                             amp_id = a["amp"] - 1
                             slot_id = ccd_idx[ccd_slot]
