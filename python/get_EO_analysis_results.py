@@ -62,7 +62,8 @@ class get_EO_analysis_results():
         self.type_dict = {}
         self.type_dict_BOT = {}
         self.type_dict_raft = {}
-        self.type_dict_ccd = {}
+        self.type_dict_ts3 = {}
+        self.type_dict_vendor = {}
 
         # define step and schema names, respectively
 
@@ -147,34 +148,63 @@ class get_EO_analysis_results():
 
         self.type_dict['raft'] = self.type_dict_raft
 
-        self.type_dict_ccd['gain'] = ['fe55_analysis', 'fe55_analysis']
-        self.type_dict_ccd['gain_error'] = ['fe55_analysis', 'fe55_analysis']
-        self.type_dict_ccd['psf_sigma'] = ['fe55_analysis', 'fe55_analysis']
-        self.type_dict_ccd['cti_low_serial'] = ['cte', 'cte']
-        self.type_dict_ccd['cti_high_serial'] = ['cte', 'cte']
-        self.type_dict_ccd['cti_low_parallel'] = ['cte', 'cte']
-        self.type_dict_ccd['cti_high_parallel'] = ['cte', 'cte']
-        self.type_dict_ccd['cti_low_serial_error'] = ['cte', 'cte']
-        self.type_dict_ccd['cti_high_serial_error'] = ['cte', 'cte']
-        self.type_dict_ccd['cti_low_parallel_error'] = ['cte', 'cte']
-        self.type_dict_ccd['cti_high_parallel_error'] = ['cte', 'cte']
-        self.type_dict_ccd['read_noise'] = ['read_noise', 'read_noise']
-        self.type_dict_ccd['system_noise'] = ['read_noise', 'system_noise']
-        self.type_dict_ccd['total_noise'] = ['read_noise', 'total_noise']
-        self.type_dict_ccd['max_frac_dev'] = ['flat_pairs', 'flat_pairs']
-        self.type_dict_ccd['bright_pixels'] = ['bright_defects', 'bright_defects']
-        self.type_dict_ccd['bright_columns'] = ['bright_defects', 'bright_defects']
-        self.type_dict_ccd['dark_pixels'] = ['dark_defects', 'dark_defects']
-        self.type_dict_ccd['dark_columns'] = ['dark_defects', 'dark_defects']
-        self.type_dict_ccd['num_traps'] = ['traps', 'traps']
-        self.type_dict_ccd['pixel_mean'] = ['prnu', 'prnu']
-        self.type_dict_ccd['num_traps'] = ['traps', 'traps']
-        self.type_dict_ccd['dark_current_95CL'] = ['dark_current', 'dark_current_95CL']
-        self.type_dict_ccd['ptc_gain'] = ['ptc', 'ptc']
-        self.type_dict_ccd['ptc_gain_error'] = ['ptc', 'ptc']
-        self.type_dict_ccd['QE'] = ['qe', 'qe']
+        self.type_dict_ts3['gain'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_ts3['gain_error'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_ts3['psf_sigma'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_ts3['cti_low_serial'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_high_serial'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_low_parallel'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_high_parallel'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_low_serial_error'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_high_serial_error'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_low_parallel_error'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_high_parallel_error'] = ['cte', 'cte']
+        self.type_dict_ts3['read_noise'] = ['read_noise', 'read_noise']
+        self.type_dict_ts3['system_noise'] = ['read_noise', 'system_noise']
+        self.type_dict_ts3['total_noise'] = ['read_noise', 'total_noise']
+        self.type_dict_ts3['max_frac_dev'] = ['flat_pairs', 'flat_pairs']
+        self.type_dict_ts3['bright_pixels'] = ['bright_defects', 'bright_defects']
+        self.type_dict_ts3['bright_columns'] = ['bright_defects', 'bright_defects']
+        self.type_dict_ts3['dark_pixels'] = ['dark_defects', 'dark_defects']
+        self.type_dict_ts3['dark_columns'] = ['dark_defects', 'dark_defects']
+        self.type_dict_ts3['num_traps'] = ['traps', 'traps']
+        self.type_dict_ts3['pixel_mean'] = ['prnu', 'prnu']
+        self.type_dict_ts3['num_traps'] = ['traps', 'traps']
+        self.type_dict_ts3['dark_current_95CL'] = ['dark_current', 'dark_current_95CL']
+        self.type_dict_ts3['ptc_gain'] = ['ptc', 'ptc']
+        self.type_dict_ts3['ptc_gain_error'] = ['ptc', 'ptc']
+        self.type_dict_ts3['QE'] = ['qe', 'qe']
 
-        self.type_dict['ccd'] = self.type_dict_ccd
+        self.type_dict['ts3'] = self.type_dict_ts3
+
+        self.type_dict_vendor['gain'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_vendor['gain_error'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_vendor['psf_sigma'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_vendor['cti_low_serial'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_high_serial'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_low_parallel'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_high_parallel'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_low_serial_error'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_high_serial_error'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_low_parallel_error'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_high_parallel_error'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['read_noise'] = ['read_noise_offline', 'read_noise']
+        self.type_dict_vendor['system_noise'] = ['read_noise_offline', 'system_noise']
+        self.type_dict_vendor['total_noise'] = ['read_noise_offline', 'total_noise']
+        self.type_dict_vendor['max_frac_dev'] = ['flat_pairs_offline', 'flat_pairs']
+        self.type_dict_vendor['bright_pixels'] = ['bright_defects_offline', 'bright_defects']
+        self.type_dict_vendor['bright_columns'] = ['bright_defects_offline', 'bright_defects']
+        self.type_dict_vendor['dark_pixels'] = ['dark_defects_offline', 'dark_defects']
+        self.type_dict_vendor['dark_columns'] = ['dark_defects_offline', 'dark_defects']
+        self.type_dict_vendor['num_traps'] = ['traps_offline', 'traps']
+        self.type_dict_vendor['pixel_mean'] = ['prnu_offline', 'prnu']
+        self.type_dict_vendor['num_traps'] = ['traps_offline', 'traps']
+        self.type_dict_vendor['dark_current_95CL'] = ['dark_current_offline', 'dark_current_95CL']
+        self.type_dict_vendor['ptc_gain'] = ['ptc_offline', 'ptc']
+        self.type_dict_vendor['ptc_gain_error'] = ['ptc_offline', 'ptc']
+        self.type_dict_vendor['QE'] = ['qe_offline', 'qe']
+
+        self.type_dict['vendor'] = self.type_dict_vendor
 
         self.camera_type = 'raft'
 
@@ -205,8 +235,10 @@ class get_EO_analysis_results():
             self.camera_type = 'raft'
         elif "BOT" in site_type:
             self.camera_type = 'BOT'
+        elif "vendor" in site_type:
+            self.camera_type = 'vendor'
         else:
-            self.camera_type = 'ccd'
+            self.camera_type = 'ts3'
 
         dev_list = []
 
