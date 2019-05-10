@@ -169,10 +169,10 @@ class get_EO_analysis_results():
         self.type_dict_ccd['num_traps'] = ['traps', 'traps']
         self.type_dict_ccd['pixel_mean'] = ['prnu', 'prnu']
         self.type_dict_ccd['num_traps'] = ['traps', 'traps']
-        self.type_dict_ccd['dark_current_95CL'] = ['dark_current_offline', 'dark_current_95CL']
-        self.type_dict_ccd['ptc_gain'] = ['ptc_offline', 'ptc']
-        self.type_dict_ccd['ptc_gain_error'] = ['ptc_offline', 'ptc']
-        self.type_dict_ccd['QE'] = ['qe_offline', 'qe']
+        self.type_dict_ccd['dark_current_95CL'] = ['dark_current', 'dark_current_95CL']
+        self.type_dict_ccd['ptc_gain'] = ['ptc', 'ptc']
+        self.type_dict_ccd['ptc_gain_error'] = ['ptc', 'ptc']
+        self.type_dict_ccd['QE'] = ['qe', 'qe']
 
         self.type_dict['ccd'] = self.type_dict_ccd
 
