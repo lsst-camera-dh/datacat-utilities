@@ -52,7 +52,7 @@ class get_EO_analysis_files():
         self.fCCD = findCCD(db=db, prodServer=server, mirrorName="", testName="", run=0, sensorId="")
         self.f_FP = findFullFocalPlane(prodServer=server)
 
-    def get_files(self, FType=None, testName=None, run=None, imgtype=None):
+    def get_files(self, FType=None, testName=None, run=None, imgtype=None, matchstr=None):
         """
         get_files:
 
@@ -62,6 +62,7 @@ class get_EO_analysis_files():
             testName: step name of test, eg fe55_raft_acq
             run: desired run number
             imgtype: (Optional) use Catalog metadata to select image type, eg BIAS
+            matchstr: (Optional) include only those files that include this string
 
         Output:
             ccd_dict: dictionary of lists of files  keyed on slot or CCD name
@@ -92,6 +93,10 @@ class get_EO_analysis_files():
             files = self.f_FP.find(run=run, testName=testName, FType=FType)
 
             for f in files:
+                if matchstr is not None:
+                    if f.find(matchstr) < 0:
+                        continue
+
                 parse_path = f.split("/")
                 fn = parse_path[-1].split(".")[0]
                 fn_split = fn.split("_")
@@ -114,10 +119,16 @@ class get_EO_analysis_files():
                 self.slot_or_ccd = 'ccd'
 
             for ccd in dev_list:
-                ccd_dict[ccd[idx]] = self.fCCD.find(mirrorName=mirrorName, FType=FType,
-                                                    XtraOpts=imgtype, run=run,
-                                                    testName=testName, sensorId=ccd[0])
-
+                filelist = self.fCCD.find(mirrorName=mirrorName, FType=FType,
+                                          XtraOpts=imgtype, run=run,
+                                          testName=testName, sensorId=ccd[0])
+                matchlist = []
+                for f in filelist:
+                    if matchstr is not None:
+                        if f.find(matchstr) < 0:
+                            continue
+                    matchlist.append(f)
+                ccd_dict[ccd[idx]] = matchlist
             return ccd_dict
 
     def deduce_mirror(self, run=None):
