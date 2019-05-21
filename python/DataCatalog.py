@@ -6,11 +6,18 @@ Use Brian's python client to query the SRS datacatalog.
 
 import os
 import subprocess
-import datacat
-import datacat.error
-from datacat.client import client_from_config
-from datacat.config import config_from_file
-from datacat.model import Folder
+
+try:
+    import datacat
+    import datacat.error
+    from datacat.client import client_from_config
+    from datacat.config import config_from_file
+    from datacat.model import Folder
+except ModuleNotFoundError as msg:
+    print ("Warning, Data Catalog not available")
+    print (msg)
+
+
 import pwd
 
 remote_hosts = {'SLAC': 'rhel6-64.slac.stanford.edu',
