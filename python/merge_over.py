@@ -56,7 +56,7 @@ for infile in infiles:
         dimh, dimv = naxis1, naxis2
         ccdax, ccday = dimv * 2, dimh * 8
         # Equations below are from LCA-13501
-        if ccdtype is 'E2V':
+        if ccdtype == 'E2V':
             dsx1 = (Sy * dimh + 1) * (1 - Sx) + (Sy + 1) * dimh * Sx
             dsx2 = (Sy + 1) * dimh * (1 - Sx) + (Sy * dimh + 1) * Sx
             dsy1 = 2 * dimv * (1 - Sx) + Sx

@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 """Helper tools to fetch Camera EO Test analysis results."""
 
 from eTraveler.clientAPI.connection import Connection
@@ -8,6 +10,7 @@ import numpy as np
 import collections
 import argparse
 import time
+import copy
 
 
 class get_EO_analysis_results():
@@ -59,21 +62,22 @@ class get_EO_analysis_results():
         self.type_dict = {}
         self.type_dict_BOT = {}
         self.type_dict_raft = {}
-        self.type_dict_ccd = {}
+        self.type_dict_ts3 = {}
+        self.type_dict_vendor = {}
 
         # define step and schema names, respectively
 
-        self.type_dict_BOT['gain'] = ['fe55_BOT_analysis', 'fe55_BOT_analysis']
-        self.type_dict_BOT['gain_error'] = ['fe55_BOT_analysis', 'fe55_BOT_analysis']
-        self.type_dict_BOT['psf_sigma'] = ['fe55_BOT_analysis', 'fe55_BOT_analysis']
-        self.type_dict_BOT['cti_low_serial'] = ['cte_BOT', 'cte_BOT']
-        self.type_dict_BOT['cti_high_serial'] = ['cte_BOT', 'cte_BOT']
-        self.type_dict_BOT['cti_low_parallel'] = ['cte_BOT', 'cte_BOT']
-        self.type_dict_BOT['cti_high_parallel'] = ['cte_BOT', 'cte_BOT']
-        self.type_dict_BOT['cti_low_serial_error'] = ['cte_BOT', 'cte_BOT']
-        self.type_dict_BOT['cti_high_serial_error'] = ['cte_BOT', 'cte_BOT']
-        self.type_dict_BOT['cti_low_parallel_error'] = ['cte_BOT', 'cte_BOT']
-        self.type_dict_BOT['cti_high_parallel_error'] = ['cte_BOT', 'cte_BOT']
+        self.type_dict_BOT['gain'] = ['fe55_analysis_BOT', 'fe55_BOT_analysis']
+        self.type_dict_BOT['gain_error'] = ['fe55_analysis_BOT', 'fe55_BOT_analysis']
+        self.type_dict_BOT['psf_sigma'] = ['fe55_analysis_BOT', 'fe55_BOT_analysis']
+        self.type_dict_BOT['cti_low_serial'] = ['cti_BOT', 'cte_BOT']
+        self.type_dict_BOT['cti_high_serial'] = ['cti_BOT', 'cte_BOT']
+        self.type_dict_BOT['cti_low_parallel'] = ['cti_BOT', 'cte_BOT']
+        self.type_dict_BOT['cti_high_parallel'] = ['cti_BOT', 'cte_BOT']
+        self.type_dict_BOT['cti_low_serial_error'] = ['cti_BOT', 'cte_BOT']
+        self.type_dict_BOT['cti_high_serial_error'] = ['cti_BOT', 'cte_BOT']
+        self.type_dict_BOT['cti_low_parallel_error'] = ['cti_BOT', 'cte_BOT']
+        self.type_dict_BOT['cti_high_parallel_error'] = ['cti_BOT', 'cte_BOT']
         self.type_dict_BOT['read_noise'] = ['read_noise_BOT', 'read_noise_BOT']
         self.type_dict_BOT['system_noise'] = ['read_noise_BOT', 'read_noise_BOT']
         self.type_dict_BOT['total_noise'] = ['read_noise_BOT', 'read_noise_BOT']
@@ -85,6 +89,11 @@ class get_EO_analysis_results():
         self.type_dict_BOT['dark_current_95CL'] = ['dark_current_BOT', 'dark_current_BOT']
         self.type_dict_BOT['ptc_gain'] = ['ptc_BOT', 'ptc_BOT']
         self.type_dict_BOT['ptc_gain_error'] = ['ptc_BOT', 'ptc_BOT']
+        self.type_dict_BOT['ptc_a00'] = ['ptc_BOT', 'ptc_BOT']
+        self.type_dict_BOT['ptc_a00_error'] = ['ptc_BOT', 'ptc_BOT']
+        self.type_dict_BOT['ptc_turnoff'] = ['ptc_BOT', 'ptc_BOT']
+        self.type_dict_BOT['ptc_noise'] = ['ptc_BOT', 'ptc_BOT']
+        self.type_dict_BOT['ptc_noise_error'] = ['ptc_BOT', 'ptc_BOT']
 
         self.type_dict_BOT['QE'] = ['qe_BOT_analysis', 'qe_BOT_analysis']
         self.type_dict_BOT['full_well'] = ['flat_pairs_BOT_analysis', 'flat_pairs_BOT']
@@ -104,7 +113,8 @@ class get_EO_analysis_results():
                                            'cti_low_serial_error',
                                            'cti_low_parallel', 'cti_low_parallel_error']
         self.BOT_schema_meas['flat_pairs_BOT'] = ['full_well', 'max_frac_dev']
-        self.BOT_schema_meas['ptc_BOT'] = ['ptc_gain', 'ptc_gain_error']
+        self.BOT_schema_meas['ptc_BOT'] = ['ptc_gain', 'ptc_gain_error', 'ptc_a00', 'ptc_a00_error',
+                                           'ptc_turnoff', 'ptc_noise', 'ptc_noise_error']
         self.BOT_schema_meas['qe_BOT_analysis'] = ['QE']
         self.BOT_schema_meas['tearing_detection_BOT'] = ['detections']
 
@@ -138,34 +148,63 @@ class get_EO_analysis_results():
 
         self.type_dict['raft'] = self.type_dict_raft
 
-        self.type_dict_ccd['gain'] = ['fe55_analysis', 'fe55_analysis']
-        self.type_dict_ccd['gain_error'] = ['fe55_analysis', 'fe55_analysis']
-        self.type_dict_ccd['psf_sigma'] = ['fe55_analysis', 'fe55_analysis']
-        self.type_dict_ccd['cti_low_serial'] = ['cte_offline', 'cte']
-        self.type_dict_ccd['cti_high_serial'] = ['cte_offline', 'cte']
-        self.type_dict_ccd['cti_low_parallel'] = ['cte_offline', 'cte']
-        self.type_dict_ccd['cti_high_parallel'] = ['cte_offline', 'cte']
-        self.type_dict_ccd['cti_low_serial_error'] = ['cte_offline', 'cte']
-        self.type_dict_ccd['cti_high_serial_error'] = ['cte_offline', 'cte']
-        self.type_dict_ccd['cti_low_parallel_error'] = ['cte_offline', 'cte']
-        self.type_dict_ccd['cti_high_parallel_error'] = ['cte_offline', 'cte']
-        self.type_dict_ccd['read_noise'] = ['read_noise_offline', 'read_noise']
-        self.type_dict_ccd['system_noise'] = ['read_noise_offline', 'read_noise']
-        self.type_dict_ccd['total_noise'] = ['read_noise_offline', 'read_noise']
-        self.type_dict_ccd['max_frac_dev'] = ['flat_pairs_offline', 'flat_pairs']
-        self.type_dict_ccd['bright_pixels'] = ['bright_defects_offline', 'bright_defects']
-        self.type_dict_ccd['bright_columns'] = ['bright_defects_offline', 'bright_defects']
-        self.type_dict_ccd['dark_pixels'] = ['dark_defects_offline', 'dark_defects']
-        self.type_dict_ccd['dark_columns'] = ['dark_defects_offline', 'dark_defects']
-        self.type_dict_ccd['num_traps'] = ['traps_offline', 'traps']
-        self.type_dict_ccd['pixel_mean'] = ['prnu_offline', 'prnu']
-        self.type_dict_ccd['num_traps'] = ['traps_offline', 'traps']
-        self.type_dict_ccd['dark_current_95CL'] = ['dark_current_offline', 'dark_current_95CL']
-        self.type_dict_ccd['ptc_gain'] = ['ptc_offline', 'ptc']
-        self.type_dict_ccd['ptc_gain_error'] = ['ptc_offline', 'ptc']
-        self.type_dict_ccd['QE'] = ['qe_offline', 'qe']
+        self.type_dict_ts3['gain'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_ts3['gain_error'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_ts3['psf_sigma'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_ts3['cti_low_serial'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_high_serial'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_low_parallel'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_high_parallel'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_low_serial_error'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_high_serial_error'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_low_parallel_error'] = ['cte', 'cte']
+        self.type_dict_ts3['cti_high_parallel_error'] = ['cte', 'cte']
+        self.type_dict_ts3['read_noise'] = ['read_noise', 'read_noise']
+        self.type_dict_ts3['system_noise'] = ['read_noise', 'system_noise']
+        self.type_dict_ts3['total_noise'] = ['read_noise', 'total_noise']
+        self.type_dict_ts3['max_frac_dev'] = ['flat_pairs', 'flat_pairs']
+        self.type_dict_ts3['bright_pixels'] = ['bright_defects', 'bright_defects']
+        self.type_dict_ts3['bright_columns'] = ['bright_defects', 'bright_defects']
+        self.type_dict_ts3['dark_pixels'] = ['dark_defects', 'dark_defects']
+        self.type_dict_ts3['dark_columns'] = ['dark_defects', 'dark_defects']
+        self.type_dict_ts3['num_traps'] = ['traps', 'traps']
+        self.type_dict_ts3['pixel_mean'] = ['prnu', 'prnu']
+        self.type_dict_ts3['num_traps'] = ['traps', 'traps']
+        self.type_dict_ts3['dark_current_95CL'] = ['dark_current', 'dark_current_95CL']
+        self.type_dict_ts3['ptc_gain'] = ['ptc', 'ptc']
+        self.type_dict_ts3['ptc_gain_error'] = ['ptc', 'ptc']
+        self.type_dict_ts3['QE'] = ['qe', 'qe']
 
-        self.type_dict['ccd'] = self.type_dict_ccd
+        self.type_dict['ts3'] = self.type_dict_ts3
+
+        self.type_dict_vendor['gain'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_vendor['gain_error'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_vendor['psf_sigma'] = ['fe55_analysis', 'fe55_analysis']
+        self.type_dict_vendor['cti_low_serial'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_high_serial'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_low_parallel'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_high_parallel'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_low_serial_error'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_high_serial_error'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_low_parallel_error'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['cti_high_parallel_error'] = ['cte_offline', 'cte']
+        self.type_dict_vendor['read_noise'] = ['read_noise_offline', 'read_noise']
+        self.type_dict_vendor['system_noise'] = ['read_noise_offline', 'system_noise']
+        self.type_dict_vendor['total_noise'] = ['read_noise_offline', 'total_noise']
+        self.type_dict_vendor['max_frac_dev'] = ['flat_pairs_offline', 'flat_pairs']
+        self.type_dict_vendor['bright_pixels'] = ['bright_defects_offline', 'bright_defects']
+        self.type_dict_vendor['bright_columns'] = ['bright_defects_offline', 'bright_defects']
+        self.type_dict_vendor['dark_pixels'] = ['dark_defects_offline', 'dark_defects']
+        self.type_dict_vendor['dark_columns'] = ['dark_defects_offline', 'dark_defects']
+        self.type_dict_vendor['num_traps'] = ['traps_offline', 'traps']
+        self.type_dict_vendor['pixel_mean'] = ['prnu_offline', 'prnu']
+        self.type_dict_vendor['num_traps'] = ['traps_offline', 'traps']
+        self.type_dict_vendor['dark_current_95CL'] = ['dark_current_offline', 'dark_current_95CL']
+        self.type_dict_vendor['ptc_gain'] = ['ptc_offline', 'ptc']
+        self.type_dict_vendor['ptc_gain_error'] = ['ptc_offline', 'ptc']
+        self.type_dict_vendor['QE'] = ['qe_offline', 'qe']
+
+        self.type_dict['vendor'] = self.type_dict_vendor
 
         self.camera_type = 'raft'
 
@@ -196,8 +235,10 @@ class get_EO_analysis_results():
             self.camera_type = 'raft'
         elif "BOT" in site_type:
             self.camera_type = 'BOT'
+        elif "vendor" in site_type:
+            self.camera_type = 'vendor'
         else:
-            self.camera_type = 'ccd'
+            self.camera_type = 'ts3'
 
         dev_list = []
 
@@ -216,8 +257,8 @@ class get_EO_analysis_results():
                 data = self.connect.getRunResults(run=run)
             else:
                 stepName = self.type_dict[self.camera_type][test_type][0]
-                if self.camera_type == "BOT":
-                    stepName = "BOT_EO_analysis"
+                #if self.camera_type == "BOT":
+                #    stepName = "BOT_EO_analysis"
                 data = self.connect.getRunResults(run=run, stepName=stepName)
             if self.camera_type == "BOT":
                 rl = self.eFP.focalPlaneContents(parentName=self.site_type["I&T-BOT"][0], run=run)
@@ -248,11 +289,14 @@ class get_EO_analysis_results():
         ccd_dict = collections.OrderedDict()
         test_dict = collections.OrderedDict()
 
+        test_array = [-1.]*16
+        #ccd_idx = dict(S00=0, S01=1, S02=2, S10=3, S11=4, S12=5, S20=6, S21=7, S22=8)
+
         ccdName = None
         if self.camera_type == 'ccd':
             ccdName = device
 
-        if self.camera_type is not "BOT":
+        if self.camera_type != "BOT":
 
             try:
                 data[device]
@@ -269,7 +313,11 @@ class get_EO_analysis_results():
             return ccd_dict
 
         else:
-            t_dict = data['steps']["BOT_EO_analysis"]
+            step = "BOT_EO_analysis"
+            if len(data) != 1:
+                step = self.type_dict["BOT"][test_type][0]
+
+            t_dict = data['steps'][step]
             # find schema for test type
             test_name_type = ""
             for schemas in self.BOT_schema_meas:
@@ -287,9 +335,15 @@ class get_EO_analysis_results():
                 else:
                     t = test_dict.setdefault(test_type, {})
                 r = t.setdefault(raft_slot, {})
-                c = r.setdefault(ccd_slot, [])
+                #c = r.setdefault(ccd_slot, [])
+                c = r.setdefault(ccd_slot, copy.copy(test_array))
                 meas = a[test_type]
-                c.append(meas)
+                amp_id = a["amp"] - 1
+                #slot_id = ccd_idx[ccd_slot]
+                # array_idx = 16 * slot_id + amp_id
+                # c.append(meas)
+                c[amp_id] = meas
+                #c.append(meas)
 
             return test_dict
 
@@ -312,11 +366,14 @@ class get_EO_analysis_results():
         # get the list of supported tests from member dict
         test_list = self.type_dict[self.camera_type]
 
+        test_array = [-1.]*16
+        #ccd_idx = dict(S00=0, S01=1, S02=2, S10=3, S11=4, S12=5, S20=6, S21=7, S22=8)
+
         ccdName = None
         if self.camera_type == 'ccd':
             ccdName = device
 
-        if self.camera_type is not "BOT":
+        if self.camera_type != "BOT":
 
             for tests in test_list:
                 steps = test_list[tests][0]
@@ -336,30 +393,38 @@ class get_EO_analysis_results():
                     c.append(ampResult)
 
         else:
-            t_dict = data['steps']["BOT_EO_analysis"]
-            for test_name_type in t_dict:
-                if test_name_type == "job_info" or test_name_type == 'tearing_detection_BOT' or \
-                        test_name_type == "package_versions":
-                    continue
+            for step in data["steps"]:
+                t_dict = data['steps'][step]
+                for test_name_type in t_dict:
+                    # only accept known EO test steps
+                    #if test_name_type == "job_info" or test_name_type == 'tearing_detection_BOT' or \
+                    #        test_name_type == "package_versions":
+                    if test_name_type not in [t[1] for t in self.type_dict_BOT.values()]:
+                        continue
 
-                for a in t_dict[test_name_type][1:]:
-                    try:
-                        raft_slot = a["raft"]
-                        ccd_slot = a["slot"]
-                    except KeyError:
-                        print(a)
+                    for a in t_dict[test_name_type][1:]:
+                        try:
+                            raft_slot = a["raft"]
+                            ccd_slot = a["slot"]
+                        except KeyError:
+                            print(a)
 
-                    for res in self.BOT_schema_meas[test_name_type]:
-                        if res == "QE":
-                            band = a["band"]
-                            qe_band = res + "-" + str(band)
-                            t = test_dict.setdefault(qe_band, {})
-                        else:
-                            t = test_dict.setdefault(res, {})
-                        r = t.setdefault(raft_slot, {})
-                        c = r.setdefault(ccd_slot, [])
-                        meas = a[res]
-                        c.append(meas)
+                        for res in self.BOT_schema_meas[test_name_type]:
+                            if res == "QE":
+                                band = a["band"]
+                                qe_band = res + "-" + str(band)
+                                t = test_dict.setdefault(qe_band, {})
+                            else:
+                                t = test_dict.setdefault(res, {})
+                            r = t.setdefault(raft_slot, {})
+                            #c = r.setdefault(ccd_slot, [])
+                            c = r.setdefault(ccd_slot, copy.copy(test_array))
+                            meas = a[res]
+                            amp_id = a["amp"] - 1
+                            #slot_id = ccd_idx[ccd_slot]
+                            #array_idx = 16*slot_id+amp_id
+                            #c.append(meas)
+                            c[amp_id] = meas
 
         return test_dict
 
@@ -384,12 +449,13 @@ if __name__ == "__main__":
 
     if True:
         start = time.time()
+
         raft_list, data = g.get_tests(site_type=args.site_type, test_type=args.test_type, run=args.run)
         res = g.get_results(test_type=args.test_type, data=data, device=raft_list)
         after_sngl = time.time() - start
 
-    raft_list_all, data_all = g.get_tests(site_type=args.site_type, run=args.run)
-    res_all = g.get_all_results(data=data_all, device=raft_list_all)
-    after_all = time.time() - start
+        raft_list_all, data_all = g.get_tests(site_type=args.site_type, run=args.run)
+        res_all = g.get_all_results(data=data_all, device=raft_list_all)
+        after_all = time.time() - start
 
     print("timing info: ", start, after_sngl, after_all)

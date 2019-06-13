@@ -71,14 +71,16 @@ class findFullFocalPlane:
         step_info = self.connections["connect"][self.db].getRunFilepaths(run=self.run)
 
         acq_step = "BOT_acq_sim"
+
         for steps in step_info:
             if "acq" in steps.lower():
                 acq_step = steps
                 break
 
-        folderList.append("/LSST/mirror/" + sourceMap[self.mirrorName] +
-                          "LCA-10134_Cryostat/" + focal_plane + "/" + self.run + "/" +
-                          acq_step + "/v0/")
+        file_base = "/LSST/mirror/" + sourceMap[self.mirrorName] + "LCA-10134_Cryostat/" + focal_plane + \
+                    "/" + self.run + "/" + acq_step + "/v0/"
+
+        folderList.append(file_base)
 
         if self.XtraOpts is not None:
             if query == '':

@@ -12,7 +12,7 @@ class raft_observation():
         chk_list = (run, step)
 
         if None in chk_list:
-            print 'Error: missing input to raft_observation'
+            print('Error: missing input to raft_observation')
             raise ValueError
 
         if prodServer == 'Prod':
@@ -97,4 +97,4 @@ if __name__ == "__main__":
         appSuffix='')
 
     obs_dict = rO.find()
-    print obs_dict
+    print(obs_dict)
