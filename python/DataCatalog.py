@@ -197,5 +197,5 @@ class DataCatalog(object):
 
 
 if __name__ == '__main__':
-
-    datasets.download(dryrun=args.dryRun, clobber=False, nfiles=nfiles)
+    pass
+#    datasets.download(dryrun=dryRun, clobber=False, nfiles=nfiles)

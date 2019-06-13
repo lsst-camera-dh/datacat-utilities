@@ -68,4 +68,4 @@ if __name__ == "__main__":
 
     aspic_list = eR.REBContents(REBName)
 
-    print (aspic_list)
+    print(aspic_list)

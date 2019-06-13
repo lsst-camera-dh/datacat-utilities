@@ -19,7 +19,7 @@ class findCCD():
             chk_list = [mirrorName, testName, sensorId, run]
 
         if None in chk_list:
-            print ('Error: missing input to findCCD')
+            print('Error: missing input to findCCD')
             raise ValueError
 
         self.mirrorName = mirrorName
@@ -154,21 +154,21 @@ class findCCD():
                         files.append(item)
 
         if self.Print:
-            print ("File paths for files at %s:" % site)
+            print("File paths for files at %s:" % site)
             for item in files:
-                print (item)
+                print(item)
 
                 # Write file with list of found data files, if requested
 
         if self.outputFile is not None and len(datasets) > 0:
-            print ('Writing output file ', self.outputFile, '...')
+            print('Writing output file ', self.outputFile, '...')
             ofile = open(self.outputFile, 'w')
             for line in files:
                 ofile.write(line + '\n')
                 pass
             ofile.close()
         elif self.outputFile is not None:
-            print ("Result file requested, but no files found")
+            print("Result file requested, but no files found")
             pass
 
         return files
@@ -251,5 +251,5 @@ if __name__ == "__main__":
 
     files = fCCD.find()
 
-    print (len(files), " files found")
-    print (files)
+    print(len(files), " files found")
+    print(files)

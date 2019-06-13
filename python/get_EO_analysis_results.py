@@ -290,14 +290,13 @@ class get_EO_analysis_results():
         test_dict = collections.OrderedDict()
 
         test_array = [-1.]*16
-        ccd_idx = {"S00":0, "S01":1, "S02":2, "S10":3, "S11":4, "S12":5, "S20":6, "S21":7, "S22":8 }
-
+        #ccd_idx = dict(S00=0, S01=1, S02=2, S10=3, S11=4, S12=5, S20=6, S21=7, S22=8)
 
         ccdName = None
         if self.camera_type == 'ccd':
             ccdName = device
 
-        if self.camera_type is not "BOT":
+        if self.camera_type != "BOT":
 
             try:
                 data[device]
@@ -340,8 +339,8 @@ class get_EO_analysis_results():
                 c = r.setdefault(ccd_slot, copy.copy(test_array))
                 meas = a[test_type]
                 amp_id = a["amp"] - 1
-                slot_id = ccd_idx[ccd_slot]
-                array_idx = 16 * slot_id + amp_id
+                #slot_id = ccd_idx[ccd_slot]
+                # array_idx = 16 * slot_id + amp_id
                 # c.append(meas)
                 c[amp_id] = meas
                 #c.append(meas)
@@ -368,13 +367,13 @@ class get_EO_analysis_results():
         test_list = self.type_dict[self.camera_type]
 
         test_array = [-1.]*16
-        ccd_idx = {"S00":0, "S01":1, "S02":2, "S10":3, "S11":4, "S12":5, "S20":6, "S21":7, "S22":8 }
+        #ccd_idx = dict(S00=0, S01=1, S02=2, S10=3, S11=4, S12=5, S20=6, S21=7, S22=8)
 
         ccdName = None
         if self.camera_type == 'ccd':
             ccdName = device
 
-        if self.camera_type is not "BOT":
+        if self.camera_type != "BOT":
 
             for tests in test_list:
                 steps = test_list[tests][0]
@@ -398,9 +397,9 @@ class get_EO_analysis_results():
                 t_dict = data['steps'][step]
                 for test_name_type in t_dict:
                     # only accept known EO test steps
-                    if test_name_type not in [t[1] for t in self.type_dict_BOT.values()]:
                     #if test_name_type == "job_info" or test_name_type == 'tearing_detection_BOT' or \
                     #        test_name_type == "package_versions":
+                    if test_name_type not in [t[1] for t in self.type_dict_BOT.values()]:
                         continue
 
                     for a in t_dict[test_name_type][1:]:
@@ -422,8 +421,8 @@ class get_EO_analysis_results():
                             c = r.setdefault(ccd_slot, copy.copy(test_array))
                             meas = a[res]
                             amp_id = a["amp"] - 1
-                            slot_id = ccd_idx[ccd_slot]
-                            array_idx = 16*slot_id+amp_id
+                            #slot_id = ccd_idx[ccd_slot]
+                            #array_idx = 16*slot_id+amp_id
                             #c.append(meas)
                             c[amp_id] = meas
 

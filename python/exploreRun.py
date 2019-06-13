@@ -22,8 +22,7 @@ class exploreRun():
         run_info = self.connect.getRunSummary(run=run)
         return run_info['experimentSN']
 
-    
-    def slot_raft_map(self, run):
+    def slot_raft_map(self, run, parentName="LCA-10134_Cryostat-0001"):
         run_info = self.connect.getRunSummary(run=run)
         kwds = {'experimentSN': run_info['experimentSN'],
                 'htype': 'LCA-10134_Cryostat',
@@ -31,7 +30,7 @@ class exploreRun():
                 'timestamp': run_info['begin']}
         response = self.connect.getHardwareHierarchy(**kwds)
         raft_list = []
-        
+
         for ind in response:
             raft = ind['child_experimentSN']
             # ignore mechanical rafts
