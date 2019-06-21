@@ -125,7 +125,7 @@ class get_EO_analysis_files():
                 matchlist = []
                 for f in filelist:
                     if matchstr is not None:
-                        if f.find(matchstr) < 0:
+                        if f.find(matchstr) < 0 or f.find(ccd[0]) < 0:
                             continue
                     matchlist.append(f)
                 ccd_dict[ccd[idx]] = matchlist
