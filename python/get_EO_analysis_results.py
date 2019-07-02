@@ -246,8 +246,8 @@ class get_EO_analysis_results():
 
             eT_conn = self.dev_prod.use_app("Connection", db)
             data = eT_conn.getResultsJH(htype=self.site_type[site_type][0],
-                                             stepName=self.type_dict[self.camera_type][test_type][0],
-                                             travelerName=self.site_type[site_type][1])
+                                        stepName=self.type_dict[self.camera_type][test_type][0],
+                                        travelerName=self.site_type[site_type][1])
             # Get a list of devices
             for dev in data:
                 dev_list.append(dev)
@@ -264,8 +264,7 @@ class get_EO_analysis_results():
                 data = eT_conn.getRunResults(run=run, stepName=stepName)
             if self.camera_type == "BOT":
                 rl = self.dev_prod.app_map["exploreFocalPlane"][db].focalPlaneContents(
-                    parentName=self.site_type[
-                    "I&T-BOT"][0], run=run)
+                    parentName=self.site_type["I&T-BOT"][0], run=run)
                 for r in rl:
                     dev_list.append(r[0])
             else:

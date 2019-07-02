@@ -120,8 +120,8 @@ class get_EO_analysis_files():
 
             for ccd in dev_list:
                 filelist = self.dev_prod.app_map["findCCD"][db].find(mirrorName=mirrorName, FType=FType,
-                                          XtraOpts=imgtype, run=run,
-                                          testName=testName, sensorId=ccd[0])
+                                                                     XtraOpts=imgtype, run=run,
+                                                                     testName=testName, sensorId=ccd[0])
                 matchlist = []
                 for f in filelist:
                     if matchstr is not None:

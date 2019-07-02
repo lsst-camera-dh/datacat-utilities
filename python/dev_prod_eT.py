@@ -31,7 +31,7 @@ class dev_prod_eT():
 
     def add_app(self, app_name=None):
 
-        a = self.app_map.setdefault(app_name, {})
+        self.app_map.setdefault(app_name, {})
 
         mod = globals()[app_name]
         kwargs = {"db": "Prod"}
