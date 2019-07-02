@@ -112,7 +112,10 @@ class findCCD():
         folderList = []
 
         if use_query_eT is True:
-            kwds = {'run': self.run, 'stepName': self.testName}
+            run_str = self.run
+            if type(run_str) != str:
+                run_str = str(self.run)
+            kwds = {'run': run_str, 'stepName': self.testName}
             filePaths = self.connect.getRunFilepaths(**kwds)
             # get the unique directory paths
 

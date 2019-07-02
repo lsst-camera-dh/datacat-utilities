@@ -5,6 +5,7 @@ from __future__ import print_function
 from eTraveler.clientAPI.connection import Connection
 from exploreFocalPlane import exploreFocalPlane
 from exploreRaft import exploreRaft
+from dev_prod_eT import dev_prod_eT
 
 import numpy as np
 import collections
@@ -208,15 +209,13 @@ class get_EO_analysis_results():
 
         self.camera_type = 'raft'
 
-        if server == 'Prod':
-            pS = True
-        else:
-            pS = False
-        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS)
-        self.eFP = exploreFocalPlane(db=db, prodServer=server)
-        self.eR = exploreRaft(db=db, prodServer=server)
+        self.dev_prod = dev_prod_eT()
 
-    def get_tests(self, site_type=None, test_type=None, run=None):
+        self.dev_prod.add_app("exploreFocalPlane")
+        self.dev_prod.add_app("exploreRaft")
+        self.dev_prod.add_app("Connection")
+
+    def get_tests(self, site_type=None, test_type=None, run=None, db=None):
         """
         get_tests:
 
@@ -231,21 +230,22 @@ class get_EO_analysis_results():
             dev_list: list of hardware devices associated with the query
             data: object containing data from the query to getResultsXXX
         """
-        if 'Raft' in site_type:
-            self.camera_type = 'raft'
-        elif "BOT" in site_type:
-            self.camera_type = 'BOT'
-        elif "vendor" in site_type:
-            self.camera_type = 'vendor'
-        else:
-            self.camera_type = 'ts3'
 
         dev_list = []
 
         if run is None:
-            #            hardwareLabels = ['Run_Quality:Run_for_the_record']
-            # hardwareLabels = ["Run_Quality:"]
-            data = self.connect.getResultsJH(htype=self.site_type[site_type][0],
+
+            if 'Raft' in site_type:
+                self.camera_type = 'raft'
+            elif "BOT" in site_type:
+                self.camera_type = 'BOT'
+            elif "vendor" in site_type:
+                self.camera_type = 'vendor'
+            else:
+                self.camera_type = 'ts3'
+
+            eT_conn = self.dev_prod.use_app("Connection", db)
+            data = eT_conn.getResultsJH(htype=self.site_type[site_type][0],
                                              stepName=self.type_dict[self.camera_type][test_type][0],
                                              travelerName=self.site_type[site_type][1])
             # Get a list of devices
@@ -253,15 +253,19 @@ class get_EO_analysis_results():
                 dev_list.append(dev)
 
         else:
+            db = self.dev_prod.set_db(run=run)
+            site_type = self.deduce_site(run=run, db=db)
+
             if test_type is None:
-                data = self.connect.getRunResults(run=run)
+                data = self.dev_prod.app_map["Connection"][db].getRunResults(run=run)
+#                data = eT_conn.getRunResults(run=run)
             else:
                 stepName = self.type_dict[self.camera_type][test_type][0]
-                #if self.camera_type == "BOT":
-                #    stepName = "BOT_EO_analysis"
-                data = self.connect.getRunResults(run=run, stepName=stepName)
+                data = eT_conn.getRunResults(run=run, stepName=stepName)
             if self.camera_type == "BOT":
-                rl = self.eFP.focalPlaneContents(parentName=self.site_type["I&T-BOT"][0], run=run)
+                rl = self.dev_prod.app_map["exploreFocalPlane"][db].focalPlaneContents(
+                    parentName=self.site_type[
+                    "I&T-BOT"][0], run=run)
                 for r in rl:
                     dev_list.append(r[0])
             else:
@@ -290,7 +294,6 @@ class get_EO_analysis_results():
         test_dict = collections.OrderedDict()
 
         test_array = [-1.]*16
-        #ccd_idx = dict(S00=0, S01=1, S02=2, S10=3, S11=4, S12=5, S20=6, S21=7, S22=8)
 
         ccdName = None
         if self.camera_type == 'ccd':
@@ -335,15 +338,12 @@ class get_EO_analysis_results():
                 else:
                     t = test_dict.setdefault(test_type, {})
                 r = t.setdefault(raft_slot, {})
-                #c = r.setdefault(ccd_slot, [])
                 c = r.setdefault(ccd_slot, copy.copy(test_array))
                 meas = a[test_type]
                 amp_id = a["amp"] - 1
-                #slot_id = ccd_idx[ccd_slot]
                 # array_idx = 16 * slot_id + amp_id
                 # c.append(meas)
                 c[amp_id] = meas
-                #c.append(meas)
 
             return test_dict
 
@@ -367,7 +367,6 @@ class get_EO_analysis_results():
         test_list = self.type_dict[self.camera_type]
 
         test_array = [-1.]*16
-        #ccd_idx = dict(S00=0, S01=1, S02=2, S10=3, S11=4, S12=5, S20=6, S21=7, S22=8)
 
         ccdName = None
         if self.camera_type == 'ccd':
@@ -397,8 +396,6 @@ class get_EO_analysis_results():
                 t_dict = data['steps'][step]
                 for test_name_type in t_dict:
                     # only accept known EO test steps
-                    #if test_name_type == "job_info" or test_name_type == 'tearing_detection_BOT' or \
-                    #        test_name_type == "package_versions":
                     if test_name_type not in [t[1] for t in self.type_dict_BOT.values()]:
                         continue
 
@@ -417,16 +414,35 @@ class get_EO_analysis_results():
                             else:
                                 t = test_dict.setdefault(res, {})
                             r = t.setdefault(raft_slot, {})
-                            #c = r.setdefault(ccd_slot, [])
                             c = r.setdefault(ccd_slot, copy.copy(test_array))
                             meas = a[res]
                             amp_id = a["amp"] - 1
-                            #slot_id = ccd_idx[ccd_slot]
-                            #array_idx = 16*slot_id+amp_id
-                            #c.append(meas)
                             c[amp_id] = meas
 
         return test_dict
+
+    def deduce_site(self, run=None, db=None):
+        """
+        deduce_site: Given the run number, figure out which site is needed
+        """
+        siteName = 'BOT'
+
+        run_sum = self.dev_prod.app_map["Connection"][db].getRunSummary(run=run)
+
+        if "CRYO" in run_sum['experimentSN']:
+            siteName = "BOT"
+            self.camera_type = siteName
+        elif run_sum['travelerName'] == "SR-EOT-02":
+            siteName = "vendor"
+            self.camera_type = siteName
+        elif run_sum['travelerName'] == "SR-EOT-1":
+            siteName = "ts3"
+            self.camera_type = siteName
+        else:
+            siteName = "Raft"
+            self.camera_type = "raft"
+
+        return siteName
 
 
 if __name__ == "__main__":
