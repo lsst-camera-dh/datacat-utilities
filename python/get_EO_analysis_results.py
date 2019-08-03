@@ -428,7 +428,7 @@ class get_EO_analysis_results():
 
         run_sum = self.dev_prod.app_map["Connection"][db].getRunSummary(run=run)
 
-        if "CRYO" in run_sum['experimentSN']:
+        if "CRYO" in run_sum['experimentSN'].upper():
             siteName = "BOT"
             self.camera_type = siteName
         elif run_sum['travelerName'] == "SR-EOT-02":
