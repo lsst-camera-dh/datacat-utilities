@@ -6,6 +6,12 @@ from eTraveler.clientAPI.connection import Connection
 class exploreRaft():
     def __init__(self, db='Prod', prodServer='Prod', appSuffix=''):
 
+        self.SR_htype = "LCA-11021_RTM"
+        self.CR_htype = "LCA-10692_CRTM"
+        self.REB_htype = "LCA-13574"
+        self.WREB_htype = "LCA-13537"
+        self.GREB_htype = "LCA-13540"
+
         if prodServer == 'Prod':
             pS = True
         else:
@@ -19,7 +25,12 @@ class exploreRaft():
             appSuffix=appSuffix)
 
     def raftContents(self, raftName=None, when=None, run=None):
-        kwds = {'experimentSN': raftName, 'htype': 'LCA-11021_RTM', 'noBatched': 'true'}
+
+        raft_htype = self.SR_htype
+        if self.CR_htype in raftName:
+            raft_htype = self.CR_htype
+
+        kwds = {'experimentSN': raftName, 'htype': raft_htype, 'noBatched': 'true'}
         if run is not None:
             run_info = self.connect.getRunSummary(run=run)
             kwds['timestamp'] = run_info['begin']
@@ -33,7 +44,7 @@ class exploreRaft():
         reb_list = []
         for row in response:
             kid = row['child_experimentSN']
-            if '13574' in kid:
+            if self.REB_htype in kid or self.WREB_htype in kid or self.GREB_htype in kid:
                 reb_list.append((kid, row['slotName']))
 
             # match up the CCD to the REB via REB and slot numbering. The CCD in slot
@@ -49,12 +60,33 @@ class exploreRaft():
             kid = child['child_experimentSN']
             if 'ITL' in kid.upper() or 'E2V' in kid.upper():
                 slotName = child['slotName']
-                rebNumber = slotName[1]
+
+                if raft_htype == self.SR_htype:
+                    slotNumber = 3
+                else:
+                    slotNumber = 0
+
                 for reb in reb_list:
-                    rebLoc = reb[1][3]
-                    if rebLoc == rebNumber:
+                    rebLoc = reb[1][slotNumber]
+
+                    # two CCDs per GREB, but treated as 1
+                    if self.GREB_htype in reb[0] and "3800C" in kid:
+                        rebId = reb[0]
+                        slotName = "guider"
+                        break
+                    # 2 CCDs per WREB
+                    elif self.WREB_htype in reb[0] and "4400B" in kid:
                         rebId = reb[0]
                         break
+                    elif self.REB_htype in reb[0]:
+                        # CCD slotname first digit encodes the REB number
+                        rebNumber = slotName[1]
+                        if rebLoc == rebNumber:
+                            rebId = reb[0]
+                            break
+                    else:
+                        continue
+
                 ccd_list.append((kid, slotName, rebId))
 
         return ccd_list
@@ -96,7 +128,8 @@ class exploreRaft():
 
         # now find raft for a REB
 
-        kwds = {'experimentSN': REB_name, 'htype': 'LCA-13574',
+        htype = REB_name.rsplit("-", 1)[0]
+        kwds = {'experimentSN': REB_name, 'htype': htype,
                 'noBatched': 'true'}  # need to fix REB htype!
         if run is not None:
             run_info = self.connect.getRunSummary(run=run)

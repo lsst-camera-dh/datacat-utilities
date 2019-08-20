@@ -7,6 +7,10 @@ class exploreFocalPlane:
 
     def __init__(self, db='Prod', prodServer='Prod', appSuffix=''):
 
+        self.SR_htype = "LCA-11021_RTM"
+        self.CR_htype = "LCA-10692_CRTM"
+        self.raft_types = [self.SR_htype, self.CR_htype]
+
         if prodServer == 'Prod':
             pS = True
         else:
@@ -36,7 +40,7 @@ class exploreFocalPlane:
         for ind in response:
             raft = ind['child_experimentSN']
             # ignore mechanical rafts
-            if 'MTR' in raft or ind["child_hardwareTypeName"] != "LCA-11021_RTM":
+            if 'MTR' in raft or ind["child_hardwareTypeName"] not in self.raft_types:
                 continue
             slot = ind['slotName']
             # kludge for first cryo definition with slot names as BayXY, not RXY

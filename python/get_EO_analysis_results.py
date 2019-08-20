@@ -232,6 +232,10 @@ class get_EO_analysis_results():
         """
 
         dev_list = []
+        if run is not None:
+            db = self.dev_prod.set_db(run=run)
+
+        eT_conn = self.dev_prod.use_app("Connection", db)
 
         if run is None:
 
@@ -244,7 +248,6 @@ class get_EO_analysis_results():
             else:
                 self.camera_type = 'ts3'
 
-            eT_conn = self.dev_prod.use_app("Connection", db)
             data = eT_conn.getResultsJH(htype=self.site_type[site_type][0],
                                         stepName=self.type_dict[self.camera_type][test_type][0],
                                         travelerName=self.site_type[site_type][1])
@@ -312,6 +315,17 @@ class get_EO_analysis_results():
                 c = ccd_dict.setdefault(ccdName, [])
                 ampResult = amp[test_type]
                 c.append(ampResult)
+
+            # patch for CR single raft test results - WREB results duplicated under WREB0
+            try:
+                wreb = ccd_dict["WREB0"]
+                wreb0_patch = wreb[0:8]
+                wreb1_patch = wreb[9:17]
+                ccd_dict["WREB0"] = wreb0_patch
+                ccd_dict["WREB1"] = wreb1_patch
+            except KeyError:
+                pass
+
             return ccd_dict
 
         else:
@@ -389,6 +403,17 @@ class get_EO_analysis_results():
                     c = t.setdefault(ccdName, [])
                     ampResult = amp[tests]
                     c.append(ampResult)
+
+                # patch for CR single raft test results - WREB results duplicated under WREB0
+                try:
+                    wreb = t["WREB0"]
+                    wreb0_patch = wreb[0:8]
+                    wreb1_patch = wreb[9:17]
+                    t["WREB0"] = wreb0_patch
+                    t["WREB1"] = wreb1_patch
+                except KeyError:
+                    pass
+
 
         else:
             for step in data["steps"]:
