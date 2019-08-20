@@ -483,6 +483,7 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--site_type', default='I&T-Raft', help="type & site of test (default=%("
                                                                       "default)s)")
     parser.add_argument('-r', '--run', default=None, help="run number (default=%(default)s)")
+    parser.add_argument('-p', '--print', default=None, help="print (default=%(default)s)")
     args = parser.parse_args()
 
     g = get_EO_analysis_results(db=args.db, server=args.eTserver)
@@ -493,6 +494,10 @@ if __name__ == "__main__":
         raft_list, data = g.get_tests(site_type=args.site_type, test_type=args.test_type, run=args.run)
         res = g.get_results(test_type=args.test_type, data=data, device=raft_list)
         after_sngl = time.time() - start
+
+        if args.print is not None and args.run is not None:
+            print(args.test_type + " values for run ", args.run)
+            print (res)
 
         raft_list_all, data_all = g.get_tests(site_type=args.site_type, run=args.run)
         res_all = g.get_all_results(data=data_all, device=raft_list_all)
