@@ -141,6 +141,10 @@ class get_EO_analysis_results():
         self.type_dict_raft['dark_current_95CL'] = ['dark_current_raft', 'dark_current_raft']
         self.type_dict_raft['ptc_gain'] = ['ptc_raft', 'ptc_raft']
         self.type_dict_raft['ptc_gain_error'] = ['ptc_raft', 'ptc_raft']
+        self.type_dict_raft['ptc_a00'] = ['ptc_raft', 'ptc_raft']
+        self.type_dict_raft['ptc_a00_error'] = ['ptc_raft', 'ptc_raft']
+        self.type_dict_raft['ptc_noise'] = ['ptc_raft', 'ptc_raft']
+        self.type_dict_raft['ptc_noise_error'] = ['ptc_raft', 'ptc_raft']
 
         self.type_dict_raft['QE'] = ['qe_raft_analysis', 'qe_raft_analysis']
         self.type_dict_raft['full_well'] = ['flat_pairs_raft_analysis', 'flat_pairs_raft']
