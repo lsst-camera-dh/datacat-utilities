@@ -46,8 +46,8 @@ class get_EO_analysis_results():
                                'total_noise', 'bright_pixels', 'bright_columns', 'dark_pixels',
                                'dark_columns', 'num_traps',
                                'cti_low_serial', 'cti_high_serial', 'cti_low_parallel', 'cti_high_parallel',
-                               'nonlinearity', 'dark_current_95CL', 'ptc_gain', 'pixel_mean', 'full_well',
-                               'max_frac_dev']
+                               'nonlinearity', 'dark_current_95CL', 'ptc_gain', 'ptc_a00', 'ptc_noise',
+                               'ptc_turnoff', 'pixel_mean', 'full_well', 'max_frac_dev']
 
         # define hardware types and traveler names, respectively
 
@@ -145,6 +145,7 @@ class get_EO_analysis_results():
         self.type_dict_raft['ptc_a00_error'] = ['ptc_raft', 'ptc_raft']
         self.type_dict_raft['ptc_noise'] = ['ptc_raft', 'ptc_raft']
         self.type_dict_raft['ptc_noise_error'] = ['ptc_raft', 'ptc_raft']
+        self.type_dict_raft['ptc_turnoff'] = ['ptc_raft', 'ptc_raft']
 
         self.type_dict_raft['QE'] = ['qe_raft_analysis', 'qe_raft_analysis']
         self.type_dict_raft['full_well'] = ['flat_pairs_raft_analysis', 'flat_pairs_raft']
