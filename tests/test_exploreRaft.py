@@ -24,10 +24,10 @@ class TestExploreRaft(TestCase):
     def test_REB_parent(self):
         eR = exploreRaft()
 
-        assert (eR.REB_parent("LCA-13574-069") == "LCA-11021_RTM-004"), "failed REB parent id"
+        assert (eR.REB_parent("LCA-13574-031") == "LCA-11021_RTM-004"), "failed REB parent id"
 
     def test_REB_CCD(self):
         eR = exploreRaft()
 
-        reb_ccds = eR.REB_CCD('LCA-13574-064')
-        assert (reb_ccds[0] == "ITL-3800C-381"), "Failed Raft CCD content id"
+        reb_ccds = eR.REB_CCD('LCA-13574-031')
+        assert (reb_ccds[0] == "ITL-3800C-372"), "Failed Raft CCD content id"
