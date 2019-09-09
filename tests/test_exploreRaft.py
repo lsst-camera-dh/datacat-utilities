@@ -10,12 +10,12 @@ class TestExploreRaft(TestCase):
 
         ccd_list = eR.raftContents(raftName)
 
-        assert (ccd_list[0][0] == 'ITL-3800C-381'), "Failed CCD id"
+        assert (ccd_list[0][0] == 'ITL-3800C-372'), "Failed CCD id"
 
     def test_CCD_parent(self):
         eR = exploreRaft()
 
-        CCD_name = "ITL-3800C-381"
+        CCD_name = "ITL-3800C-372"
 
         parentRaft = eR.CCD_parent(CCD_name, 'ITL-CCD')
 
@@ -24,7 +24,7 @@ class TestExploreRaft(TestCase):
     def test_REB_parent(self):
         eR = exploreRaft()
 
-        assert (eR.REB_parent("LCA-13574-064") == "LCA-11021_RTM-004"), "failed REB parent id"
+        assert (eR.REB_parent("LCA-13574-069") == "LCA-11021_RTM-004"), "failed REB parent id"
 
     def test_REB_CCD(self):
         eR = exploreRaft()
