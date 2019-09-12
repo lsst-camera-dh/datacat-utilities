@@ -4,6 +4,8 @@ from findCCD import findCCD
 from findFullFocalPlane import findFullFocalPlane
 from exploreRaft import exploreRaft
 from exploreFocalPlane import exploreFocalPlane
+from dev_prod_eT import dev_prod_eT
+
 import argparse
 
 """Helper tools to fetch Camera EO Test image files."""
@@ -41,16 +43,12 @@ class get_EO_analysis_files():
         self.db = db
         self.ccd_slots = ["S00", "S01", "S02", "S10", "S11", "S12", "S20", "S21", "S22"]
 
-        if server == 'Prod':
-            pS = True
-        else:
-            pS = False
-        self.connect = Connection(operator='richard', db=db, exp='LSST-CAMERA', prodServer=pS)
+        self.dev_prod = dev_prod_eT()
 
-        self.eFP = exploreFocalPlane(db=db, prodServer=server)
-        self.eR = exploreRaft(db=db, prodServer=server)
-        self.fCCD = findCCD(db=db, prodServer=server, mirrorName="", testName="", run=0, sensorId="")
-        self.f_FP = findFullFocalPlane(prodServer=server)
+        self.dev_prod.add_app("exploreFocalPlane")
+        self.dev_prod.add_app("exploreRaft")
+        self.dev_prod.add_app("Connection")
+        self.dev_prod.add_app("findCCD")
 
     def get_files(self, FType=None, testName=None, run=None, imgtype=None, matchstr=None):
         """
@@ -68,8 +66,10 @@ class get_EO_analysis_files():
             ccd_dict: dictionary of lists of files  keyed on slot or CCD name
             or raft_dict : dict by raft of dict of list of files, both keyed on slot names
         """
-        data = self.connect.getRunResults(run=run, stepName=testName)
-        self.run_sum = self.connect.getRunSummary(run=run)
+        db = self.dev_prod.set_db(run=run)
+
+        data = self.dev_prod.app_map["Connection"][db].getRunResults(run=run, stepName=testName)
+        self.run_sum = self.dev_prod.app_map["Connection"][db].getRunSummary(run=run)
         when = self.run_sum['begin']
 
         mirrorName = self.deduce_mirror(run=run)
@@ -90,7 +90,7 @@ class get_EO_analysis_files():
 
         if 'CRYO' in device.upper():
 
-            files = self.f_FP.find(run=run, testName=testName, FType=FType)
+            files = self.dev_prod.app_map["findFocalPlane"][db].find(run=run, testName=testName, FType=FType)
 
             for f in files:
                 if matchstr is not None:
@@ -111,7 +111,7 @@ class get_EO_analysis_files():
 
         else:
             if 'RTM' in device:
-                ccd_list = self.eR.raftContents(raftName=device, when=when)
+                ccd_list = self.dev_prod.app_map["exploreRaft"][db].raftContents(raftName=device, when=when)
                 for ccd in ccd_list:
                     dev_list.append(ccd)
             else:
@@ -119,15 +119,16 @@ class get_EO_analysis_files():
                 self.slot_or_ccd = 'ccd'
 
             for ccd in dev_list:
-                filelist = self.fCCD.find(mirrorName=mirrorName, FType=FType,
-                                          XtraOpts=imgtype, run=run,
-                                          testName=testName, sensorId=ccd[0])
+                filelist = self.dev_prod.app_map["findCCD"][db].find(mirrorName=mirrorName, FType=FType,
+                                                                     XtraOpts=imgtype, run=run,
+                                                                     testName=testName, sensorId=ccd[0])
                 matchlist = []
                 for f in filelist:
                     if matchstr is not None:
                         if f.find(matchstr) < 0:
                             continue
-                    matchlist.append(f)
+                    if f.find(ccd[0]) >= 0:
+                        matchlist.append(f)
                 ccd_dict[ccd[idx]] = matchlist
             return ccd_dict
 
@@ -135,6 +136,7 @@ class get_EO_analysis_files():
         """
         deduce_mirror: Given the run number, figure out which Data Catalog mirror its data is registered in
         """
+
         mirrorName = 'INT-prod'
 
         if "Integration" in self.run_sum['subsystem']:
