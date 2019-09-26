@@ -405,7 +405,10 @@ class get_EO_analysis_results():
                         ccdName = amp['sensor_id']
                     # set up dict by CCD with list of test quantities
                     c = t.setdefault(ccdName, [])
-                    ampResult = amp[tests]
+                    try:
+                        ampResult = amp[tests]
+                    except KeyError:
+                        continue
                     c.append(ampResult)
 
                 # patch for CR single raft test results - WREB results duplicated under WREB0
