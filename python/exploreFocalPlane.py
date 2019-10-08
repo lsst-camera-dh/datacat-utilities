@@ -64,10 +64,18 @@ if __name__ == "__main__":
                         help="focal plane type")
     parser.add_argument('-i', '--fpInstance', default="LCA-10134_Cryostat-0001",
                         help="focal plane type")
+    parser.add_argument('-r', '--run', default=None,
+                        help="run number")
+    parser.add_argument('-d', '--db', default="Prod",
+                        help="eT database Dev or Prod")
     args = parser.parse_args()
 
-    eFP = exploreFocalPlane()
+    eFP = exploreFocalPlane(db=args.db)
 
-    rafts = eFP.focalPlaneContents(parentName=args.fpInstance, htype=args.focalPlane)
+    kwds = {"parentName": args.fpInstance, "htype": args.focalPlane}
+    if args.run is not None:
+        kwds["run"] = args.run
+
+    rafts = eFP.focalPlaneContents(**kwds)
 
     print(rafts)

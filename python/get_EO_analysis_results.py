@@ -344,23 +344,27 @@ class get_EO_analysis_results():
                 if test_type in self.BOT_schema_meas[schemas]:
                     test_name_type = schemas
 
-            for a in t_dict[test_name_type][1:]:
-                ccd_slot = a["slot"]
-                raft_slot = a["raft"]
+            try:
+                for a in t_dict[test_name_type][1:]:
+                    ccd_slot = a["slot"]
+                    raft_slot = a["raft"]
 
-                if test_type == "QE":
-                    band = a["band"]
-                    qe_band = test_type + "-" + str(band)
-                    t = test_dict.setdefault(qe_band, {})
-                else:
-                    t = test_dict.setdefault(test_type, {})
-                r = t.setdefault(raft_slot, {})
-                c = r.setdefault(ccd_slot, copy.copy(test_array))
-                meas = a[test_type]
-                amp_id = a["amp"] - 1
-                # array_idx = 16 * slot_id + amp_id
-                # c.append(meas)
-                c[amp_id] = meas
+                    if test_type == "QE":
+                        band = a["band"]
+                        qe_band = test_type + "-" + str(band)
+                        t = test_dict.setdefault(qe_band, {})
+                    else:
+                        t = test_dict.setdefault(test_type, {})
+                    r = t.setdefault(raft_slot, {})
+                    c = r.setdefault(ccd_slot, copy.copy(test_array))
+                    meas = a[test_type]
+                    amp_id = a["amp"] - 1
+                    # array_idx = 16 * slot_id + amp_id
+                    # c.append(meas)
+                    c[amp_id] = meas
+            except KeyError:
+                print(" missing test for ", test_type)
+                pass
 
             return test_dict
 
@@ -399,26 +403,27 @@ class get_EO_analysis_results():
                 t = test_dict.setdefault(tests, {})
 
                 # test_name_type is the test's EO schema name
-                results_list = data['steps'][steps][test_name_type]
-                for amp in results_list[1:]:
-                    if self.camera_type == 'raft':
-                        ccdName = amp['sensor_id']
-                    # set up dict by CCD with list of test quantities
-                    c = t.setdefault(ccdName, [])
-                    try:
-                        ampResult = amp[tests]
-                    except KeyError:
-                        continue
-                    c.append(ampResult)
+                try:
+                    results_list = data['steps'][steps][test_name_type]
+                    for amp in results_list[1:]:
+                        if self.camera_type == 'raft':
+                            ccdName = amp['sensor_id']
+                        # set up dict by CCD with list of test quantities
+                        c = t.setdefault(ccdName, [])
+                        try:
+                            ampResult = amp[tests]
+                        except KeyError:
+                            continue
+                        c.append(ampResult)
 
                 # patch for CR single raft test results - WREB results duplicated under WREB0
-                try:
                     wreb = t["WREB0"]
                     wreb0_patch = wreb[0:8]
                     wreb1_patch = wreb[9:17]
                     t["WREB0"] = wreb0_patch
                     t["WREB1"] = wreb1_patch
                 except KeyError:
+                    print("Missing test ", test_name_type)
                     pass
 
 
