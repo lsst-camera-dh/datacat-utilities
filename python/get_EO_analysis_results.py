@@ -6,6 +6,7 @@ from eTraveler.clientAPI.connection import Connection
 from exploreFocalPlane import exploreFocalPlane
 from exploreRaft import exploreRaft
 from dev_prod_eT import dev_prod_eT
+from get_steps_schema import get_steps_schema
 
 import numpy as np
 import collections
@@ -215,6 +216,8 @@ class get_EO_analysis_results():
 
         self.dev_prod = dev_prod_eT()
 
+        self.get_steps = get_steps_schema()
+
         self.dev_prod.add_app("exploreFocalPlane")
         self.dev_prod.add_app("exploreRaft")
         self.dev_prod.add_app("Connection")
@@ -385,7 +388,9 @@ class get_EO_analysis_results():
         """
         test_dict = collections.OrderedDict()
         # get the list of supported tests from member dict
-        test_list = self.type_dict[self.camera_type]
+#        test_list = self.type_dict[self.camera_type]
+
+        test_list = self.get_steps.get_test_info(runData=data)
 
         test_array = [-1.]*16
 
@@ -417,11 +422,14 @@ class get_EO_analysis_results():
                         c.append(ampResult)
 
                 # patch for CR single raft test results - WREB results duplicated under WREB0
-                    wreb = t["WREB0"]
-                    wreb0_patch = wreb[0:8]
-                    wreb1_patch = wreb[9:17]
-                    t["WREB0"] = wreb0_patch
-                    t["WREB1"] = wreb1_patch
+                    try:
+                        wreb = t["WREB0"]
+                        wreb0_patch = wreb[0:8]
+                        wreb1_patch = wreb[9:17]
+                        t["WREB0"] = wreb0_patch
+                        t["WREB1"] = wreb1_patch
+                    except KeyError:
+                        pass
                 except KeyError:
                     print("Missing test ", test_name_type)
                     pass
