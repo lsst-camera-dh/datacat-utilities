@@ -451,6 +451,11 @@ class get_EO_analysis_results():
                             print(a)
 
                         for res in self.BOT_schema_meas[test_name_type]:
+                            try:
+                                meas = a[res]
+                            except KeyError:
+                                break
+
                             if res == "QE":
                                 band = a["band"]
                                 qe_band = res + "-" + str(band)
@@ -459,7 +464,7 @@ class get_EO_analysis_results():
                                 t = test_dict.setdefault(res, {})
                             r = t.setdefault(raft_slot, {})
                             c = r.setdefault(ccd_slot, copy.copy(test_array))
-                            meas = a[res]
+
                             amp_id = a["amp"] - 1
                             c[amp_id] = meas
 
