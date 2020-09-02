@@ -76,6 +76,8 @@ class findFullFocalPlane:
             if "acq" in steps.lower():
                 acq_step = steps
                 break
+        if acq_step == "BOT_acq_sim":
+            acq_step = self.testName
 
         file_base = "/LSST/mirror/" + sourceMap[self.mirrorName] + "LCA-10134_Cryostat/" + focal_plane + \
                     "/" + self.run + "/" + acq_step + "/v0/"

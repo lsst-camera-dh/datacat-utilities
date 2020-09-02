@@ -45,7 +45,7 @@ class get_EO_analysis_files():
 
         self.dev_prod = dev_prod_eT()
 
-        self.dev_prod.add_app("exploreFocalPlane")
+        self.dev_prod.add_app("findFullFocalPlane")
         self.dev_prod.add_app("exploreRaft")
         self.dev_prod.add_app("Connection")
         self.dev_prod.add_app("findCCD")
@@ -90,7 +90,8 @@ class get_EO_analysis_files():
 
         if 'CRYO' in device.upper():
 
-            files = self.dev_prod.app_map["findFocalPlane"][db].find(run=run, testName=testName, FType=FType)
+            files = self.dev_prod.app_map["findFullFocalPlane"][db].find(run=run, testName=testName,
+                                                                       FType=FType)
 
             for f in files:
                 if matchstr is not None:

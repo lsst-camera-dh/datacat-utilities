@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 from exploreFocalPlane import exploreFocalPlane
+from findFullFocalPlane import findFullFocalPlane
 from exploreRaft import exploreRaft
 from exploreRun import exploreRun
 from findCCD import findCCD
@@ -32,9 +33,11 @@ class dev_prod_eT():
     def add_app(self, app_name=None):
 
         self.app_map.setdefault(app_name, {})
+        kwargs = {}
 
         mod = globals()[app_name]
-        kwargs = {"db": "Prod"}
+        if app_name != "findFullFocalPlane":
+            kwargs = {"db": "Prod"}
         if app_name == "Connection":
             kwargs["operator"] = "richard"
         elif app_name == "findCCD":
@@ -45,7 +48,8 @@ class dev_prod_eT():
 
         self.app_map[app_name]["Prod"] = mod(**kwargs)
 
-        kwargs["db"] = "Dev"
+        if app_name != "findFullFocalPlane":
+            kwargs["db"] = "Dev"
         self.app_map[app_name]["Dev"] = mod(**kwargs)
 
     def use_app(self, app_name=None, mode=None):
