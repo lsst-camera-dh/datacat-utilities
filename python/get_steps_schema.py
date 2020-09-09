@@ -99,6 +99,8 @@ if __name__ == "__main__":
     returnData = get.get(run=str(args.run))
     test_list = get.get_test_info()
 
+    print("available tests: \n", test_list)
+
     print(len(returnData["steps"]), " steps found in run ", args.run)
     for step in returnData['steps']:
         stepDict = returnData['steps'][step]
