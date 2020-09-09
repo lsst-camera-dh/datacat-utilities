@@ -301,6 +301,7 @@ class get_EO_analysis_results():
         """
         ccd_dict = collections.OrderedDict()
         test_dict = collections.OrderedDict()
+        test_list = self.get_steps.get_test_info(runData=data)
 
         test_array = [-1.]*16
 
@@ -310,13 +311,10 @@ class get_EO_analysis_results():
 
         if self.camera_type != "BOT":
 
-            try:
-                data[device]
-                step = data[device]['steps'][self.type_dict[self.camera_type][test_type][0]]
-            except KeyError:
-                step = data['steps'][self.type_dict[self.camera_type][test_type][0]]
+            step = test_list[test_type][0]
+            test_name_type = test_list[test_type][1]
 
-            for amp in step[self.type_dict[self.camera_type][test_type][1]][1:]:
+            for amp in step[test_name_type][1:]:
                 if self.camera_type == 'raft':
                     ccdName = amp['sensor_id']
                 c = ccd_dict.setdefault(ccdName, [])
@@ -336,16 +334,11 @@ class get_EO_analysis_results():
             return ccd_dict
 
         else:
-            step = "BOT_EO_analysis"
-            if len(data) != 1:
-                step = self.type_dict["BOT"][test_type][0]
+
+            step = test_list[test_type][0]
+            test_name_type = test_list[test_type][1]
 
             t_dict = data['steps'][step]
-            # find schema for test type
-            test_name_type = ""
-            for schemas in self.BOT_schema_meas:
-                if test_type in self.BOT_schema_meas[schemas]:
-                    test_name_type = schemas
 
             try:
                 for a in t_dict[test_name_type][1:]:
@@ -436,37 +429,35 @@ class get_EO_analysis_results():
 
 
         else:
-            for step in data["steps"]:
+            for tests in test_list:
+                step = test_list[tests][0]
+                test_name_type = test_list[tests][1]
                 t_dict = data['steps'][step]
-                for test_name_type in t_dict:
-                    # only accept known EO test steps
-                    if test_name_type not in [t[1] for t in self.type_dict_BOT.values()]:
-                        continue
 
-                    for a in t_dict[test_name_type][1:]:
+                for a in t_dict[test_name_type][1:]:
+                    try:
+                        raft_slot = a["raft"]
+                        ccd_slot = a["slot"]
+                    except KeyError:
+                        print(a)
+
+                    for res in self.BOT_schema_meas[test_name_type]:
                         try:
-                            raft_slot = a["raft"]
-                            ccd_slot = a["slot"]
+                            meas = a[res]
                         except KeyError:
-                            print(a)
+                            break
 
-                        for res in self.BOT_schema_meas[test_name_type]:
-                            try:
-                                meas = a[res]
-                            except KeyError:
-                                break
+                        if res == "QE":
+                            band = a["band"]
+                            qe_band = res + "-" + str(band)
+                            t = test_dict.setdefault(qe_band, {})
+                        else:
+                            t = test_dict.setdefault(res, {})
+                        r = t.setdefault(raft_slot, {})
+                        c = r.setdefault(ccd_slot, copy.copy(test_array))
 
-                            if res == "QE":
-                                band = a["band"]
-                                qe_band = res + "-" + str(band)
-                                t = test_dict.setdefault(qe_band, {})
-                            else:
-                                t = test_dict.setdefault(res, {})
-                            r = t.setdefault(raft_slot, {})
-                            c = r.setdefault(ccd_slot, copy.copy(test_array))
-
-                            amp_id = a["amp"] - 1
-                            c[amp_id] = meas
+                        amp_id = a["amp"] - 1
+                        c[amp_id] = meas
 
         return test_dict
 
