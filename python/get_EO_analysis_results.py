@@ -314,7 +314,7 @@ class get_EO_analysis_results():
             step = test_list[test_type][0]
             test_name_type = test_list[test_type][1]
 
-            for amp in step[test_name_type][1:]:
+            for amp in data["steps"][step][test_name_type][1:]:
                 if self.camera_type == 'raft':
                     ccdName = amp['sensor_id']
                 c = ccd_dict.setdefault(ccdName, [])
