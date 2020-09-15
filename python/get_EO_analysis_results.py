@@ -306,7 +306,7 @@ class get_EO_analysis_results():
         test_array = [-1.]*16
 
         ccdName = None
-        if self.camera_type == 'ccd':
+        if self.camera_type == 'ts3':
             ccdName = device
 
         if self.camera_type != "BOT":
@@ -388,7 +388,7 @@ class get_EO_analysis_results():
         test_array = [-1.]*16
 
         ccdName = None
-        if self.camera_type == 'ccd':
+        if self.camera_type == 'ts3':
             ccdName = device
 
         if self.camera_type != "BOT":
