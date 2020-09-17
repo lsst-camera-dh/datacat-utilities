@@ -431,6 +431,10 @@ class get_EO_analysis_results():
         else:
             for tests in test_list:
                 step = test_list[tests][0]
+
+                if step == "tearing_BOT":  # no per-amp quantities here
+                    continue
+
                 test_name_type = test_list[tests][1]
                 t_dict = data['steps'][step]
 
@@ -439,25 +443,33 @@ class get_EO_analysis_results():
                         raft_slot = a["raft"]
                         ccd_slot = a["slot"]
                     except KeyError:
-                        print(a)
-
-                    for res in self.BOT_schema_meas[test_name_type]:
-                        try:
-                            meas = a[res]
+                        try:  # some tests combine raft and slot into sensor_id
+                            s_id = a["sensor_id"]
+                            s_id_str = s_id.split("_")
+                            raft_slot = s_id_str[0]
+                            ccd_slot = s_id_str[1]
                         except KeyError:
-                            break
+                            print(a)
 
-                        if res == "QE":
-                            band = a["band"]
-                            qe_band = res + "-" + str(band)
-                            t = test_dict.setdefault(qe_band, {})
-                        else:
-                            t = test_dict.setdefault(res, {})
-                        r = t.setdefault(raft_slot, {})
-                        c = r.setdefault(ccd_slot, copy.copy(test_array))
+                    res = tests
+                    #for res in self.BOT_schema_meas[test_name_type]:
+                    try:
+                        meas = a[res]
+                        #meas = a[tests]
+                    except KeyError:
+                        break
 
-                        amp_id = a["amp"] - 1
-                        c[amp_id] = meas
+                    if res == "QE":
+                        band = a["band"]
+                        qe_band = res + "-" + str(band)
+                        t = test_dict.setdefault(qe_band, {})
+                    else:
+                        t = test_dict.setdefault(res, {})
+                    r = t.setdefault(raft_slot, {})
+                    c = r.setdefault(ccd_slot, copy.copy(test_array))
+
+                    amp_id = a["amp"] - 1
+                    c[amp_id] = meas
 
         return test_dict
 
