@@ -431,6 +431,10 @@ class get_EO_analysis_results():
         else:
             for tests in test_list:
                 step = test_list[tests][0]
+
+                if step == "tearing_BOT":  # no per-amp quantities here
+                    continue
+
                 test_name_type = test_list[tests][1]
                 t_dict = data['steps'][step]
 
@@ -439,7 +443,13 @@ class get_EO_analysis_results():
                         raft_slot = a["raft"]
                         ccd_slot = a["slot"]
                     except KeyError:
-                        print(a)
+                        try:  # some tests combine raft and slot into sensor_id
+                            s_id = a["sensor_id"]
+                            s_id_str = s_id.split("_")
+                            raft_slot = s_id_str[0]
+                            ccd_slot = s_id_str[1]
+                        except KeyError:
+                            print(a)
 
                     res = tests
                     #for res in self.BOT_schema_meas[test_name_type]:
