@@ -26,6 +26,7 @@ class exploreRaft():
 
     def raftContents(self, raftName=None, when=None, run=None):
 
+        # when format: %Y-%m-%dT%H:%M:%S.%f  eg: 2016-11-11T04:24:35.0
         raft_htype = self.SR_htype
         if self.CR_htype in raftName:
             raft_htype = self.CR_htype

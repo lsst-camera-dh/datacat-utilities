@@ -26,6 +26,7 @@ class exploreFocalPlane:
     def focalPlaneContents(self, parentName="LCA-10134_Cryostat-0001",
                            htype='LCA-10134_Cryostat', when=None, run=None):
 
+        # when format: %Y-%m-%dT%H:%M:%S.%f  eg: 2016-11-11T04:24:35.0
         kwds = {'experimentSN': parentName, 'htype': htype, 'noBatched': 'true'}
         if run is not None:
             run_info = self.connect.getRunSummary(run=run)
