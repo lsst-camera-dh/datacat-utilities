@@ -54,7 +54,7 @@ class get_steps_schema:
                 test_list = schema_list[schema][0]
                 for item in test_list:
                     if 'amp' in item or "slot" in item or "raft" in item or "sensor" in item \
-                            or "schema" in item or "job" in item or "detections" in item or \
+                            or "schema" in item or "job" in item or \
                             "subset" in item or "file" in item or "host" in item or "wavelength" in item:
                         continue
 

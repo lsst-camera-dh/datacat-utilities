@@ -433,43 +433,44 @@ class get_EO_analysis_results():
                 step = test_list[tests][0]
 
                 test_name_type = test_list[tests][1]
-                t_dict = data['steps'][step]
-                if step == "tearing_BOT":  # drop tearing_detections_BOT, which is per sensor
-                    if 'tearing_detections_BOT' in t_dict.keys():
-                        del t_dict['tearing_detections_BOT']
+                if test_name_type != 'tearing_detection_BOT':
+                    t_dict = data['steps'][step]
+                    if step == "tearing_BOT":  # drop tearing_detections_BOT, which is per sensor
+                        if 'tearing_detection_BOT' in t_dict.keys():
+                            del t_dict['tearing_detection_BOT']
 
-                for a in t_dict[test_name_type][1:]:
-                    try:
-                        raft_slot = a["raft"]
-                        ccd_slot = a["slot"]
-                    except KeyError:
-                        try:  # some tests combine raft and slot into sensor_id
-                            s_id = a["sensor_id"]
-                            s_id_str = s_id.split("_")
-                            raft_slot = s_id_str[0]
-                            ccd_slot = s_id_str[1]
+                    for a in t_dict[test_name_type][1:]:
+                        try:
+                            raft_slot = a["raft"]
+                            ccd_slot = a["slot"]
                         except KeyError:
-                            print(a)
+                            try:  # some tests combine raft and slot into sensor_id
+                                s_id = a["sensor_id"]
+                                s_id_str = s_id.split("_")
+                                raft_slot = s_id_str[0]
+                                ccd_slot = s_id_str[1]
+                            except KeyError:
+                                print(a)
 
-                    res = tests
-                    #for res in self.BOT_schema_meas[test_name_type]:
-                    try:
-                        meas = a[res]
-                        #meas = a[tests]
-                    except KeyError:
-                        break
+                        res = tests
+                        #for res in self.BOT_schema_meas[test_name_type]:
+                        try:
+                            meas = a[res]
+                            #meas = a[tests]
+                        except KeyError:
+                            break
 
-                    if res == "QE":
-                        band = a["band"]
-                        qe_band = res + "-" + str(band)
-                        t = test_dict.setdefault(qe_band, {})
-                    else:
-                        t = test_dict.setdefault(res, {})
-                    r = t.setdefault(raft_slot, {})
-                    c = r.setdefault(ccd_slot, copy.copy(test_array))
+                        if res == "QE":
+                            band = a["band"]
+                            qe_band = res + "-" + str(band)
+                            t = test_dict.setdefault(qe_band, {})
+                        else:
+                            t = test_dict.setdefault(res, {})
+                        r = t.setdefault(raft_slot, {})
+                        c = r.setdefault(ccd_slot, copy.copy(test_array))
 
-                    amp_id = a["amp"] - 1
-                    c[amp_id] = meas
+                        amp_id = a["amp"] - 1
+                        c[amp_id] = meas
 
         return test_dict
 
