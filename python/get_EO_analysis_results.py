@@ -432,11 +432,11 @@ class get_EO_analysis_results():
             for tests in test_list:
                 step = test_list[tests][0]
 
-                if step == "tearing_BOT":  # no per-amp quantities here
-                    continue
-
                 test_name_type = test_list[tests][1]
                 t_dict = data['steps'][step]
+                if step == "tearing_BOT":  # drop tearing_detections_BOT, which is per sensor
+                    if 'tearing_detections_BOT' in t_dict.keys():
+                        del t_dict['tearing_detections_BOT']
 
                 for a in t_dict[test_name_type][1:]:
                     try:
